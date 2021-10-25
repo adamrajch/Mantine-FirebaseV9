@@ -14,6 +14,8 @@ import { useNotifications } from '@mantine/notifications';
 import { Prism } from '@mantine/prism';
 import Head from 'next/head';
 import ColorModeSwitch from '../components/NextLink/ColorModeSwitch';
+import CreateActivityModal from '../components/NextLink/programs/CreateActivityModal';
+import CreateProgramModal from '../components/NextLink/programs/CreateProgramModal';
 
 const code = `
 import React from 'react';
@@ -55,20 +57,19 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Mantine Firebase V9 Template</title>
-        <meta name="description" content="Mantine w/ Firebase" />
+        <title>Periodize</title>
+        <meta name="description" content="PReriodize Mantine w/ Firebase" />
       </Head>
-
-      <Container size={400} style={{ paddingTop: 80, paddingBottom: 120 }}>
+      <ColorModeSwitch />
+      <Container size={600} style={{ paddingTop: 80, paddingBottom: 120 }}>
         <Title style={{ textAlign: 'center', marginBottom: 20 }}>Mantine Next starter</Title>
         <Text align="center" style={{ marginBottom: 40 }}>
           This starter includes all @mantine packages, feel free to remove everything that is not
           required for your application
         </Text>
         <Group position="center">
-          <Button component="a" href="https://mantine.dev" size="lg">
-            Mantine docs
-          </Button>
+          <CreateProgramModal />
+          <CreateActivityModal />
           <Button
             component="a"
             href="https://mantine.dev/theming/theming-context/"
@@ -78,12 +79,6 @@ export default function Home() {
             Change theme
           </Button>
         </Group>
-
-        <Title order={2} style={{ marginBottom: 30, marginTop: 50, textAlign: 'center' }}>
-          Explore features
-        </Title>
-        <ColorModeSwitch />
-        <Text weight={700}>Notifications system</Text>
 
         <Button
           variant="outline"
