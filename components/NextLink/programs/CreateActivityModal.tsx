@@ -7,7 +7,13 @@ export default function CreateActivityModal() {
 
   return (
     <>
-      <Modal opened={opened} onClose={() => setOpened(false)} title="Add Activity" size="lg">
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Add Activity"
+        size="xl"
+        style={{ padding: 12 }}
+      >
         <CreateActivityForm />
       </Modal>
 

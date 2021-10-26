@@ -1,6 +1,6 @@
 import { Button, Group, Modal } from '@mantine/core';
 import React, { useState } from 'react';
-import CreateProgramForm from './CreateProgramForm';
+import FormikCreateProgramForm from './FormikCreateProgramForm';
 
 export default function CreateProgramModal() {
   const [opened, setOpened] = useState(false);
@@ -8,7 +8,8 @@ export default function CreateProgramModal() {
   return (
     <>
       <Modal opened={opened} onClose={() => setOpened(false)} title="Create A New Program">
-        <CreateProgramForm />
+        {/* <CreateProgramForm /> */}
+        <FormikCreateProgramForm />
       </Modal>
 
       <Group position="center">

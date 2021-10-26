@@ -9,7 +9,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
 import { db } from '../../../firebase';
@@ -19,6 +19,8 @@ interface formValues {
   summary: string;
   type: string;
   category: string[];
+  experience: string[];
+  periodization: string[];
 }
 export default function CreateProgramForm(): ReactElement {
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,11 @@ export default function CreateProgramForm(): ReactElement {
     { value: 'mobility', label: 'mobility' },
     { value: 'sport', label: 'sport' },
   ];
+  const multiSelectExperience = [
+    { value: 'beginner', label: 'noob' },
+    { value: 'intermediate', label: 'basic' },
+    { value: 'advanced', label: 'chad' },
+  ];
   const form = useForm<formValues>({
     initialValues: {
       title: '',
@@ -37,6 +44,8 @@ export default function CreateProgramForm(): ReactElement {
       summary: '',
       type: 'routine',
       category: ['bb', 'pl'],
+      experience: ['beginner', 'intermediate', 'advanced'],
+      periodization: ['none'],
     },
 
     validationRules: {
@@ -44,16 +53,15 @@ export default function CreateProgramForm(): ReactElement {
       summary: (value) => value.trim().length >= 3 && value.trim().length <= 300,
     },
   });
-  async function handleSubmit(values: formValues) {
+  async function handleSubmit(values: any) {
     setLoading(true);
     console.log({
       values,
     });
     //create fb doc of program
-
-    const docRef = await addDoc(collection(db, 'programs'), {
-      values,
-    });
+    values.createdDate = Timestamp.now();
+    values.updatedDate = null;
+    const docRef = await addDoc(collection(db, 'programs'), values);
 
     console.log(docRef.id);
     setLoading(false);
@@ -61,16 +69,6 @@ export default function CreateProgramForm(): ReactElement {
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <Group direction="column" spacing="lg" grow>
-        <SegmentedControl
-          fullWidth
-          value={form.values.type}
-          onChange={(value) => form.setFieldValue('type', value)}
-          data={[
-            { label: 'Routine', value: 'routine' },
-            { label: 'Block', value: 'block' },
-            { label: 'Macrocycle', value: 'macrocycle' },
-          ]}
-        />
         <TextInput
           autoComplete="false"
           required
@@ -79,6 +77,23 @@ export default function CreateProgramForm(): ReactElement {
           value={form.values.title}
           onChange={(event) => form.setFieldValue('title', event.currentTarget.value)}
         />
+        <SegmentedControl
+          fullWidth
+          value={form.values.type}
+          onChange={(value) => form.setFieldValue('type', value)}
+          data={[
+            { label: 'Routine', value: 'routine' },
+            { label: 'Program', value: 'program' },
+          ]}
+        />
+        <Group position="center">
+          <Checkbox label="Linear" />
+          <Checkbox label="Block" />
+          <Checkbox label="Wave" />
+          <Checkbox label="D.U.P" />
+          <Checkbox label="Reverse" />
+        </Group>
+
         <Textarea
           label="Summary"
           value={form.values.summary}
@@ -91,6 +106,14 @@ export default function CreateProgramForm(): ReactElement {
           value={form.values.category}
           clearable
           onChange={(value) => form.setFieldValue('category', value)}
+        />
+        <MultiSelect
+          required
+          data={multiSelectExperience}
+          label="Experience"
+          value={form.values.experience}
+          clearable
+          onChange={(value) => form.setFieldValue('experience', value)}
         />
         <Checkbox
           label="Private"

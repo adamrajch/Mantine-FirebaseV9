@@ -3,6 +3,7 @@ import {
   Group,
   Loader,
   NumberInput,
+  Paper,
   SegmentedControl,
   Slider,
   Switch,
@@ -68,76 +69,108 @@ export default function CreateActivityForm(): ReactElement {
   }
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <TextInput
-        autoComplete="false"
-        required
-        label="Lift"
-        error={form.errors.name && 'Title must be between 3 and 20 characters'}
-        value={form.values.name}
-        onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-      />
-      <Group grow>
-        <NumberInput
+      <Group direction="column" position="apart" spacing={1}>
+        <SegmentedControl
+          fullWidth
+          value={form.values.type}
+          onChange={(value) => form.setFieldValue('type', value)}
+          data={[
+            { label: 'single', value: 'Single' },
+            { label: 'superset', value: 'SuperSet' },
+            { label: 'cluster', value: 'Cluster' },
+            { label: 'circuit', value: 'Circuit' },
+          ]}
+          my={6}
+        />
+        <TextInput
           autoComplete="false"
           required
-          label="Sets"
-          min={1}
-          step={1}
-          max={999}
-          // value={form.values.set}
-          // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+          label="Cluster Lift"
+          error={form.errors.name && 'Name must be between 3 and 20 characters'}
+          value={form.values.name}
+          onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
         />
-        <NumberInput
-          autoComplete="false"
-          required
-          label="Reps"
-          min={1}
-          step={1}
-          max={999}
-          // value={form.values.name}
-          // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-        />
-        <NumberInput
-          autoComplete="false"
-          required
-          label="Load"
-          min={0}
-          step={45}
-          max={9999}
-          // value={form.values.name}
-          // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-        />
+        <Paper>
+          <Group grow>
+            <TextInput
+              autoComplete="false"
+              required
+              label="Lift"
+              error={form.errors.name && 'Title must be between 3 and 20 characters'}
+              value={form.values.name}
+              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+            />
+          </Group>
+          <Group grow>
+            <NumberInput
+              autoComplete="false"
+              required
+              label="Sets"
+              min={1}
+              step={1}
+              max={999}
+              // value={form.values.set}
+              // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+            />
+            <NumberInput
+              autoComplete="false"
+              required
+              label="Reps"
+              min={1}
+              step={1}
+              max={999}
+              // value={form.values.name}
+              // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+            />
+          </Group>
+          <Group position="apart">
+            <Switch label="Weight" />
+            <Switch label="RPE" />
+            <Switch label="%" />
+          </Group>
+          <Group>
+            <NumberInput
+              autoComplete="false"
+              required
+              label="Load"
+              min={0}
+              step={45}
+              max={9999}
+              // value={form.values.name}
+              // onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+            />
+          </Group>
+
+          <SegmentedControl
+            fullWidth
+            // value={form.values.type}
+            // onChange={(value) => form.setFieldValue('type', value)}
+            data={[
+              { label: '1', value: 1 },
+              { label: '2', value: 2 },
+              { label: '3', value: 3 },
+              { label: '4', value: 4 },
+              { label: '5', value: 5 },
+              { label: '6', value: 6 },
+              { label: '7', value: 7 },
+              { label: '8', value: 8 },
+              { label: '9', value: 9 },
+              { label: '10', value: 10 },
+            ]}
+            my={6}
+          />
+          <Slider
+            labelAlwaysOn
+            marks={[
+              { value: 25, label: '25%' },
+              { value: 50, label: '50%' },
+              { value: 75, label: '75%' },
+            ]}
+            my={6}
+          />
+        </Paper>
+        <Button type="submit">{loading ? <Loader color="green" variant="dots" /> : 'Save'}</Button>
       </Group>
-      <Group>
-        <Switch label="RPE" />
-        <Switch label="%" />
-      </Group>
-      <SegmentedControl
-        fullWidth
-        // value={form.values.type}
-        // onChange={(value) => form.setFieldValue('type', value)}
-        data={[
-          { label: '1', value: 1 },
-          { label: '2', value: 2 },
-          { label: '3', value: 3 },
-          { label: '4', value: 4 },
-          { label: '5', value: 5 },
-          { label: '6', value: 6 },
-          { label: '7', value: 7 },
-          { label: '8', value: 8 },
-          { label: '9', value: 9 },
-          { label: '10', value: 10 },
-        ]}
-      />
-      <Slider
-        labelAlwaysOn
-        marks={[
-          { value: 25, label: '25%' },
-          { value: 50, label: '50%' },
-          { value: 75, label: '75%' },
-        ]}
-      />
-      <Button type="submit">{loading ? <Loader color="green" variant="dots" /> : 'Save'}</Button>
     </form>
   );
 }
