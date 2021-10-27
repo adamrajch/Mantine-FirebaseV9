@@ -9,7 +9,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
-import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
 import { db } from '../../../firebase';
@@ -26,9 +26,9 @@ export default function CreateProgramForm(): ReactElement {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const multiSelectData = [
-    { value: 'bb', label: 'bodybuilding' },
-    { value: 'oly', label: 'olympic weightlifting' },
-    { value: 'pl', label: 'powerlifting' },
+    { value: 'bodybuilding', label: 'bodybuilding' },
+    { value: 'olympic weightlifting', label: 'olympic weightlifting' },
+    { value: 'powerlifting', label: 'powerlifting' },
     { value: 'mobility', label: 'mobility' },
     { value: 'sport', label: 'sport' },
   ];
@@ -59,8 +59,12 @@ export default function CreateProgramForm(): ReactElement {
       values,
     });
     //create fb doc of program
-    values.createdDate = Timestamp.now();
+    const d = new Date();
+    const time = d.getTime();
+    // values.createdDate = time;
     values.updatedDate = null;
+    values.weeks = null;
+
     const docRef = await addDoc(collection(db, 'programs'), values);
 
     console.log(docRef.id);

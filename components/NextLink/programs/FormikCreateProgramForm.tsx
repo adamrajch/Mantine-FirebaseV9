@@ -1,4 +1,4 @@
-import { addDoc, collection, Timestamp } from '@firebase/firestore';
+import { addDoc, collection } from '@firebase/firestore';
 import {
   Button,
   Checkbox,
@@ -6,6 +6,7 @@ import {
   Loader,
   MultiSelect,
   SegmentedControl,
+  Switch,
   Textarea,
   TextInput,
 } from '@mantine/core';
@@ -21,6 +22,8 @@ interface formValues {
   category: string[];
   experience: string[];
   periodization: string[];
+  rpe: boolean;
+  percent: boolean;
 }
 
 const ProgramSchema = Yup.object().shape({
@@ -45,15 +48,17 @@ export default function FormikCreateProgramForm(): ReactElement {
     category: ['bb', 'pl'],
     experience: ['beginner', 'intermediate', 'advanced'],
     periodization: [],
+    rpe: true,
+    percent: false,
   };
 
   const multiSelectData = [
-    { value: 'bb', label: 'bodybuilding', group: 'Lifting' },
-    { value: 'oly', label: 'olympic weightlifting', group: 'Lifting' },
-    { value: 'pl', label: 'powerlifting', group: 'Lifting' },
-    { value: 'sm', label: 'strongman', group: 'Lifting' },
-    { value: 'cal', label: 'calesthenics', group: 'Lifting' },
-    { value: 'cf', label: 'crossfit', group: 'Lifting' },
+    { value: 'bodybuilding', label: 'bodybuilding', group: 'Lifting' },
+    { value: 'olympic weightlifting', label: 'olympic weightlifting', group: 'Lifting' },
+    { value: 'powerlifting', label: 'powerlifting', group: 'Lifting' },
+    { value: 'strongman', label: 'strongman', group: 'Lifting' },
+    { value: 'calisthenics', label: 'calesthenics', group: 'Lifting' },
+    { value: 'crossfit', label: 'crossfit', group: 'Lifting' },
     { value: 'mobility', label: 'mobility', group: 'Mobility' },
     { value: 'prehab', label: 'prehab', group: 'Mobility' },
     { value: 'rehab', label: 'rehab', group: 'Mobility' },
@@ -69,14 +74,15 @@ export default function FormikCreateProgramForm(): ReactElement {
     { value: 'linear', label: 'linear' },
     { value: 'block', label: 'block' },
     { value: 'wave', label: 'wave' },
-    { value: 'dup', label: 'D.U.P' },
+    { value: 'D.U.P', label: 'D.U.P' },
     { value: 'reverse', label: 'reverse' },
   ];
+
   async function handleSubmit(values: any) {
     setLoading(true);
     console.log(values);
-
-    values.createdDate = Timestamp.now();
+    const d = new Date();
+    values.createdDate = d.getTime();
     values.updatedDate = null;
     const docRef = await addDoc(collection(db, 'programs'), values);
 
@@ -143,6 +149,7 @@ export default function FormikCreateProgramForm(): ReactElement {
             <MultiSelect
               required
               data={multiSelectData}
+              placeholder="Select discipline"
               label="Focus"
               value={values.category}
               searchable
@@ -159,12 +166,21 @@ export default function FormikCreateProgramForm(): ReactElement {
               onChange={(value) => setFieldValue('experience', value)}
               error={errors.experience}
             />
-            <Checkbox
+            <Group position="left" mx={0}>
+              <Switch label="RPE" name="rpe" checked={values.rpe} onChange={handleChange} />
+              <Switch
+                label="Percent"
+                name="percent"
+                checked={values.percent}
+                onChange={handleChange}
+              />
+            </Group>
+            {/* <Checkbox
               label="Public"
               name="public"
               checked={values.public}
               onChange={handleChange}
-            />
+            /> */}
             <Button type="submit">
               {loading ? <Loader color="white" variant="dots" /> : 'Create'}
             </Button>
