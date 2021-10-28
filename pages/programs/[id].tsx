@@ -1,10 +1,11 @@
-import { Button, Group, Paper, Text, Title } from '@mantine/core';
+import { Button, Group, Input, Paper, Text, Title } from '@mantine/core';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { FieldArray, Form, Formik } from 'formik';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
 import ColorModeSwitch from '../../components/NextLink/ColorModeSwitch';
+import CreateActivityModal from '../../components/NextLink/programs/CreateActivityModal';
 import { db } from '../../firebase';
 export default function Program({ programProps: p }: any): ReactElement {
   console.log(p);
@@ -51,6 +52,27 @@ export default function Program({ programProps: p }: any): ReactElement {
     title: 'New Week',
     days: [],
   };
+
+  const emptyWorkout: any = {
+    name: '',
+    type: 'single',
+    lifts: [
+      {
+        name: '',
+        note: '',
+        records: [
+          {
+            load: '135',
+            sets: '5',
+            reps: '5',
+            unit: 'lbs',
+            rpe: 8,
+            percent: null,
+          },
+        ],
+      },
+    ],
+  };
   const initialValues: any = {
     weeks: [
       {
@@ -89,7 +111,6 @@ export default function Program({ programProps: p }: any): ReactElement {
                   },
                 ],
               },
-              ,
               {
                 name: 'back squat + front squat',
                 note: '',
@@ -194,7 +215,7 @@ export default function Program({ programProps: p }: any): ReactElement {
         enableReinitialize={false}
         validateOnChange={false}
         validateOnBlur={false}
-        render={({ values }) => (
+        render={({ values, handleChange, setFieldValue, handleReset }) => (
           <Form>
             <FieldArray
               name="weeks"
@@ -207,26 +228,127 @@ export default function Program({ programProps: p }: any): ReactElement {
                     </button>
                   </Group>
                   <Group direction="column" spacing={4} grow>
-                    {values.weeks.map((week: any, index: number) => (
+                    {values.weeks.map((week: any, weekIndex: number) => (
                       <Paper
-                        key={index}
+                        key={weekIndex}
                         style={{
                           backgroundColor: 'gray',
                           width: '50vw',
-                          height: '50vh',
+
                           padding: '8px',
                         }}
-                        color="blue"
                       >
-                        <Group position="apart">
-                          <Title style={{ color: 'blue' }}>{week.title}</Title>
-                          <button type="button" onClick={() => arrayHelpers.remove(index)}>
-                            -
-                          </button>
-                        </Group>
+                        <FieldArray
+                          name={`weeks[${weekIndex}].days`}
+                          render={(dayArrayHelpers) => (
+                            <>
+                              <Group position="apart">
+                                <Input
+                                  name={`weeks[${weekIndex}].title`}
+                                  value={values.weeks[weekIndex].title}
+                                  onChange={handleChange}
+                                />
+                                <Button
+                                  onClick={() =>
+                                    dayArrayHelpers.push({
+                                      name: 'New Day',
+                                      summary: '',
+                                      workouts: [],
+                                    })
+                                  }
+                                >
+                                  Add Day
+                                </Button>
+                                <Button onClick={() => handleReset()}>Reset Template</Button>
+                                <Button
+                                  type="button"
+                                  onClick={() => arrayHelpers.remove(weekIndex)}
+                                >
+                                  -
+                                </Button>
+                              </Group>
+                              {values.weeks[weekIndex].days &&
+                                values.weeks[weekIndex].days.length > 0 &&
+                                values.weeks[weekIndex].days.map((d: any, dayIndex: number) => (
+                                  <FieldArray
+                                    name={`weeks[${weekIndex}].days[${dayIndex}].workouts`}
+                                    render={(workoutArrayHelpers) => (
+                                      <>
+                                        <Group
+                                          direction="column"
+                                          style={{ backgroundColor: 'gainsboro' }}
+                                          my={24}
+                                          grow
+                                        >
+                                          <Group position="apart">
+                                            <Input
+                                              name={`weeks.${weekIndex}.days.${dayIndex}.name`}
+                                              value={values.weeks[weekIndex].days[dayIndex].name}
+                                              onChange={handleChange}
+                                            />
+                                            <Button
+                                              onClick={() => workoutArrayHelpers.push(emptyWorkout)}
+                                            >
+                                              Add Lift
+                                            </Button>
 
-                        {/* <Field name={`friends[${index}].name`} />
-                      <Field name={`friends.${index}.age`} /> */}
+                                            <Button
+                                              onClick={() => workoutArrayHelpers.push(emptyWorkout)}
+                                            >
+                                              Add Cluster
+                                            </Button>
+                                            <Button
+                                              onClick={() => workoutArrayHelpers.push(emptyWorkout)}
+                                            >
+                                              Add Circuit
+                                            </Button>
+
+                                            <CreateActivityModal />
+                                            <Button
+                                              onClick={() => dayArrayHelpers.remove(dayIndex)}
+                                            >
+                                              Delete Day
+                                            </Button>
+                                          </Group>
+                                          {values.weeks[weekIndex].days[dayIndex].workouts &&
+                                            values.weeks[weekIndex].days[dayIndex].workouts.length >
+                                              0 &&
+                                            values.weeks[weekIndex].days[dayIndex].workouts.map(
+                                              (w: any, workoutIndex: number) => (
+                                                <>
+                                                  <Group position="apart">
+                                                    <Input
+                                                      name={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name`}
+                                                      value={
+                                                        values.weeks[weekIndex].days[dayIndex]
+                                                          .workouts[workoutIndex].name
+                                                      }
+                                                      onChange={handleChange}
+                                                    />
+
+                                                    <Button
+                                                      onClick={() =>
+                                                        workoutArrayHelpers.remove(workoutIndex)
+                                                      }
+                                                    >
+                                                      Delete Workout
+                                                    </Button>
+                                                    {type == "single" && }
+                                                    {type == "cluster" && }
+                                                    {type == "circuit" && }
+                                                  </Group>
+
+                                                </>
+                                              )
+                                            )}
+                                        </Group>
+                                      </>
+                                    )}
+                                  />
+                                ))}
+                            </>
+                          )}
+                        />
                       </Paper>
                     ))}
                   </Group>

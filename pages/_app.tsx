@@ -25,6 +25,10 @@ export default function App(props: AppProps) {
         <MantineProvider
           theme={{
             colorScheme,
+            primaryColor: 'cyan',
+            fontFamily: 'Verdana, sans-serif',
+            fontFamilyMonospace: 'Monaco, Courier, monospace',
+            headings: { fontFamily: 'Greycliff CF, sans-serif' },
           }}
         >
           <NormalizeCSS />
