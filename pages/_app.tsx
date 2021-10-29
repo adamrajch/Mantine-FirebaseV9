@@ -18,17 +18,32 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>Mantine next example</title>
+        <title>Periodize</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider
+          emotionOptions={{ key: 'mantine', prepend: false }}
           theme={{
             colorScheme,
             primaryColor: 'cyan',
             fontFamily: 'Verdana, sans-serif',
             fontFamilyMonospace: 'Monaco, Courier, monospace',
             headings: { fontFamily: 'Greycliff CF, sans-serif' },
+          }}
+          styles={{
+            Box: {
+              root: {
+                width: '100%',
+              },
+            },
+            Group: {
+              root: {
+                // width: '100%',
+                padding: 0,
+                margin: 0,
+              },
+            },
           }}
         >
           <NormalizeCSS />

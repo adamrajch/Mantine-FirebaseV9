@@ -13,7 +13,7 @@ import {
 import { Form, Formik } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import * as Yup from 'yup';
-import { db } from '../../../firebase';
+import { db } from '../../firebase';
 interface formValues {
   title: string;
   public: boolean;

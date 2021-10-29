@@ -2,7 +2,7 @@ import { Button, Group, Modal } from '@mantine/core';
 import React, { useState } from 'react';
 import CreateActivityForm from './CreateActivityForm';
 
-export default function CreateActivityModal() {
+export default function CreateActivityModal(props: any) {
   const [opened, setOpened] = useState(false);
 
   return (
@@ -14,7 +14,11 @@ export default function CreateActivityModal() {
         size="xl"
         style={{ padding: 12 }}
       >
-        <CreateActivityForm />
+        <CreateActivityForm
+          workoutArrayHelpers={props.workoutArrayHelpers}
+          formValues={props.values}
+          handleChange={props.handleChange}
+        />
       </Modal>
 
       <Group position="center">
