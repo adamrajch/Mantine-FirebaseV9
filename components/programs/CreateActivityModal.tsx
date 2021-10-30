@@ -18,6 +18,7 @@ export default function CreateActivityModal(props: any) {
           workoutArrayHelpers={props.workoutArrayHelpers}
           formValues={props.values}
           handleChange={props.handleChange}
+          handleOpen={setOpened}
         />
       </Modal>
 

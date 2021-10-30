@@ -5,17 +5,22 @@ import {
   Collapse,
   Group,
   Loader,
+  Menu,
   NumberInput,
   SegmentedControl,
   Switch,
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
 import { FieldArray, Form, Formik } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { BiReset } from 'react-icons/bi';
 import { FaRegStickyNote } from 'react-icons/fa';
+import { HiOutlineSwitchVertical } from 'react-icons/hi';
+import * as Yup from 'yup';
+import { FlexContainer } from '../FlexContainer';
 type Record = {
   sets: number;
   reps: number;
@@ -41,10 +46,46 @@ interface formValues {
   circuitRest?: number;
 }
 
+const ActivitySchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, 'Must be between 2-50 characters')
+    .max(20, 'Must be between 2-50 characters')
+    .required('Required'),
+  note: Yup.string()
+    .min(2, 'Must be between 3-50 characters')
+    .max(20, 'Must be between 3-50 characters'),
+  type: Yup.string(),
+  lifts: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string()
+        .min(2, 'Must be between 3-50 characters')
+        .max(20, 'Must be between 3-50 characters')
+        .required('Required'),
+      records: Yup.array().of(
+        Yup.object().shape({
+          sets: Yup.number()
+            .min(1, 'Must be between 1-999')
+            .max(999, 'Must be between 1-999')
+            .required('Required'),
+          reps: Yup.number()
+            .min(1, 'Must be between 1-999')
+            .max(999, 'Must be between 1-999')
+            .required('Required'),
+          rpe: Yup.number().min(1, 'Must be between 1-10').max(10, 'Must be between 1-10'),
+          load: Yup.number().min(0, 'Must be between 9999').max(9990, 'Must be between 0-9999'),
+          percent: Yup.number().min(0, 'Must be between 0-100').max(999, 'Must be between 0-100'),
+          hasLoad: Yup.boolean(),
+          hasRPE: Yup.boolean(),
+          hasPercent: Yup.boolean(),
+        })
+      ),
+    })
+  ),
+});
 export default function CreateActivityForm({
-  workoutArrayHelpers,
+  workoutArrayHelpers: tHelpers,
+  handleOpen,
   formValues,
-  handleChange,
 }: any): ReactElement {
   const [loading, setLoading] = useState(false);
   const [opened, setOpen] = useState(false);
@@ -65,7 +106,7 @@ export default function CreateActivityForm({
     type: 'working',
     sets: 3,
     reps: 5,
-    rpe: 6,
+    rpe: 8,
     load: 135,
     percent: 75,
     hasLoad: false,
@@ -73,15 +114,32 @@ export default function CreateActivityForm({
     hasPercent: false,
   };
 
-  const emptyLift = [
+  const emptyLift = {
+    name: '',
+    records: [
+      {
+        type: 'working',
+        sets: 3,
+        reps: 5,
+        rpe: 8,
+        load: 135,
+        percent: 75,
+        hasLoad: false,
+        hasRPE: false,
+        hasPercent: false,
+      },
+    ],
+  };
+
+  const starterLift = [
     {
-      name: 'Lift',
+      name: '',
       records: [
         {
           type: 'working',
           sets: 3,
           reps: 5,
-          rpe: 6,
+          rpe: 8,
           load: 135,
           percent: 75,
           hasLoad: false,
@@ -91,16 +149,15 @@ export default function CreateActivityForm({
       ],
     },
   ];
-
   const emptyCluster = [
     {
-      name: 'Lift 1',
+      name: '',
       records: [
         {
           type: 'working',
           sets: 3,
           reps: 5,
-          rpe: 6,
+          rpe: 8,
           load: 135,
           percent: 75,
           hasLoad: false,
@@ -110,13 +167,13 @@ export default function CreateActivityForm({
       ],
     },
     {
-      name: 'Lift 2',
+      name: '',
       records: [
         {
           type: 'working',
           sets: 3,
           reps: 5,
-          rpe: 6,
+          rpe: 8,
           load: 135,
           percent: 75,
           hasLoad: false,
@@ -132,13 +189,13 @@ export default function CreateActivityForm({
     note: '',
     lifts: [
       {
-        name: 'Beg',
+        name: '',
         records: [
           {
             type: 'working',
             sets: 3,
             reps: 5,
-            rpe: 6,
+            rpe: 8,
             load: 135,
             percent: 75,
             hasLoad: false,
@@ -151,46 +208,47 @@ export default function CreateActivityForm({
     circuitInterval: undefined,
     circuitRest: undefined,
   };
-
+  const colorScheme = useColorScheme();
   async function handleSubmit(values: formValues) {
     setLoading(true);
-    console.log({
-      values,
-    });
-
+    console.log(values);
+    tHelpers.push(values);
+    handleOpen(false);
     setLoading(false);
   }
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={async (values) => alert(JSON.stringify(values, null, 2))}
+      onSubmit={async (values) => handleSubmit(values)}
       enableReinitialize={false}
       validateOnChange={false}
-      validateOnBlur={false}
+      validateOnBlur={true}
+      validationSchema={ActivitySchema}
       render={({ values, handleChange, setFieldValue, handleReset, errors }) => (
         <Form>
           <FieldArray
             name="lifts"
             render={(liftArrayHelpers) => (
-              <Group
-                direction="column"
-                grow
-                sx={(theme) => ({
+              <Box
+                styles={(theme) => ({
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
-                  alignContent: 'space-between',
+                  rowGap: 10,
                   width: '100%',
                 })}
               >
                 <SegmentedControl
                   fullWidth
+                  color="cyan"
                   value={values.type}
                   onChange={(value) => {
                     setFieldValue('type', value);
+                    setFieldValue('name', '');
                     if (value === 'single') {
-                      setFieldValue('lifts', emptyLift);
+                      setFieldValue('lifts', [emptyLift]);
+                      setFieldValue('note', '');
                     } else if (value === 'cluster') {
                       setFieldValue('lifts', emptyCluster);
                     } else {
@@ -202,55 +260,78 @@ export default function CreateActivityForm({
                     { label: 'cluster', value: 'cluster' },
                     { label: 'circuit', value: 'circuit' },
                   ]}
+                  styles={{
+                    root: {
+                      width: '100%',
+                    },
+                    controlActive: {
+                      backgroundColor: '#2782b0',
+                      borderRadius: 4,
+                    },
+                    active: {
+                      backgroundColor: '#2782b0',
+                    },
+                  }}
                   my={6}
                 />
                 {values.type !== 'single' && (
-                  <Group position="apart">
-                    <TextInput
-                      autoComplete="false"
-                      required
-                      label={values.type === 'single' ? 'Lift' : 'Cluster Name'}
-                      error={errors.name && 'Name must be between 3 and 25 characters'}
-                      value={values.name}
-                      name="name"
-                      onChange={handleChange}
-                    />
-                    <Group>
-                      <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                        <FaRegStickyNote />
-                      </ActionIcon>
-                      <Button
-                        onClick={() => liftArrayHelpers.push(emptyLift)}
-                        leftIcon={<AiOutlinePlus />}
-                        size="xs"
-                      >
-                        Lift
-                      </Button>
-                    </Group>
-                  </Group>
+                  <Box
+                    sx={{
+                      marginTop: 12,
+                    }}
+                  >
+                    <FlexContainer justify="space-between">
+                      <TextInput
+                        autoComplete="false"
+                        required
+                        label={values.type === 'single' ? '' : 'Add Cluster'}
+                        placeholder={values.type === 'single' ? 'Add lift' : 'Cluster Name'}
+                        error={errors.name && 'Name must be between 3 and 25 characters'}
+                        value={values.name}
+                        name="name"
+                        onChange={handleChange}
+                      />
+                      <Group>
+                        <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                          <FaRegStickyNote />
+                        </ActionIcon>
+                        <Button
+                          onClick={() => liftArrayHelpers.push(emptyLift)}
+                          leftIcon={<AiOutlinePlus />}
+                          size="xs"
+                        >
+                          Lift
+                        </Button>
+                      </Group>
+                    </FlexContainer>
+                    <Collapse in={opened} my={8}>
+                      <Textarea
+                        placeholder="Add directions/tips here!"
+                        name="note"
+                        value={values.note}
+                        onChange={handleChange}
+                      />
+                    </Collapse>
+                  </Box>
                 )}
-                <Collapse in={opened}>
-                  <Textarea
-                    placeholder="Add directions/tips here!"
-                    name="note"
-                    value={values.note}
-                    onChange={handleChange}
-                  />
-                </Collapse>
 
                 {values.lifts &&
                   values.lifts.length > 0 &&
                   values.lifts.map((lift, liftIndex) => (
                     <Box
+                      key={liftIndex}
                       sx={(theme) => ({
                         width: '100%',
                         padding: 12,
-                        marginTop: 12,
-                        marginBottom: 12,
+                        marginTop: 2,
+                        marginBottom: 2,
                         borderRadius: 8,
                         borderColor: theme.colors.gray[9],
                         '&:hover': {
-                          backgroundColor: theme.colors.gray[9],
+                          backgroundColor:
+                            theme.colorScheme === 'dark'
+                              ? theme.colors.gray[9]
+                              : theme.colors.gray[5],
                         },
                       })}
                     >
@@ -258,18 +339,13 @@ export default function CreateActivityForm({
                         {({ move, swap, push, insert, unshift, pop, form, remove }) => {
                           return (
                             <Form>
-                              <Group
-                                noWrap
-                                position="apart"
-                                grow
-                                sx={(theme) => ({
-                                  width: '100%',
-                                })}
-                              >
+                              <FlexContainer justify="space-between" align="center">
                                 <TextInput
                                   autoComplete="false"
                                   required
-                                  label="Lift"
+                                  placeholder={
+                                    values.type === 'single' ? 'Add lift' : `Lift ${liftIndex + 1}`
+                                  }
                                   error={errors.name && 'Title must be between 3 and 20 characters'}
                                   value={values.lifts[liftIndex].name}
                                   name={`lifts[${liftIndex}].name`}
@@ -279,8 +355,49 @@ export default function CreateActivityForm({
                                       setFieldValue('name', e.currentTarget.value);
                                     }
                                   }}
+                                  style={{
+                                    marginTop: 'auto',
+                                    marginBottom: 'auto',
+                                  }}
                                 />
                                 <Group position="right">
+                                  {values.type !== 'single' && (
+                                    <Menu
+                                      control={
+                                        <ActionIcon size="lg" color="cyan">
+                                          <HiOutlineSwitchVertical />
+                                        </ActionIcon>
+                                      }
+                                      style={{ zIndex: 1300 }}
+                                      styles={{
+                                        body: {
+                                          color: 'red',
+                                          zIndex: 1200,
+                                        },
+                                        itemInner: {
+                                          zIndex: 1200,
+                                        },
+                                        item: { zIndex: 1300 },
+                                        itemBody: { zIndex: 1300 },
+                                      }}
+                                      sx={(theme) => ({
+                                        zIndex: 11100,
+                                      })}
+                                    >
+                                      {values.lifts.map((lift, i) => (
+                                        <Menu.Item
+                                          key={i}
+                                          onClick={() => swap(liftIndex, i)}
+                                          sx={(theme) => ({
+                                            zIndex: 11000,
+                                          })}
+                                        >
+                                          {lift.name}
+                                        </Menu.Item>
+                                      ))}
+                                    </Menu>
+                                  )}
+
                                   <ActionIcon
                                     onClick={() => push(emptyRecord)}
                                     size="lg"
@@ -288,39 +405,42 @@ export default function CreateActivityForm({
                                   >
                                     <AiOutlinePlus style={{ height: 18, width: 18 }} />
                                   </ActionIcon>
-                                  <ActionIcon onClick={() => handleReset()} size="lg" color="cyan">
+                                  <ActionIcon
+                                    onClick={() => setFieldValue(`lifts[${liftIndex}]`, emptyLift)}
+                                    size="lg"
+                                    color="cyan"
+                                  >
                                     <BiReset style={{ height: 18, width: 18 }} />
                                   </ActionIcon>
+                                  {values.type !== 'single' && (
+                                    <ActionIcon
+                                      onClick={() => liftArrayHelpers.remove(liftIndex)}
+                                      size="lg"
+                                      color="cyan"
+                                    >
+                                      <AiOutlineClose style={{ height: 18, width: 18 }} />
+                                    </ActionIcon>
+                                  )}
                                 </Group>
-                              </Group>
+                              </FlexContainer>
                               {/* Record Array  */}
                               {values.lifts[liftIndex].records &&
                                 values.lifts[liftIndex].records.length > 0 &&
                                 values.lifts[liftIndex].records.map(
                                   (record: Record, recordIndex: number) => (
                                     <Group
+                                      key={recordIndex}
                                       direction="column"
-                                      spacing={1}
+                                      spacing={0}
                                       sx={(theme) => ({
-                                        paddingLeft: 12,
                                         marginBottom: 24,
                                       })}
                                     >
-                                      <Group
-                                        position="apart"
-                                        noWrap
-                                        grow
-                                        spacing={0}
-                                        sx={(theme) => ({
-                                          width: '100%',
-                                          padding: 'none',
-                                          margin: 'none',
-                                        })}
-                                      >
+                                      <FlexContainer justify="space-between" align="center">
                                         <SegmentedControl
                                           fullWidth
-                                          color="cyan"
                                           size="xs"
+                                          color="cyan"
                                           value={values.lifts[liftIndex].records[recordIndex].type}
                                           onChange={(value) => {
                                             setFieldValue(
@@ -334,20 +454,48 @@ export default function CreateActivityForm({
                                             { label: 'backdown', value: 'backdown' },
                                           ]}
                                           my={6}
+                                          styles={{
+                                            root: {
+                                              width: '100%',
+                                            },
+                                            controlActive: {
+                                              backgroundColor: '#2782b0',
+                                              borderRadius: 4,
+                                            },
+                                            active: {
+                                              backgroundColor: '#2782b0',
+                                            },
+                                          }}
                                         />
-                                        <Group position="right">
+                                        <FlexContainer justify="flex-end" align="center">
                                           <Switch
                                             label="RPE"
                                             checked={
                                               values.lifts[liftIndex].records[recordIndex].hasRPE
                                             }
                                             name={`lifts[${liftIndex}].records[${recordIndex}].hasRPE`}
-                                            onChange={(event) =>
+                                            onChange={(event) => {
                                               setFieldValue(
                                                 `lifts[${liftIndex}].records[${recordIndex}].hasRPE`,
                                                 event.currentTarget.checked
-                                              )
-                                            }
+                                              );
+                                              if (event.currentTarget.checked == true) {
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasLoad`,
+                                                  false
+                                                );
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasPercent`,
+                                                  false
+                                                );
+                                              }
+                                            }}
+                                            styles={{
+                                              label: {
+                                                marginRight: 8,
+                                                padding: 2,
+                                              },
+                                            }}
                                           />
                                           <Switch
                                             label="%"
@@ -356,12 +504,28 @@ export default function CreateActivityForm({
                                                 .hasPercent
                                             }
                                             name={`lifts[${liftIndex}].records[${recordIndex}].hasPercent`}
-                                            onChange={(event) =>
+                                            onChange={(event) => {
                                               setFieldValue(
                                                 `lifts[${liftIndex}].records[${recordIndex}].hasPercent`,
                                                 event.currentTarget.checked
-                                              )
-                                            }
+                                              );
+                                              if (event.currentTarget.checked == true) {
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasLoad`,
+                                                  false
+                                                );
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasRPE`,
+                                                  false
+                                                );
+                                              }
+                                            }}
+                                            styles={{
+                                              label: {
+                                                marginRight: 8,
+                                                paddingLeft: 2,
+                                              },
+                                            }}
                                           />
                                           <Switch
                                             label="Load"
@@ -369,80 +533,95 @@ export default function CreateActivityForm({
                                               values.lifts[liftIndex].records[recordIndex].hasLoad
                                             }
                                             name={`lifts[${liftIndex}].records[${recordIndex}].hasLoad`}
-                                            onChange={(event) =>
+                                            onChange={(event) => {
                                               setFieldValue(
                                                 `lifts[${liftIndex}].records[${recordIndex}].hasLoad`,
                                                 event.currentTarget.checked
-                                              )
-                                            }
+                                              );
+                                              if (event.currentTarget.checked == true) {
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasPercent`,
+                                                  false
+                                                );
+                                                setFieldValue(
+                                                  `lifts[${liftIndex}].records[${recordIndex}].hasRPE`,
+                                                  false
+                                                );
+                                              }
+                                            }}
+                                            styles={{
+                                              label: {
+                                                marginRight: 8,
+                                                padding: 2,
+                                              },
+                                            }}
                                           />
                                           <ActionIcon
                                             onClick={() => remove(recordIndex)}
                                             color="red"
+                                            styles={{
+                                              root: {
+                                                marginTop: 'auto',
+                                                marginBottom: 'auto',
+                                              },
+                                            }}
                                           >
                                             <AiOutlineDelete />
                                           </ActionIcon>
-                                        </Group>
-                                      </Group>
-                                      <Group
-                                        position="apart"
-                                        noWrap
-                                        grow
-                                        spacing={0}
-                                        sx={(theme) => ({
-                                          width: '100%',
-                                          padding: 'none',
-                                          margin: 'none',
-                                        })}
-                                      >
-                                        <Group spacing={0} position="apart" grow>
-                                          <Group spacing={5} grow>
-                                            <NumberInput
-                                              autoComplete="false"
-                                              required
-                                              min={1}
-                                              step={1}
-                                              max={999}
-                                              value={
-                                                values.lifts[liftIndex].records[recordIndex].sets
-                                              }
-                                              name={`lifts[${liftIndex}].records[${recordIndex}].sets`}
-                                              onChange={(value) =>
-                                                setFieldValue(
-                                                  `lifts[${liftIndex}].records[${recordIndex}].sets`,
-                                                  value
-                                                )
-                                              }
-                                              styles={{
-                                                icon: {
-                                                  padding: 1,
-                                                  marginRight: 2,
-                                                  tabSize: 10,
-                                                },
-                                              }}
-                                              icon={<span>s</span>}
-                                            />
-                                            <NumberInput
-                                              autoComplete="false"
-                                              required
-                                              min={1}
-                                              step={1}
-                                              max={9999}
-                                              value={
-                                                values.lifts[liftIndex].records[recordIndex].reps
-                                              }
-                                              name={`lifts[${liftIndex}].records[${recordIndex}].reps`}
-                                              onChange={(value) =>
-                                                setFieldValue(
-                                                  `lifts[${liftIndex}].records[${recordIndex}].reps`,
-                                                  value
-                                                )
-                                              }
-                                              icon={<span>r</span>}
-                                            />
-                                          </Group>
-                                        </Group>
-                                        <Group position="right" spacing={5} grow>
+                                        </FlexContainer>
+                                      </FlexContainer>
+
+                                      <FlexContainer>
+                                        <FlexContainer justify="flex-start">
+                                          <NumberInput
+                                            autoComplete="false"
+                                            required
+                                            min={1}
+                                            step={1}
+                                            max={999}
+                                            value={
+                                              values.lifts[liftIndex].records[recordIndex].sets
+                                            }
+                                            name={`lifts[${liftIndex}].records[${recordIndex}].sets`}
+                                            onChange={(value) =>
+                                              setFieldValue(
+                                                `lifts[${liftIndex}].records[${recordIndex}].sets`,
+                                                value
+                                              )
+                                            }
+                                            styles={{
+                                              icon: {
+                                                fontSize: 12,
+                                              },
+                                            }}
+                                            icon={<span>s</span>}
+                                          />
+                                          <NumberInput
+                                            autoComplete="false"
+                                            required
+                                            min={1}
+                                            step={1}
+                                            max={9999}
+                                            value={
+                                              values.lifts[liftIndex].records[recordIndex].reps
+                                            }
+                                            name={`lifts[${liftIndex}].records[${recordIndex}].reps`}
+                                            onChange={(value) =>
+                                              setFieldValue(
+                                                `lifts[${liftIndex}].records[${recordIndex}].reps`,
+                                                value
+                                              )
+                                            }
+                                            styles={{
+                                              icon: {
+                                                fontSize: 12,
+                                              },
+                                            }}
+                                            icon={<span>r</span>}
+                                          />
+                                        </FlexContainer>
+
+                                        <FlexContainer justify="flex-end" align="center">
                                           {values.lifts[liftIndex].records[recordIndex].hasRPE && (
                                             <NumberInput
                                               autoComplete="false"
@@ -459,6 +638,11 @@ export default function CreateActivityForm({
                                                   value
                                                 )
                                               }
+                                              styles={{
+                                                icon: {
+                                                  fontSize: 12,
+                                                },
+                                              }}
                                               icon={<span>rpe</span>}
                                             />
                                           )}
@@ -479,6 +663,11 @@ export default function CreateActivityForm({
                                                   value
                                                 )
                                               }
+                                              styles={{
+                                                icon: {
+                                                  fontSize: 12,
+                                                },
+                                              }}
                                               icon={<span>%</span>}
                                             />
                                           )}
@@ -498,11 +687,16 @@ export default function CreateActivityForm({
                                                   value
                                                 )
                                               }
+                                              styles={{
+                                                icon: {
+                                                  fontSize: 12,
+                                                },
+                                              }}
                                               icon={<span>lbs</span>}
                                             />
                                           )}
-                                        </Group>
-                                      </Group>
+                                        </FlexContainer>
+                                      </FlexContainer>
                                     </Group>
                                   )
                                 )}
@@ -512,10 +706,10 @@ export default function CreateActivityForm({
                       </FieldArray>
                     </Box>
                   ))}
-              </Group>
+              </Box>
             )}
           />
-          <pre>{JSON.stringify(values, null, 2)}</pre>
+
           <Group position="right">
             <Button type="submit">
               {loading ? <Loader color="green" variant="dots" /> : 'Add'}

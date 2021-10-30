@@ -27,7 +27,6 @@ export default function Program({ programProps: p }: any): ReactElement {
     lifts: [
       {
         name: '',
-        note: '',
         records: [
           {
             load: '135',
@@ -312,12 +311,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                       name={`weeks[${weekIndex}].days[${dayIndex}].workouts`}
                                       render={(workoutArrayHelpers) => (
                                         <>
-                                          <Group
-                                            direction="column"
-                                            // style={{ backgroundColor: 'gainsboro' }}
-                                            my={24}
-                                            grow
-                                          >
+                                          <Group direction="column" my={24} grow>
                                             <Group position="apart" spacing={2}>
                                               <Input
                                                 name={`weeks.${weekIndex}.days.${dayIndex}.name`}
