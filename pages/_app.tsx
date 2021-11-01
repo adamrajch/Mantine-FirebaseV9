@@ -25,7 +25,7 @@ export default function App(props: AppProps) {
         <MantineProvider
           emotionOptions={{ key: 'mantine', prepend: false }}
           theme={{
-            colorScheme,
+            colorScheme: 'dark',
             primaryColor: 'cyan',
             fontFamily: 'Verdana, sans-serif',
             fontFamilyMonospace: 'Monaco, Courier, monospace',

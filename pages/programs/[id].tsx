@@ -1,13 +1,15 @@
-import { ActionIcon, Button, Group, Input, Paper, Text, Title } from '@mantine/core';
+import { ActionIcon, Button, Group, Input, Menu, Paper, Text, Title } from '@mantine/core';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { FieldArray, Form, Formik } from 'formik';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
-import { AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { BiDuplicate } from 'react-icons/bi';
 import Layout from '../../components/dashboard/AppShell';
 import CreateActivityModal from '../../components/programs/CreateActivityModal';
 import { db } from '../../firebase';
+import { Block, Day, Week, Workout } from '../../types/types';
 export default function Program({ programProps: p }: any): ReactElement {
   console.log(p);
 
@@ -16,188 +18,122 @@ export default function Program({ programProps: p }: any): ReactElement {
     console.log(values);
     workoutArrayHelpers.push(workout);
   }
-  const emptyWeek: any = {
-    title: 'New Week',
+
+  const emptyBlock: Block = {
+    name: 'New Block',
+    summary: undefined,
+    weeks: [],
+  };
+  const emptyWeek: Week = {
+    name: 'New Week',
+    summary: undefined,
     days: [],
   };
 
-  const emptyWorkout: any = {
+  const emptyDay: Day = {
+    name: '',
+    summary: '',
+    workouts: [],
+  };
+  const emptyWorkout: Workout = {
     name: '',
     type: 'single',
+    note: undefined,
     lifts: [
       {
         name: '',
         records: [
           {
-            load: '135',
-            sets: '5',
-            reps: '5',
+            load: 135,
+            sets: 5,
+            reps: 5,
             unit: 'lbs',
             rpe: 8,
-            percent: null,
+            percent: undefined,
           },
         ],
       },
     ],
   };
 
-  const emptyCluster: any = {
+  const emptyCluster: Workout = {
     name: '',
     type: 'cluster',
     lifts: [
       {
         name: '',
-        note: '',
         records: [
           {
-            load: '135',
-            sets: '5',
-            reps: '5',
+            load: 135,
+            sets: 5,
+            reps: 5,
             unit: 'lbs',
             rpe: 8,
-            percent: null,
+            percent: undefined,
           },
         ],
       },
       {
         name: '',
-        note: '',
         records: [
           {
-            load: '135',
-            sets: '5',
-            reps: '5',
+            load: 135,
+            sets: 5,
+            reps: 5,
             unit: 'lbs',
             rpe: 8,
-            percent: null,
+            percent: undefined,
           },
         ],
       },
     ],
   };
 
-  const emptyCircuit: any = {
+  const emptyCircuit: Workout = {
     name: '',
     type: 'circuit',
+    note: '5 min rest',
     lifts: [
       {
         name: '',
-        note: '',
         records: [
           {
-            load: '135',
-            sets: '5',
-            reps: '5',
+            load: 125,
+            sets: 5,
+            reps: 5,
             unit: 'lbs',
             rpe: 8,
-            percent: null,
+            percent: undefined,
           },
         ],
       },
       {
         name: '',
-        note: '',
         records: [
           {
-            load: '135',
-            sets: '5',
-            reps: '5',
+            load: 125,
+            sets: 5,
+            reps: 5,
             unit: 'lbs',
             rpe: 8,
-            percent: null,
+            percent: undefined,
           },
         ],
       },
     ],
   };
   const initialValues: any = {
-    weeks: [
+    blocks: [
       {
-        title: 'Week 1',
-        days: [
+        name: 'Block Title',
+        weeks: [
           {
-            name: 'Day 1',
-            summary: '',
-            workouts: [
+            name: 'Week 1',
+            days: [
               {
-                name: 'bench press',
-                note: '',
-                type: 'single',
-                lifts: [
-                  {
-                    name: 'bench press',
-                    note: '',
-                    records: [
-                      {
-                        load: '135',
-                        sets: '5',
-                        reps: '5',
-                        unit: 'lbs',
-                        rpe: 8,
-                        percent: null,
-                      },
-                      {
-                        load: '225',
-                        sets: '3',
-                        reps: '5',
-                        unit: '',
-                        rpe: 5,
-                        percent: null,
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                name: 'back squat + front squat',
-                note: '',
-                type: 'cluster',
-                lifts: [
-                  {
-                    name: 'bench press',
-                    note: '',
-                    records: [
-                      {
-                        load: '135',
-                        sets: '5',
-                        reps: '5',
-                        unit: 'lbs',
-                        rpe: 8,
-                        percent: null,
-                      },
-                      {
-                        load: '225',
-                        sets: '3',
-                        reps: '5',
-                        unit: '',
-                        rpe: 5,
-                        percent: null,
-                      },
-                    ],
-                  },
-                  {
-                    name: 'front squat squat',
-                    note: '',
-                    records: [
-                      {
-                        load: '225',
-                        sets: '5',
-                        reps: '5',
-                        unit: 'lbs',
-                        rpe: 8,
-                        percent: null,
-                      },
-                      {
-                        load: '315',
-                        sets: '3',
-                        reps: '5',
-                        unit: '',
-                        rpe: 5,
-                        percent: null,
-                      },
-                    ],
-                  },
-                ],
+                name: 'Day 1',
+                summary: '',
+                workouts: [],
               },
             ],
           },
@@ -213,7 +149,6 @@ export default function Program({ programProps: p }: any): ReactElement {
             <Title order={1}>{p.title}</Title>
           </Link>
           <Text>Created {new Date(p.createdDate * 1000).toLocaleDateString()}</Text>
-
           <Text mx={0}>
             {`Level: `}
             {p.experience.map((e: string, i: number) => (
@@ -255,158 +190,251 @@ export default function Program({ programProps: p }: any): ReactElement {
           render={({ values, handleChange, setFieldValue, handleReset }) => (
             <Form>
               <FieldArray
-                name="weeks"
-                render={(arrayHelpers) => (
-                  <Group grow direction="column" position="center">
-                    <Group>
-                      <Title>{p.title}</Title>
-                      <button type="button" onClick={() => arrayHelpers.push(emptyWeek)}>
-                        +
-                      </button>
-                    </Group>
-                    <Group direction="column" spacing={4} grow>
-                      {values.weeks.map((week: any, weekIndex: number) => (
-                        <Paper
-                          key={weekIndex}
-                          style={{
-                            width: '50vw',
-                            border: '1px solid gray',
-                            padding: '16px',
-                          }}
-                        >
+                name="blocks"
+                render={(blockArrayHelpers) => (
+                  <>
+                    {values.blocks &&
+                      values.blocks.length > 0 &&
+                      values.blocks.map((b: any, blockIndex: number) => (
+                        <div key={blockIndex}>
                           <FieldArray
-                            name={`weeks[${weekIndex}].days`}
-                            render={(dayArrayHelpers) => (
-                              <>
+                            name={`blocks[${blockIndex}].weeks`}
+                            render={(arrayHelpers) => (
+                              <Group grow direction="column" position="center">
                                 <Group position="apart">
                                   <Input
-                                    name={`weeks[${weekIndex}].title`}
-                                    value={values.weeks[weekIndex].title}
+                                    name={`blocks[${blockIndex}].name`}
+                                    value={values.blocks[blockIndex].name}
                                     onChange={handleChange}
                                   />
+
+                                  <ActionIcon
+                                    onClick={() =>
+                                      blockArrayHelpers.insert(
+                                        values.blocks.length,
+                                        values.blocks[blockIndex]
+                                      )
+                                    }
+                                    color="cyan"
+                                  >
+                                    <BiDuplicate />
+                                  </ActionIcon>
+
                                   <Button
                                     onClick={() =>
-                                      dayArrayHelpers.push({
-                                        name: 'New Day',
-                                        summary: '',
-                                        workouts: [],
+                                      arrayHelpers.push({
+                                        name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
+                                        days: [],
                                       })
                                     }
                                   >
-                                    Add Day
-                                  </Button>
-                                  <Button onClick={() => handleReset()}>Reset Template</Button>
-                                  <Button
-                                    type="button"
-                                    onClick={() => arrayHelpers.remove(weekIndex)}
-                                  >
-                                    -
+                                    +Week
                                   </Button>
                                 </Group>
-                                {values.weeks[weekIndex].days &&
-                                  values.weeks[weekIndex].days.length > 0 &&
-                                  values.weeks[weekIndex].days.map((d: any, dayIndex: number) => (
-                                    <FieldArray
-                                      key={dayIndex}
-                                      name={`weeks[${weekIndex}].days[${dayIndex}].workouts`}
-                                      render={(workoutArrayHelpers) => (
-                                        <>
-                                          <Group direction="column" my={24} grow>
-                                            <Group position="apart" spacing={2}>
-                                              <Input
-                                                name={`weeks.${weekIndex}.days.${dayIndex}.name`}
-                                                value={values.weeks[weekIndex].days[dayIndex].name}
-                                                onChange={handleChange}
-                                              />
-                                              <Group>
-                                                <Button
-                                                  onClick={() =>
-                                                    workoutArrayHelpers.push(emptyWorkout)
-                                                  }
-                                                  leftIcon={<AiOutlinePlus />}
-                                                  size="xs"
-                                                >
-                                                  Lift
-                                                </Button>
-
-                                                <Button
-                                                  onClick={() =>
-                                                    workoutArrayHelpers.push(emptyCluster)
-                                                  }
-                                                  size="xs"
-                                                  leftIcon={<AiOutlinePlus />}
-                                                >
-                                                  Cluster
-                                                </Button>
-                                                <Button
-                                                  onClick={() =>
-                                                    workoutArrayHelpers.push(emptyWorkout)
-                                                  }
-                                                  size="xs"
-                                                  leftIcon={<AiOutlinePlus />}
-                                                >
-                                                  Circuit
-                                                </Button>
-
-                                                <CreateActivityModal
-                                                  workoutArrayHelpers={workoutArrayHelpers}
-                                                  formValues={values}
-                                                  handleChange={handleChange}
-                                                  addWorkout={addWorkout}
-                                                />
-                                                <ActionIcon
-                                                  size="lg"
-                                                  variant="filled"
-                                                  color="cyan"
-                                                  onClick={() => dayArrayHelpers.remove(dayIndex)}
-                                                >
-                                                  <AiOutlineDelete />
-                                                </ActionIcon>
-                                              </Group>
-                                            </Group>
-                                            {values.weeks[weekIndex].days[dayIndex].workouts &&
-                                              values.weeks[weekIndex].days[dayIndex].workouts
-                                                .length > 0 &&
-                                              values.weeks[weekIndex].days[dayIndex].workouts.map(
-                                                (w: any, workoutIndex: number) => (
-                                                  <>
-                                                    <Group position="apart" key={workoutIndex}>
-                                                      <Input
-                                                        name={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name`}
-                                                        value={
-                                                          values.weeks[weekIndex].days[dayIndex]
-                                                            .workouts[workoutIndex].name
-                                                        }
-                                                        onChange={handleChange}
-                                                      />
-                                                      <ActionIcon
-                                                        size="lg"
-                                                        variant="filled"
-                                                        color="cyan"
+                                <Group direction="column" spacing={4} grow>
+                                  {values.blocks[blockIndex].weeks &&
+                                    values.blocks[blockIndex].weeks.length > 0 &&
+                                    values.blocks[blockIndex].weeks.map(
+                                      (week: any, weekIndex: number) => (
+                                        <Paper
+                                          key={weekIndex}
+                                          style={{
+                                            width: '50vw',
+                                            border: '1px solid gray',
+                                            padding: '16px',
+                                          }}
+                                        >
+                                          <FieldArray
+                                            name={`blocks[${blockIndex}].weeks[${weekIndex}].days`}
+                                            render={(dayArrayHelpers) => (
+                                              <>
+                                                <Group position="apart">
+                                                  <Input
+                                                    name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
+                                                    value={
+                                                      values.blocks[blockIndex].weeks[weekIndex]
+                                                        .name
+                                                    }
+                                                    onChange={handleChange}
+                                                  />
+                                                  <Group position="right">
+                                                    <Button
+                                                      onClick={() => dayArrayHelpers.push(emptyDay)}
+                                                    >
+                                                      Add Day
+                                                    </Button>
+                                                    <ActionIcon
+                                                      onClick={() =>
+                                                        arrayHelpers.insert(
+                                                          values.blocks[blockIndex].weeks.length,
+                                                          values.blocks[blockIndex].weeks[weekIndex]
+                                                        )
+                                                      }
+                                                      color="cyan"
+                                                    >
+                                                      <BiDuplicate />
+                                                    </ActionIcon>
+                                                    <Menu
+                                                      control={
+                                                        <ActionIcon size="lg" color="cyan">
+                                                          <AiFillSetting />
+                                                        </ActionIcon>
+                                                      }
+                                                      zIndex={1200}
+                                                    >
+                                                      <Menu.Item
+                                                        icon={<AiOutlineDelete />}
                                                         onClick={() =>
-                                                          workoutArrayHelpers.remove(workoutIndex)
+                                                          arrayHelpers.remove(weekIndex)
                                                         }
                                                       >
-                                                        <AiOutlineClose />
-                                                      </ActionIcon>
-                                                    </Group>
-                                                  </>
-                                                )
-                                              )}
-                                          </Group>
-                                        </>
-                                      )}
-                                    />
-                                  ))}
-                              </>
+                                                        Delete
+                                                      </Menu.Item>
+                                                    </Menu>
+                                                  </Group>
+                                                </Group>
+                                                {values.blocks[blockIndex].weeks[weekIndex].days &&
+                                                  values.blocks[blockIndex].weeks[weekIndex].days
+                                                    .length > 0 &&
+                                                  values.blocks[blockIndex].weeks[
+                                                    weekIndex
+                                                  ].days.map((d: any, dayIndex: number) => (
+                                                    <FieldArray
+                                                      key={dayIndex}
+                                                      name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts`}
+                                                      render={(workoutArrayHelpers) => (
+                                                        <>
+                                                          <Group direction="column" my={24} grow>
+                                                            <Group position="apart" spacing={2}>
+                                                              <Input
+                                                                name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.name`}
+                                                                value={
+                                                                  values.blocks[blockIndex].weeks[
+                                                                    weekIndex
+                                                                  ].days[dayIndex].name
+                                                                }
+                                                                onChange={handleChange}
+                                                              />
+                                                              <Group>
+                                                                <Button
+                                                                  onClick={() =>
+                                                                    workoutArrayHelpers.push(
+                                                                      emptyWorkout
+                                                                    )
+                                                                  }
+                                                                  leftIcon={<AiOutlinePlus />}
+                                                                  size="xs"
+                                                                >
+                                                                  Lift
+                                                                </Button>
+
+                                                                <Button
+                                                                  onClick={() =>
+                                                                    workoutArrayHelpers.push(
+                                                                      emptyCluster
+                                                                    )
+                                                                  }
+                                                                  size="xs"
+                                                                  leftIcon={<AiOutlinePlus />}
+                                                                >
+                                                                  Cluster
+                                                                </Button>
+                                                                <Button
+                                                                  onClick={() =>
+                                                                    workoutArrayHelpers.push(
+                                                                      emptyWorkout
+                                                                    )
+                                                                  }
+                                                                  size="xs"
+                                                                  leftIcon={<AiOutlinePlus />}
+                                                                >
+                                                                  Circuit
+                                                                </Button>
+
+                                                                <CreateActivityModal
+                                                                  workoutArrayHelpers={
+                                                                    workoutArrayHelpers
+                                                                  }
+                                                                  formValues={values}
+                                                                  handleChange={handleChange}
+                                                                  addWorkout={addWorkout}
+                                                                />
+                                                                <ActionIcon
+                                                                  size="lg"
+                                                                  variant="filled"
+                                                                  color="cyan"
+                                                                  onClick={() =>
+                                                                    dayArrayHelpers.remove(dayIndex)
+                                                                  }
+                                                                >
+                                                                  <AiOutlineDelete />
+                                                                </ActionIcon>
+                                                              </Group>
+                                                            </Group>
+                                                            {values.blocks[blockIndex].weeks[
+                                                              weekIndex
+                                                            ].days[dayIndex].workouts &&
+                                                              values.blocks[blockIndex].weeks[
+                                                                weekIndex
+                                                              ].days[dayIndex].workouts.length >
+                                                                0 &&
+                                                              values.blocks[blockIndex].weeks[
+                                                                weekIndex
+                                                              ].days[dayIndex].workouts.map(
+                                                                (w: any, workoutIndex: number) => (
+                                                                  <>
+                                                                    <Group
+                                                                      position="apart"
+                                                                      key={workoutIndex}
+                                                                    >
+                                                                      <Input
+                                                                        name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name`}
+                                                                        value={
+                                                                          values.blocks[blockIndex]
+                                                                            .weeks[weekIndex].days[
+                                                                            dayIndex
+                                                                          ].workouts[workoutIndex]
+                                                                            .name
+                                                                        }
+                                                                        onChange={handleChange}
+                                                                      />
+                                                                      <ActionIcon
+                                                                        size="lg"
+                                                                        variant="filled"
+                                                                        color="cyan"
+                                                                        onClick={() =>
+                                                                          workoutArrayHelpers.remove(
+                                                                            workoutIndex
+                                                                          )
+                                                                        }
+                                                                      >
+                                                                        <AiOutlineClose />
+                                                                      </ActionIcon>
+                                                                    </Group>
+                                                                  </>
+                                                                )
+                                                              )}
+                                                          </Group>
+                                                        </>
+                                                      )}
+                                                    />
+                                                  ))}
+                                              </>
+                                            )}
+                                          />
+                                        </Paper>
+                                      )
+                                    )}
+                                </Group>
+                              </Group>
                             )}
                           />
-                        </Paper>
+                        </div>
                       ))}
-                    </Group>
-                  </Group>
+                  </>
                 )}
               />
+
               <pre>{JSON.stringify(values, null, 2)}</pre>
               <Button type="submit">Submit</Button>
             </Form>

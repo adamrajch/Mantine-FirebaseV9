@@ -346,7 +346,6 @@ export default function CreateActivityForm({
                                   placeholder={
                                     values.type === 'single' ? 'Add lift' : `Lift ${liftIndex + 1}`
                                   }
-                                  error={errors.name && 'Title must be between 3 and 20 characters'}
                                   value={values.lifts[liftIndex].name}
                                   name={`lifts[${liftIndex}].name`}
                                   onChange={(e) => {
@@ -360,43 +359,31 @@ export default function CreateActivityForm({
                                     marginBottom: 'auto',
                                   }}
                                 />
+                                {/* validation for nested input */}
                                 <Group position="right">
-                                  {values.type !== 'single' && (
-                                    <Menu
-                                      control={
-                                        <ActionIcon size="lg" color="cyan">
-                                          <HiOutlineSwitchVertical />
-                                        </ActionIcon>
-                                      }
-                                      style={{ zIndex: 1300 }}
-                                      styles={{
-                                        body: {
-                                          color: 'red',
-                                          zIndex: 1200,
-                                        },
-                                        itemInner: {
-                                          zIndex: 1200,
-                                        },
-                                        item: { zIndex: 1300 },
-                                        itemBody: { zIndex: 1300 },
-                                      }}
-                                      sx={(theme) => ({
-                                        zIndex: 11100,
-                                      })}
-                                    >
-                                      {values.lifts.map((lift, i) => (
-                                        <Menu.Item
-                                          key={i}
-                                          onClick={() => swap(liftIndex, i)}
-                                          sx={(theme) => ({
-                                            zIndex: 11000,
-                                          })}
-                                        >
-                                          {lift.name}
-                                        </Menu.Item>
-                                      ))}
-                                    </Menu>
-                                  )}
+                                  {values.type !== 'single' &&
+                                    values.lifts.every((l) => l.name.length > 0) && (
+                                      <Menu
+                                        control={
+                                          <ActionIcon size="lg" color="cyan">
+                                            <HiOutlineSwitchVertical />
+                                          </ActionIcon>
+                                        }
+                                        zIndex={1200}
+                                        sx={(theme) => ({
+                                          color: 'pink',
+                                          '&:hover': {
+                                            backgroundColor: theme.colors.gray[1],
+                                          },
+                                        })}
+                                      >
+                                        {values.lifts.map((lift, i) => (
+                                          <Menu.Item key={i} onClick={() => swap(liftIndex, i)}>
+                                            {values.lifts[i].name}
+                                          </Menu.Item>
+                                        ))}
+                                      </Menu>
+                                    )}
 
                                   <ActionIcon
                                     onClick={() => push(emptyRecord)}
@@ -484,10 +471,10 @@ export default function CreateActivityForm({
                                                   `lifts[${liftIndex}].records[${recordIndex}].hasLoad`,
                                                   false
                                                 );
-                                                setFieldValue(
-                                                  `lifts[${liftIndex}].records[${recordIndex}].hasPercent`,
-                                                  false
-                                                );
+                                                // setFieldValue(
+                                                //   `lifts[${liftIndex}].records[${recordIndex}].hasPercent`,
+                                                //   false
+                                                // );
                                               }
                                             }}
                                             styles={{
@@ -514,10 +501,10 @@ export default function CreateActivityForm({
                                                   `lifts[${liftIndex}].records[${recordIndex}].hasLoad`,
                                                   false
                                                 );
-                                                setFieldValue(
-                                                  `lifts[${liftIndex}].records[${recordIndex}].hasRPE`,
-                                                  false
-                                                );
+                                                // setFieldValue(
+                                                //   `lifts[${liftIndex}].records[${recordIndex}].hasRPE`,
+                                                //   false
+                                                // );
                                               }
                                             }}
                                             styles={{
