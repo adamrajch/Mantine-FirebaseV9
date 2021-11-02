@@ -1,5 +1,6 @@
-import { Button, Group, Modal } from '@mantine/core';
+import { ActionIcon, Group, Modal } from '@mantine/core';
 import React, { useState } from 'react';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 import CreateActivityForm from './CreateActivityForm';
 
 export default function CreateActivityModal(props: any) {
@@ -23,9 +24,9 @@ export default function CreateActivityModal(props: any) {
       </Modal>
 
       <Group position="center">
-        <Button onClick={() => setOpened(true)} radius="md">
-          Add Activity
-        </Button>
+        <ActionIcon onClick={() => setOpened(true)}>
+          <AiOutlinePlusCircle />
+        </ActionIcon>
       </Group>
     </>
   );

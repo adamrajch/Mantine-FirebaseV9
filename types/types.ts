@@ -1,4 +1,5 @@
 export type Record = {
+  type: string;
   sets: number;
   reps: number;
   rpe?: number;

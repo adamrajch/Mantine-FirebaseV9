@@ -1,13 +1,36 @@
-import { ActionIcon, Button, Group, Input, Menu, Paper, Text, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Divider,
+  Group,
+  Input,
+  Menu,
+  Paper,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { FieldArray, Form, Formik } from 'formik';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
-import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import {
+  AiFillSetting,
+  AiOutlineClose,
+  AiOutlineDelete,
+  AiOutlineFileAdd,
+  AiOutlineFolderAdd,
+  AiOutlinePlus,
+  AiOutlineSave,
+} from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
+import { CgPlayListAdd } from 'react-icons/cg';
+import { RiAddLine } from 'react-icons/ri';
 import Layout from '../../components/dashboard/AppShell';
+import { FlexContainer } from '../../components/FlexContainer';
 import CreateActivityModal from '../../components/programs/CreateActivityModal';
+import RecordSection from '../../components/programs/formSections/RecordSection';
 import { db } from '../../firebase';
 import { Block, Day, Week, Workout } from '../../types/types';
 export default function Program({ programProps: p }: any): ReactElement {
@@ -18,32 +41,40 @@ export default function Program({ programProps: p }: any): ReactElement {
     console.log(values);
     workoutArrayHelpers.push(workout);
   }
-
-  const emptyBlock: Block = {
-    name: 'New Block',
-    summary: undefined,
-    weeks: [],
-  };
-  const emptyWeek: Week = {
-    name: 'New Week',
-    summary: undefined,
-    days: [],
+  const emptyRecord = {
+    type: 'working',
+    load: 135,
+    sets: 5,
+    reps: 5,
+    unit: 'lbs',
+    rpe: 8,
+    percent: undefined,
   };
 
-  const emptyDay: Day = {
-    name: '',
-    summary: '',
-    workouts: [],
+  const emptyLift = {
+    name: 'New Lift',
+    records: [
+      {
+        type: 'working',
+        load: 135,
+        sets: 5,
+        reps: 5,
+        unit: 'lbs',
+        rpe: 8,
+        percent: undefined,
+      },
+    ],
   };
   const emptyWorkout: Workout = {
-    name: '',
+    name: 'New Lift',
     type: 'single',
     note: undefined,
     lifts: [
       {
-        name: '',
+        name: 'New Lift',
         records: [
           {
+            type: 'working',
             load: 135,
             sets: 5,
             reps: 5,
@@ -56,14 +87,22 @@ export default function Program({ programProps: p }: any): ReactElement {
     ],
   };
 
+  const emptyDay: Day = {
+    name: 'New Day',
+    summary: undefined,
+    workouts: [emptyWorkout],
+  };
+
   const emptyCluster: Workout = {
-    name: '',
+    name: 'New Cluster',
     type: 'cluster',
+    note: undefined,
     lifts: [
       {
-        name: '',
+        name: 'Lift 1',
         records: [
           {
+            type: 'working',
             load: 135,
             sets: 5,
             reps: 5,
@@ -74,9 +113,10 @@ export default function Program({ programProps: p }: any): ReactElement {
         ],
       },
       {
-        name: '',
+        name: 'Lift 2',
         records: [
           {
+            type: 'working',
             load: 135,
             sets: 5,
             reps: 5,
@@ -122,10 +162,21 @@ export default function Program({ programProps: p }: any): ReactElement {
       },
     ],
   };
+  const emptyWeek: Week = {
+    name: 'New Week',
+    summary: undefined,
+    days: [emptyDay],
+  };
+  const emptyBlock: Block = {
+    name: 'New Block',
+    summary: undefined,
+    weeks: [emptyWeek],
+  };
+
   const initialValues: any = {
     blocks: [
       {
-        name: 'Block Title',
+        name: 'Block 1',
         weeks: [
           {
             name: 'Week 1',
@@ -207,29 +258,60 @@ export default function Program({ programProps: p }: any): ReactElement {
                                     value={values.blocks[blockIndex].name}
                                     onChange={handleChange}
                                   />
+                                  <Group position="right">
+                                    <ActionIcon
+                                      onClick={() =>
+                                        arrayHelpers.push({
+                                          name: `Week ${
+                                            values.blocks[blockIndex].weeks.length + 1
+                                          }`,
+                                          summary: undefined,
+                                          days: [emptyDay],
+                                        })
+                                      }
+                                    >
+                                      <AiOutlineFolderAdd />
+                                    </ActionIcon>
 
-                                  <ActionIcon
-                                    onClick={() =>
-                                      blockArrayHelpers.insert(
-                                        values.blocks.length,
-                                        values.blocks[blockIndex]
-                                      )
-                                    }
-                                    color="cyan"
-                                  >
-                                    <BiDuplicate />
-                                  </ActionIcon>
-
-                                  <Button
-                                    onClick={() =>
-                                      arrayHelpers.push({
-                                        name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
-                                        days: [],
-                                      })
-                                    }
-                                  >
-                                    +Week
-                                  </Button>
+                                    <Menu
+                                      control={
+                                        <ActionIcon size="lg" color="cyan">
+                                          <AiFillSetting />
+                                        </ActionIcon>
+                                      }
+                                      zIndex={1200}
+                                    >
+                                      <Menu.Item
+                                        icon={<AiOutlineSave color="cyan" />}
+                                        onClick={() =>
+                                          blockArrayHelpers.insert(
+                                            values.blocks.length,
+                                            values.blocks[blockIndex]
+                                          )
+                                        }
+                                      >
+                                        Save block
+                                      </Menu.Item>
+                                      <Menu.Item
+                                        icon={<BiDuplicate color="cyan" />}
+                                        onClick={() =>
+                                          blockArrayHelpers.insert(
+                                            values.blocks.length,
+                                            values.blocks[blockIndex]
+                                          )
+                                        }
+                                      >
+                                        Duplicate Block
+                                      </Menu.Item>
+                                      <Menu.Item
+                                        icon={<AiOutlineDelete />}
+                                        onClick={() => blockArrayHelpers.remove(blockIndex)}
+                                        color="red"
+                                      >
+                                        Delete
+                                      </Menu.Item>
+                                    </Menu>
+                                  </Group>
                                 </Group>
                                 <Group direction="column" spacing={4} grow>
                                   {values.blocks[blockIndex].weeks &&
@@ -239,7 +321,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                         <Paper
                                           key={weekIndex}
                                           style={{
-                                            width: '50vw',
+                                            width: '60vw',
                                             border: '1px solid gray',
                                             padding: '16px',
                                           }}
@@ -250,30 +332,46 @@ export default function Program({ programProps: p }: any): ReactElement {
                                               <>
                                                 <Group position="apart">
                                                   <Input
+                                                    placeholder="week name"
                                                     name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
                                                     value={
                                                       values.blocks[blockIndex].weeks[weekIndex]
                                                         .name
                                                     }
                                                     onChange={handleChange}
+                                                    rightSection={
+                                                      values.blocks[blockIndex].weeks[weekIndex]
+                                                        .name.length ? (
+                                                        <ActionIcon
+                                                          onClick={() =>
+                                                            setFieldValue(
+                                                              `blocks[${blockIndex}].weeks[${weekIndex}].name`,
+                                                              ''
+                                                            )
+                                                          }
+                                                          size="xs"
+                                                        >
+                                                          <AiOutlineClose color="cyan" />
+                                                        </ActionIcon>
+                                                      ) : null
+                                                    }
                                                   />
                                                   <Group position="right">
-                                                    <Button
-                                                      onClick={() => dayArrayHelpers.push(emptyDay)}
-                                                    >
-                                                      Add Day
-                                                    </Button>
                                                     <ActionIcon
                                                       onClick={() =>
-                                                        arrayHelpers.insert(
-                                                          values.blocks[blockIndex].weeks.length,
-                                                          values.blocks[blockIndex].weeks[weekIndex]
-                                                        )
+                                                        dayArrayHelpers.push({
+                                                          name: `Day ${
+                                                            values.blocks[blockIndex].weeks[
+                                                              weekIndex
+                                                            ].days.length + 1
+                                                          }`,
+                                                          workouts: [emptyWorkout],
+                                                        })
                                                       }
-                                                      color="cyan"
                                                     >
-                                                      <BiDuplicate />
+                                                      <AiOutlineFileAdd />
                                                     </ActionIcon>
+
                                                     <Menu
                                                       control={
                                                         <ActionIcon size="lg" color="cyan">
@@ -282,6 +380,19 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                       }
                                                       zIndex={1200}
                                                     >
+                                                      <Menu.Item
+                                                        icon={<BiDuplicate color="cyan" />}
+                                                        onClick={() =>
+                                                          arrayHelpers.insert(
+                                                            values.blocks[blockIndex].weeks.length,
+                                                            values.blocks[blockIndex].weeks[
+                                                              weekIndex
+                                                            ]
+                                                          )
+                                                        }
+                                                      >
+                                                        Duplicate Week
+                                                      </Menu.Item>
                                                       <Menu.Item
                                                         icon={<AiOutlineDelete />}
                                                         onClick={() =>
@@ -293,6 +404,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                     </Menu>
                                                   </Group>
                                                 </Group>
+
                                                 {values.blocks[blockIndex].weeks[weekIndex].days &&
                                                   values.blocks[blockIndex].weeks[weekIndex].days
                                                     .length > 0 &&
@@ -307,6 +419,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                           <Group direction="column" my={24} grow>
                                                             <Group position="apart" spacing={2}>
                                                               <Input
+                                                                placeholder="day name"
                                                                 name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.name`}
                                                                 value={
                                                                   values.blocks[blockIndex].weeks[
@@ -314,6 +427,23 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                   ].days[dayIndex].name
                                                                 }
                                                                 onChange={handleChange}
+                                                                rightSection={
+                                                                  values.blocks[blockIndex].weeks[
+                                                                    weekIndex
+                                                                  ].days[dayIndex].name.length ? (
+                                                                    <ActionIcon
+                                                                      onClick={() =>
+                                                                        setFieldValue(
+                                                                          `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`,
+                                                                          ''
+                                                                        )
+                                                                      }
+                                                                      size="xs"
+                                                                    >
+                                                                      <AiOutlineClose color="cyan" />
+                                                                    </ActionIcon>
+                                                                  ) : null
+                                                                }
                                                               />
                                                               <Group>
                                                                 <Button
@@ -323,6 +453,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                     )
                                                                   }
                                                                   leftIcon={<AiOutlinePlus />}
+                                                                  variant="outline"
                                                                   size="xs"
                                                                 >
                                                                   Lift
@@ -335,6 +466,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                     )
                                                                   }
                                                                   size="xs"
+                                                                  variant="outline"
                                                                   leftIcon={<AiOutlinePlus />}
                                                                 >
                                                                   Cluster
@@ -346,6 +478,7 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                     )
                                                                   }
                                                                   size="xs"
+                                                                  variant="outline"
                                                                   leftIcon={<AiOutlinePlus />}
                                                                 >
                                                                   Circuit
@@ -359,9 +492,9 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                   handleChange={handleChange}
                                                                   addWorkout={addWorkout}
                                                                 />
+
                                                                 <ActionIcon
                                                                   size="lg"
-                                                                  variant="filled"
                                                                   color="cyan"
                                                                   onClick={() =>
                                                                     dayArrayHelpers.remove(dayIndex)
@@ -383,34 +516,355 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                               ].days[dayIndex].workouts.map(
                                                                 (w: any, workoutIndex: number) => (
                                                                   <>
-                                                                    <Group
-                                                                      position="apart"
-                                                                      key={workoutIndex}
+                                                                    <FieldArray
+                                                                      name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.lifts`}
                                                                     >
-                                                                      <Input
-                                                                        name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name`}
-                                                                        value={
-                                                                          values.blocks[blockIndex]
-                                                                            .weeks[weekIndex].days[
-                                                                            dayIndex
-                                                                          ].workouts[workoutIndex]
-                                                                            .name
-                                                                        }
-                                                                        onChange={handleChange}
-                                                                      />
-                                                                      <ActionIcon
-                                                                        size="lg"
-                                                                        variant="filled"
-                                                                        color="cyan"
-                                                                        onClick={() =>
-                                                                          workoutArrayHelpers.remove(
-                                                                            workoutIndex
-                                                                          )
-                                                                        }
-                                                                      >
-                                                                        <AiOutlineClose />
-                                                                      </ActionIcon>
-                                                                    </Group>
+                                                                      {(liftArrayHelpers) => {
+                                                                        return (
+                                                                          <>
+                                                                            {values.blocks[
+                                                                              blockIndex
+                                                                            ].weeks[weekIndex].days[
+                                                                              dayIndex
+                                                                            ].workouts[workoutIndex]
+                                                                              .type !==
+                                                                              'single' && (
+                                                                              <div
+                                                                                style={{
+                                                                                  display: 'flex',
+                                                                                  justifyContent:
+                                                                                    'space-between',
+                                                                                  alignContent:
+                                                                                    'center',
+                                                                                  marginBottom: 10,
+                                                                                }}
+                                                                                key={workoutIndex}
+                                                                              >
+                                                                                <Input
+                                                                                  name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name`}
+                                                                                  value={
+                                                                                    values.blocks[
+                                                                                      blockIndex
+                                                                                    ].weeks[
+                                                                                      weekIndex
+                                                                                    ].days[dayIndex]
+                                                                                      .workouts[
+                                                                                      workoutIndex
+                                                                                    ].name
+                                                                                  }
+                                                                                  onChange={
+                                                                                    handleChange
+                                                                                  }
+                                                                                />
+                                                                                <div
+                                                                                  style={{
+                                                                                    display: 'flex',
+                                                                                    justifyContent:
+                                                                                      'flex-end',
+                                                                                    alignContent:
+                                                                                      'center',
+                                                                                    gap: 10,
+                                                                                  }}
+                                                                                >
+                                                                                  <ActionIcon
+                                                                                    size="xs"
+                                                                                    color="cyan"
+                                                                                    onClick={() =>
+                                                                                      liftArrayHelpers.push(
+                                                                                        emptyLift
+                                                                                      )
+                                                                                    }
+                                                                                  >
+                                                                                    <CgPlayListAdd />
+                                                                                  </ActionIcon>
+                                                                                  <ActionIcon
+                                                                                    size="xs"
+                                                                                    color="cyan"
+                                                                                    onClick={() =>
+                                                                                      workoutArrayHelpers.remove(
+                                                                                        workoutIndex
+                                                                                      )
+                                                                                    }
+                                                                                  >
+                                                                                    <AiOutlineClose />
+                                                                                  </ActionIcon>
+                                                                                </div>
+                                                                              </div>
+                                                                            )}
+
+                                                                            {values.blocks[
+                                                                              blockIndex
+                                                                            ].weeks[weekIndex].days[
+                                                                              dayIndex
+                                                                            ].workouts[workoutIndex]
+                                                                              .lifts &&
+                                                                              values.blocks[
+                                                                                blockIndex
+                                                                              ].weeks[weekIndex]
+                                                                                .days[dayIndex]
+                                                                                .workouts[
+                                                                                workoutIndex
+                                                                              ].lifts.length > 0 &&
+                                                                              values.blocks[
+                                                                                blockIndex
+                                                                              ].weeks[
+                                                                                weekIndex
+                                                                              ].days[
+                                                                                dayIndex
+                                                                              ].workouts[
+                                                                                workoutIndex
+                                                                              ].lifts.map(
+                                                                                (
+                                                                                  l,
+                                                                                  liftIndex: number
+                                                                                ) => (
+                                                                                  <div
+                                                                                    key={liftIndex}
+                                                                                  >
+                                                                                    <FieldArray
+                                                                                      name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.lifts[${liftIndex}].records`}
+                                                                                    >
+                                                                                      {(
+                                                                                        recordArrayHelpers
+                                                                                      ) => {
+                                                                                        return (
+                                                                                          <div
+                                                                                            style={{
+                                                                                              marginBottom: 5,
+                                                                                              paddingLeft: 10,
+                                                                                            }}
+                                                                                          >
+                                                                                            <div
+                                                                                              key={
+                                                                                                liftIndex
+                                                                                              }
+                                                                                              style={{
+                                                                                                display:
+                                                                                                  'flex',
+                                                                                                justifyContent:
+                                                                                                  'space-between',
+                                                                                                alignContent:
+                                                                                                  'center',
+                                                                                              }}
+                                                                                            >
+                                                                                              <TextInput
+                                                                                                autoComplete="false"
+                                                                                                required
+                                                                                                placeholder="New Lift"
+                                                                                                value={
+                                                                                                  values
+                                                                                                    .blocks[
+                                                                                                    blockIndex
+                                                                                                  ]
+                                                                                                    .weeks[
+                                                                                                    weekIndex
+                                                                                                  ]
+                                                                                                    .days[
+                                                                                                    dayIndex
+                                                                                                  ]
+                                                                                                    .workouts[
+                                                                                                    workoutIndex
+                                                                                                  ]
+                                                                                                    .lifts[
+                                                                                                    liftIndex
+                                                                                                  ]
+                                                                                                    .name
+                                                                                                }
+                                                                                                name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].name`}
+                                                                                                onChange={(
+                                                                                                  e
+                                                                                                ) => {
+                                                                                                  handleChange(
+                                                                                                    e
+                                                                                                  );
+                                                                                                  if (
+                                                                                                    values
+                                                                                                      .blocks[
+                                                                                                      blockIndex
+                                                                                                    ]
+                                                                                                      .weeks[
+                                                                                                      weekIndex
+                                                                                                    ]
+                                                                                                      .days[
+                                                                                                      dayIndex
+                                                                                                    ]
+                                                                                                      .workouts[
+                                                                                                      workoutIndex
+                                                                                                    ]
+                                                                                                      .type ===
+                                                                                                    'single'
+                                                                                                  ) {
+                                                                                                    setFieldValue(
+                                                                                                      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].name`,
+                                                                                                      e
+                                                                                                        .currentTarget
+                                                                                                        .value
+                                                                                                    );
+                                                                                                  }
+                                                                                                }}
+                                                                                                style={{
+                                                                                                  marginTop:
+                                                                                                    'auto',
+                                                                                                  marginBottom:
+                                                                                                    'auto',
+                                                                                                }}
+                                                                                              />
+                                                                                              <FlexContainer justify="flex-end">
+                                                                                                {values
+                                                                                                  .blocks[
+                                                                                                  blockIndex
+                                                                                                ]
+                                                                                                  .weeks[
+                                                                                                  weekIndex
+                                                                                                ]
+                                                                                                  .days[
+                                                                                                  dayIndex
+                                                                                                ]
+                                                                                                  .workouts[
+                                                                                                  workoutIndex
+                                                                                                ]
+                                                                                                  .type !==
+                                                                                                  'single' && (
+                                                                                                  <ActionIcon
+                                                                                                    onClick={() =>
+                                                                                                      recordArrayHelpers.push(
+                                                                                                        emptyRecord
+                                                                                                      )
+                                                                                                    }
+                                                                                                  >
+                                                                                                    <RiAddLine color="cyan" />
+                                                                                                  </ActionIcon>
+                                                                                                )}
+                                                                                                <ActionIcon
+                                                                                                  onClick={() => {
+                                                                                                    liftArrayHelpers.remove(
+                                                                                                      liftIndex
+                                                                                                    );
+                                                                                                    if (
+                                                                                                      values
+                                                                                                        .blocks[
+                                                                                                        blockIndex
+                                                                                                      ]
+                                                                                                        .weeks[
+                                                                                                        weekIndex
+                                                                                                      ]
+                                                                                                        .days[
+                                                                                                        dayIndex
+                                                                                                      ]
+                                                                                                        .workouts[
+                                                                                                        workoutIndex
+                                                                                                      ]
+                                                                                                        .type ===
+                                                                                                      'single'
+                                                                                                    ) {
+                                                                                                      workoutArrayHelpers.remove(
+                                                                                                        workoutIndex
+                                                                                                      );
+                                                                                                    }
+                                                                                                  }}
+                                                                                                >
+                                                                                                  <AiOutlineClose color="cyan" />
+                                                                                                </ActionIcon>
+                                                                                              </FlexContainer>
+                                                                                            </div>
+                                                                                            {values
+                                                                                              .blocks[
+                                                                                              blockIndex
+                                                                                            ].weeks[
+                                                                                              weekIndex
+                                                                                            ].days[
+                                                                                              dayIndex
+                                                                                            ]
+                                                                                              .workouts[
+                                                                                              workoutIndex
+                                                                                            ].lifts[
+                                                                                              liftIndex
+                                                                                            ]
+                                                                                              .records &&
+                                                                                              values
+                                                                                                .blocks[
+                                                                                                blockIndex
+                                                                                              ]
+                                                                                                .weeks[
+                                                                                                weekIndex
+                                                                                              ]
+                                                                                                .days[
+                                                                                                dayIndex
+                                                                                              ]
+                                                                                                .workouts[
+                                                                                                workoutIndex
+                                                                                              ]
+                                                                                                .lifts[
+                                                                                                liftIndex
+                                                                                              ]
+                                                                                                .records
+                                                                                                .length >
+                                                                                                0 &&
+                                                                                              values.blocks[
+                                                                                                blockIndex
+                                                                                              ].weeks[
+                                                                                                weekIndex
+                                                                                              ].days[
+                                                                                                dayIndex
+                                                                                              ].workouts[
+                                                                                                workoutIndex
+                                                                                              ].lifts[
+                                                                                                liftIndex
+                                                                                              ].records.map(
+                                                                                                (
+                                                                                                  r,
+                                                                                                  recordIndex: number
+                                                                                                ) => (
+                                                                                                  <RecordSection
+                                                                                                    values={
+                                                                                                      values
+                                                                                                    }
+                                                                                                    blockIndex={
+                                                                                                      blockIndex
+                                                                                                    }
+                                                                                                    weekIndex={
+                                                                                                      weekIndex
+                                                                                                    }
+                                                                                                    workoutIndex={
+                                                                                                      workoutIndex
+                                                                                                    }
+                                                                                                    dayIndex={
+                                                                                                      dayIndex
+                                                                                                    }
+                                                                                                    recordIndex={
+                                                                                                      recordIndex
+                                                                                                    }
+                                                                                                    liftIndex={
+                                                                                                      liftIndex
+                                                                                                    }
+                                                                                                    setFieldValue={
+                                                                                                      setFieldValue
+                                                                                                    }
+                                                                                                    recordArrayHelpers={
+                                                                                                      recordArrayHelpers
+                                                                                                    }
+                                                                                                  />
+                                                                                                )
+                                                                                              )}
+                                                                                          </div>
+                                                                                        );
+                                                                                      }}
+                                                                                    </FieldArray>
+                                                                                  </div>
+                                                                                )
+                                                                              )}
+                                                                          </>
+                                                                        );
+                                                                      }}
+                                                                    </FieldArray>
+                                                                    <Divider
+                                                                      size="sm"
+                                                                      color="cyan"
+                                                                      style={{
+                                                                        marginTop: 20,
+                                                                        marginBottom: 20,
+                                                                      }}
+                                                                    />
                                                                   </>
                                                                 )
                                                               )}

@@ -26,6 +26,7 @@ type Record = {
   reps: number;
   rpe?: number;
   load?: number;
+  type?: string;
   percent?: number;
   hasLoad: boolean;
   hasRPE: boolean;
