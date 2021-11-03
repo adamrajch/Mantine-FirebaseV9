@@ -138,6 +138,7 @@ export default function Program({ programProps: p }: any): ReactElement {
         name: '',
         records: [
           {
+            type: 'working',
             load: 125,
             sets: 5,
             reps: 5,
@@ -151,6 +152,7 @@ export default function Program({ programProps: p }: any): ReactElement {
         name: '',
         records: [
           {
+            type: 'working',
             load: 125,
             sets: 5,
             reps: 5,
