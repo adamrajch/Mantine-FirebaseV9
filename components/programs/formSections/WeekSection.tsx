@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react';
 import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { Workout } from '../../../types/types';
+import DaySection from './DaySection';
 type Template = {
   blocks: Array<{
     name: string;
@@ -56,14 +57,19 @@ const emptyWorkout: Workout = {
     },
   ],
 };
-export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any): ReactElement {
+export default function WeekSection({
+  weekIndex,
+  blockIndex,
+  weekHelpers,
+  dayIndex,
+}: any): ReactElement {
   const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Template } = useFormikContext();
   return (
     <div>
       <FieldArray
         name={`blocks[${blockIndex}].weeks[${weekIndex}].days`}
-        render={(dayArrayHelpers) => (
+        render={(dayHelpers) => (
           <div style={{ paddingLeft: 20 }}>
             <Group position="apart">
               <Input
@@ -87,7 +93,7 @@ export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any)
               <Group position="right">
                 <ActionIcon
                   onClick={() =>
-                    dayArrayHelpers.push({
+                    dayHelpers.push({
                       name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
                       workouts: [emptyWorkout],
                     })
@@ -124,6 +130,18 @@ export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any)
                 </Menu>
               </Group>
             </Group>
+            {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
+              <div>
+                <DaySection
+                  blockIndex={blockIndex}
+                  weekIndex={weekIndex}
+                  dayIndex={dayIndex}
+                  dayHelpers={dayHelpers}
+                />
+              </div>
+            ) : (
+              <div>Add Day</div>
+            )}
           </div>
         )}
       />

@@ -1,9 +1,8 @@
 import { ActionIcon, Button, SimpleGrid, Title } from '@mantine/core';
 import { FieldArray, Formik } from 'formik';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { CgFolderAdd } from 'react-icons/cg';
-import BlockSection from './formSections/BlockSection';
-import BlockSelect from './formSections/BlockSelect';
+import DynamicTemplateForm from './DynamicTemplateForm';
 type Template = {
   blocks: Array<{
     name: string;
@@ -56,10 +55,6 @@ export default function FullProgramForm(): ReactElement {
       },
     ],
   };
-  const [value, setValue] = useState<string | null>('');
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
 
   return (
     <div>
@@ -96,20 +91,12 @@ export default function FullProgramForm(): ReactElement {
                       </ActionIcon>
                     </div>
                   </SimpleGrid>
-                  <BlockSelect />
-                  {/* <DynamicTemplateForm value={value} /> */}
-                  {values.blocks &&
-                    values.blocks.length > 0 &&
-                    values.blocks.map((b: any, blockIndex: number) => (
-                      <BlockSection
-                        blockHelpers={blockHelpers}
-                        blockIndex={blockIndex}
-                        key={blockIndex}
-                      />
-                    ))}
+
+                  <DynamicTemplateForm />
                 </>
               )}
             />
+            <pre>{JSON.stringify(values, null, 2)}</pre>
             <Button type="submit">Save</Button>
           </form>
         )}
