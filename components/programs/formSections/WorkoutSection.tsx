@@ -4,6 +4,7 @@ import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote } from 'react-icons/fa';
 import { FlexContainer } from '../../FlexContainer';
+import LiftSection from './LiftSection';
 
 const emptyLift = {
   name: 'New Lift',
@@ -28,15 +29,17 @@ export default function WorkoutSection({
 }: any): ReactElement {
   const { values, handleChange } = useFormikContext();
   const [open, setOpen] = useState(false);
+
   return (
     <div>
       <FieldArray
-        name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.lifts`}
+        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts`}
       >
         {(liftHelpers) => {
           return (
             <>
-              {values.type !== 'single' && (
+              {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .type !== 'single' && (
                 <Box
                   sx={{
                     marginTop: 12,
@@ -45,14 +48,6 @@ export default function WorkoutSection({
                   <FlexContainer justify="space-between">
                     <TextInput
                       autoComplete="false"
-                      required
-                      label={
-                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
-                          workoutIndex
-                        ].type === 'single'
-                          ? ''
-                          : 'Add Cluster'
-                      }
                       placeholder={
                         values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
                           workoutIndex
@@ -60,7 +55,7 @@ export default function WorkoutSection({
                           ? 'Add lift'
                           : 'Cluster Name'
                       }
-                      //   error={errors.name && 'Name must be between 3 and 25 characters'}
+                      name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].name`}
                       value={
                         values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
                           workoutIndex
@@ -91,7 +86,7 @@ export default function WorkoutSection({
                   <Collapse in={open} my={8}>
                     <Textarea
                       placeholder="Add directions/tips here!"
-                      name="note"
+                      name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].note`}
                       value={
                         values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
                           workoutIndex
@@ -102,6 +97,32 @@ export default function WorkoutSection({
                   </Collapse>
                 </Box>
               )}
+              {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts &&
+                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                  .lifts.length > 0 &&
+                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                  workoutIndex
+                ].lifts.map((l, liftIndex: number) => (
+                  <div
+                    key={liftIndex}
+                    style={{
+                      marginTop: 10,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    <LiftSection
+                      workoutIndex={workoutIndex}
+                      workoutHelpers={workoutHelpers}
+                      blockIndex={blockIndex}
+                      weekIndex={weekIndex}
+                      dayIndex={dayIndex}
+                      liftHelpers={liftHelpers}
+                      liftIndex={liftIndex}
+                      key={liftIndex}
+                    />
+                  </div>
+                ))}
             </>
           );
         }}

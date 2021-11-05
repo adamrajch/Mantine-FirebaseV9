@@ -637,9 +637,6 @@ export default function Program({ programProps: p }: any): ReactElement {
                                                                                             }}
                                                                                           >
                                                                                             <div
-                                                                                              key={
-                                                                                                liftIndex
-                                                                                              }
                                                                                               style={{
                                                                                                 display:
                                                                                                   'flex',

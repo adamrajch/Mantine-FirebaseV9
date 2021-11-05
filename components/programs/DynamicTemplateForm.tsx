@@ -129,6 +129,9 @@ export default function DynamicTemplateForm(): ReactElement {
           />
         </div>
       )}
+      <div>
+        Block:{blockIndex} week:{weekIndex} day:{dayIndex}
+      </div>
     </div>
   );
 }

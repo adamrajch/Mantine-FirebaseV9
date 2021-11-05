@@ -6,7 +6,6 @@ export default function DaySelect({ blockIndex, weekIndex, setDayIndex }: any): 
   const { values } = useFormikContext();
   const [label, setLabel] = useState('');
   useEffect(() => {
-    // setLabel('');
     console.log('Day Label: ', label);
   }, [weekIndex]);
   return (

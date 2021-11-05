@@ -8,7 +8,7 @@ import WorkoutSection from './WorkoutSection';
 const emptyWorkout: Workout = {
   name: 'New Lift',
   type: 'single',
-  note: undefined,
+  note: '',
   lifts: [
     {
       name: 'New Lift',
@@ -30,7 +30,7 @@ const emptyWorkout: Workout = {
 const emptyCluster: Workout = {
   name: 'New Cluster',
   type: 'cluster',
-  note: undefined,
+  note: '',
   lifts: [
     {
       name: 'Lift 1',
@@ -123,14 +123,14 @@ export default function DaySection({
                   >
                     Cluster
                   </Button>
-                  <Button
+                  {/* <Button
                     onClick={() => workoutHelpers.push(emptyWorkout)}
                     size="xs"
                     variant="outline"
                     leftIcon={<AiOutlinePlus />}
                   >
                     Circuit
-                  </Button>
+                  </Button> */}
 
                   <CreateActivityModal
                     dayHelpers={dayHelpers}
@@ -151,6 +151,7 @@ export default function DaySection({
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts.map(
                   (workout, workoutIndex) => (
                     <WorkoutSection
+                      key={workoutIndex}
                       workoutIndex={workoutIndex}
                       workoutHelpers={workoutHelpers}
                       blockIndex={blockIndex}

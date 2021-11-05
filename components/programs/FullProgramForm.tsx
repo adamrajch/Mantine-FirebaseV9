@@ -43,6 +43,7 @@ export default function FullProgramForm(): ReactElement {
         weeks: [
           {
             name: 'Week 1',
+            summary: '',
             days: [
               {
                 name: 'Day 1',
@@ -83,7 +84,19 @@ export default function FullProgramForm(): ReactElement {
                           blockHelpers.push({
                             name: `Block ${values.blocks.length + 1}`,
                             summary: '',
-                            weeks: [],
+                            weeks: [
+                              {
+                                name: 'New Week',
+                                summary: '',
+                                days: [
+                                  {
+                                    name: 'Day 1',
+                                    summary: '',
+                                    workouts: [],
+                                  },
+                                ],
+                              },
+                            ],
                           })
                         }
                       >
