@@ -13,7 +13,6 @@ export default function WeekSelect({ setWeekIndex, blockIndex, weekIndex }: any)
   return (
     <NativeSelect
       value={label}
-      placeholder="Pick one"
       data={values.blocks[blockIndex].weeks.map((week, i: number) => ({
         value: i.toString(),
         label: week.name,

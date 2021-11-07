@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Button, Collapse, Group, Text, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -11,12 +11,12 @@ const emptyLift = {
   records: [
     {
       type: 'working',
-      load: 135,
       sets: 5,
       reps: 5,
       unit: 'lbs',
-      rpe: 8,
+      rpe: undefined,
       percent: undefined,
+      load: undefined,
     },
   ],
 };
@@ -42,32 +42,37 @@ export default function WorkoutSection({
                 .type !== 'single' && (
                 <Box
                   sx={{
-                    marginTop: 12,
+                    marginTop: 20,
                   }}
                 >
                   <FlexContainer justify="space-between">
-                    <TextInput
-                      autoComplete="false"
-                      placeholder={
-                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
-                          workoutIndex
-                        ].type === 'single'
-                          ? 'Add lift'
-                          : 'Cluster Name'
-                      }
-                      name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].name`}
-                      value={
-                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
-                          workoutIndex
-                        ].name
-                      }
-                      onChange={handleChange}
-                    />
+                    <div style={{ display: 'flex', alignContent: 'center' }}>
+                      <Text>{workoutIndex + 1}.</Text>
+                      <TextInput
+                        autoComplete="false"
+                        placeholder={
+                          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                            workoutIndex
+                          ].type === 'single'
+                            ? 'Add lift'
+                            : 'Cluster Name'
+                        }
+                        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].name`}
+                        value={
+                          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                            workoutIndex
+                          ].name
+                        }
+                        onChange={handleChange}
+                      />
+                    </div>
+
                     <Group>
                       <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                         <FaRegStickyNote />
                       </ActionIcon>
                       <Button
+                        variant="outline"
                         onClick={() => liftHelpers.push(emptyLift)}
                         leftIcon={<AiOutlinePlus />}
                         size="xs"
@@ -107,8 +112,19 @@ export default function WorkoutSection({
                   <div
                     key={liftIndex}
                     style={{
-                      marginTop: 10,
-                      paddingLeft: 10,
+                      marginTop:
+                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                          workoutIndex
+                        ].type !== 'single'
+                          ? 0
+                          : 10,
+                      marginBottom: 20,
+                      paddingLeft:
+                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                          workoutIndex
+                        ].type !== 'single'
+                          ? 20
+                          : 0,
                     }}
                   >
                     <LiftSection

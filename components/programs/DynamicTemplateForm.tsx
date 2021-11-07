@@ -15,11 +15,11 @@ export default function DynamicTemplateForm(): ReactElement {
   useEffect(() => {
     setDayIndex(0);
   }, [weekIndex]);
-  useEffect(() => {
-    console.log('Block: ', blockIndex);
-    console.log('Week: ', weekIndex);
-    console.log('Day: ', dayIndex);
-  }, [dayIndex, weekIndex, blockIndex]);
+  // useEffect(() => {
+  //   console.log('Block: ', blockIndex);
+  //   console.log('Week: ', weekIndex);
+  //   console.log('Day: ', dayIndex);
+  // }, [dayIndex, weekIndex, blockIndex]);
   return (
     <div>
       {/* {blockIndex == null && 'Select Block'} */}
@@ -60,12 +60,14 @@ export default function DynamicTemplateForm(): ReactElement {
                             <WeekSelect setWeekIndex={setWeekIndex} blockIndex={blockIndex} />
                           )}
 
-                        <DaySelect
-                          setDayIndex={setDayIndex}
-                          weekIndex={weekIndex}
-                          blockIndex={blockIndex}
-                        />
-
+                        {values.blocks[blockIndex].weeks &&
+                          values.blocks[blockIndex].weeks.length > 0 && (
+                            <DaySelect
+                              setDayIndex={setDayIndex}
+                              weekIndex={weekIndex}
+                              blockIndex={blockIndex}
+                            />
+                          )}
                         <Group position="right">
                           <ActionIcon
                             onClick={() =>
@@ -113,14 +115,15 @@ export default function DynamicTemplateForm(): ReactElement {
                           </Menu>
                         </Group>
                       </Group>
-                      <div>
-                        <WeekSection
-                          weekHelpers={weekHelpers}
-                          blockIndex={blockIndex}
-                          weekIndex={weekIndex}
-                          dayIndex={dayIndex}
-                        />
-                      </div>
+                      {values.blocks[blockIndex].weeks &&
+                        values.blocks[blockIndex].weeks.length > 0 && (
+                          <WeekSection
+                            weekHelpers={weekHelpers}
+                            blockIndex={blockIndex}
+                            weekIndex={weekIndex}
+                            dayIndex={dayIndex}
+                          />
+                        )}
                     </div>
                   )}
                 />
@@ -129,9 +132,9 @@ export default function DynamicTemplateForm(): ReactElement {
           />
         </div>
       )}
-      <div>
+      {/* <div>
         Block:{blockIndex} week:{weekIndex} day:{dayIndex}
-      </div>
+      </div> */}
     </div>
   );
 }

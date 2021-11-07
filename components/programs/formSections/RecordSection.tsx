@@ -1,22 +1,23 @@
 import { ActionIcon, NumberInput, SegmentedControl, Switch } from '@mantine/core';
+import { useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { FlexContainer } from '../../FlexContainer';
 
 export default function RecordSection({
-  values,
   recordIndex,
   liftIndex,
   blockIndex,
   weekIndex,
   dayIndex,
   workoutIndex,
-  setFieldValue,
-  recordArrayHelpers,
+
+  recordHelpers,
 }: any): ReactElement {
   const [hasRPE, setHasRPE] = useState(false);
   const [hasPercent, setHasPercent] = useState(false);
   const [hasLoad, setHasLoad] = useState(false);
+  const { values, setFieldValue } = useFormikContext();
   return (
     <div>
       <FlexContainer justify="space-between" align="center">
@@ -105,7 +106,7 @@ export default function RecordSection({
             }}
           />
           <ActionIcon
-            onClick={() => recordArrayHelpers.remove(recordIndex)}
+            onClick={() => recordHelpers.remove(recordIndex)}
             color="red"
             styles={{
               root: {

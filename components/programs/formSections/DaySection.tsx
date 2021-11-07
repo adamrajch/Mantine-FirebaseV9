@@ -37,12 +37,12 @@ const emptyCluster: Workout = {
       records: [
         {
           type: 'working',
-          load: 135,
           sets: 5,
           reps: 5,
           unit: 'lbs',
-          rpe: 8,
+          rpe: undefined,
           percent: undefined,
+          load: undefined,
         },
       ],
     },
@@ -51,12 +51,12 @@ const emptyCluster: Workout = {
       records: [
         {
           type: 'working',
-          load: 135,
           sets: 5,
           reps: 5,
           unit: 'lbs',
-          rpe: 8,
+          rpe: undefined,
           percent: undefined,
+          load: undefined,
         },
       ],
     },

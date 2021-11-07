@@ -10,11 +10,11 @@ export default function DaySelect({ blockIndex, weekIndex, setDayIndex }: any): 
   }, [weekIndex]);
   return (
     <div>
-      {values.blocks[blockIndex].weeks[weekIndex].days &&
+      {values.blocks[blockIndex].weeks &&
+      values.blocks[blockIndex].weeks[weekIndex].days &&
       values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
         <NativeSelect
           value={label}
-          placeholder="Pick one"
           data={values.blocks[blockIndex].weeks[weekIndex].days.map((day, i: number) => ({
             value: i.toString(),
             label: day.name,

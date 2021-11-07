@@ -5,29 +5,30 @@ import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import { BiReset } from 'react-icons/bi';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 import { FlexContainer } from '../../FlexContainer';
+import RecordSection from './RecordSection';
 
 const emptyLift = {
   name: 'New Lift',
   records: [
     {
       type: 'working',
-      load: 135,
       sets: 5,
       reps: 5,
       unit: 'lbs',
-      rpe: 8,
+      rpe: undefined,
       percent: undefined,
+      load: undefined,
     },
   ],
 };
 const emptyRecord = {
   type: 'working',
-  load: 135,
   sets: 5,
   reps: 5,
   unit: 'lbs',
-  rpe: 8,
+  rpe: undefined,
   percent: undefined,
+  load: undefined,
 };
 export default function LiftSection({
   blockIndex,
@@ -47,7 +48,7 @@ export default function LiftSection({
     ) {
       setFieldValue(
         `blocks[${blockIndex}].weeks[${weekIndex}].days.${dayIndex}.workouts.${workoutIndex}.name`,
-        e.currentTarge.value
+        e.currentTarget.value
       );
     }
   }
@@ -146,6 +147,35 @@ export default function LiftSection({
                   )}
                 </Group>
               </FlexContainer>
+              {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts[liftIndex].records &&
+                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                  .lifts[liftIndex].records.length > 0 &&
+                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                  workoutIndex
+                ].lifts[liftIndex].records.map((r, recordIndex: number) => (
+                  <div
+                    key={recordIndex}
+                    style={{
+                      marginTop: 2,
+                      marginBottom: 2,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    <RecordSection
+                      workoutIndex={workoutIndex}
+                      workoutHelpers={workoutHelpers}
+                      blockIndex={blockIndex}
+                      weekIndex={weekIndex}
+                      dayIndex={dayIndex}
+                      liftHelpers={liftHelpers}
+                      liftIndex={liftIndex}
+                      recordIndex={recordIndex}
+                      recordHelpers={recordHelpers}
+                      key={liftIndex}
+                    />
+                  </div>
+                ))}
             </div>
           );
         }}

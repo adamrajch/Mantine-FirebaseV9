@@ -1,4 +1,4 @@
-import { ActionIcon, Button, SimpleGrid, Title } from '@mantine/core';
+import { ActionIcon, Button, Container, SimpleGrid, Title } from '@mantine/core';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement } from 'react';
 import { CgFolderAdd } from 'react-icons/cg';
@@ -71,7 +71,7 @@ export default function FullProgramForm(): ReactElement {
             <FieldArray
               name="blocks"
               render={(blockHelpers) => (
-                <>
+                <Container size="xl">
                   <SimpleGrid cols={3} spacing="xs">
                     <div></div>
                     <div>
@@ -86,7 +86,7 @@ export default function FullProgramForm(): ReactElement {
                             summary: '',
                             weeks: [
                               {
-                                name: 'New Week',
+                                name: 'Week 1',
                                 summary: '',
                                 days: [
                                   {
@@ -106,10 +106,10 @@ export default function FullProgramForm(): ReactElement {
                   </SimpleGrid>
 
                   <DynamicTemplateForm />
-                </>
+                </Container>
               )}
             />
-            <pre>{JSON.stringify(values, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
             <Button type="submit">Save</Button>
           </form>
         )}
