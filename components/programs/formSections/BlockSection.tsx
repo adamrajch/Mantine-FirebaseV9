@@ -1,9 +1,10 @@
-import { ActionIcon, Group, Input, Menu } from '@mantine/core';
+import { ActionIcon, Input, Menu } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiFillSetting, AiOutlineDelete, AiOutlineFolderAdd, AiOutlineSave } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { Day, Workout } from '../../../types/types';
+import { FlexContainer } from '../../FlexContainer';
 import WeekSection from './WeekSection';
 type Template = {
   blocks: Array<{
@@ -72,14 +73,14 @@ export default function BlockSection({ blockIndex, blockHelpers }: any): ReactEl
       <FieldArray
         name={`blocks[${blockIndex}].weeks`}
         render={(weekHelpers) => (
-          <div style={{ marginBottom: 20 }}>
-            <Group position="apart">
+          <div>
+            <FlexContainer>
               <Input
                 name={`blocks[${blockIndex}].name`}
                 value={values.blocks[blockIndex].name}
                 onChange={(e: any) => handleChange(e)}
               />
-              <Group position="right">
+              <FlexContainer justify="flex-end">
                 <ActionIcon
                   onClick={() =>
                     weekHelpers.push({
@@ -124,8 +125,8 @@ export default function BlockSection({ blockIndex, blockHelpers }: any): ReactEl
                     Delete
                   </Menu.Item>
                 </Menu>
-              </Group>
-            </Group>
+              </FlexContainer>
+            </FlexContainer>
             <div>
               {values.blocks[blockIndex].weeks &&
                 values.blocks[blockIndex].weeks.length > 0 &&

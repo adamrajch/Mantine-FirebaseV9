@@ -1,8 +1,8 @@
-import { ActionIcon, Button, Container, SimpleGrid, Title } from '@mantine/core';
+import { Button, Collapse, Container, Group, SimpleGrid, Title } from '@mantine/core';
 import { FieldArray, Formik } from 'formik';
-import React, { ReactElement } from 'react';
-import { CgFolderAdd } from 'react-icons/cg';
+import React, { ReactElement, useState } from 'react';
 import DynamicTemplateForm from './DynamicTemplateForm';
+import RichText from './RichText';
 type Template = {
   blocks: Array<{
     name: string;
@@ -35,6 +35,9 @@ type Template = {
   }>;
 };
 export default function FullProgramForm(): ReactElement {
+  const [value, onChange] = useState<string>('');
+  const [opened, setOpen] = useState(false);
+
   const initialValues: Template = {
     blocks: [
       {
@@ -68,47 +71,30 @@ export default function FullProgramForm(): ReactElement {
       >
         {({ handleSubmit, handleChange, handleBlur, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FieldArray
-              name="blocks"
-              render={(blockHelpers) => (
-                <Container size="xl">
-                  <SimpleGrid cols={3} spacing="xs">
-                    <div></div>
-                    <div>
-                      <Title align="center">Create Program</Title>
-                    </div>
+            <Container size="xl">
+              <SimpleGrid cols={3} spacing="xs">
+                <div></div>
+                <div>
+                  <Title align="center">Create Program</Title>
+                </div>
 
-                    <div>
-                      <ActionIcon
-                        onClick={() =>
-                          blockHelpers.push({
-                            name: `Block ${values.blocks.length + 1}`,
-                            summary: '',
-                            weeks: [
-                              {
-                                name: 'Week 1',
-                                summary: '',
-                                days: [
-                                  {
-                                    name: 'Day 1',
-                                    summary: '',
-                                    workouts: [],
-                                  },
-                                ],
-                              },
-                            ],
-                          })
-                        }
-                      >
-                        <CgFolderAdd />
-                      </ActionIcon>
-                    </div>
-                  </SimpleGrid>
-
-                  <DynamicTemplateForm />
-                </Container>
-              )}
-            />
+                <div></div>
+              </SimpleGrid>
+              <Group>
+                <Button onClick={() => setOpen((o) => !o)}>Summary</Button>
+              </Group>
+              <Collapse in={opened}>
+                <RichText value={value} onChange={onChange} />
+              </Collapse>
+              <FieldArray
+                name="blocks"
+                render={(blockHelpers) => (
+                  <div>
+                    <DynamicTemplateForm blockHelpers={blockHelpers} />
+                  </div>
+                )}
+              />
+            </Container>
             {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
             <Button type="submit">Save</Button>
           </form>

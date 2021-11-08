@@ -24,9 +24,7 @@ export default function DaySelect({ blockIndex, weekIndex, setDayIndex }: any): 
             setLabel(e.target.value);
           }}
         />
-      ) : (
-        <div>No Days</div>
-      )}
+      ) : null}
     </div>
   );
 }

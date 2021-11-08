@@ -37,9 +37,9 @@ export default function App(props: AppProps) {
                 width: '100%',
               },
             },
+
             Group: {
               root: {
-                // width: '100%',
                 padding: 0,
                 margin: 0,
               },

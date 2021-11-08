@@ -7,7 +7,6 @@ export default function WeekSelect({ setWeekIndex, blockIndex, weekIndex }: any)
   const [label, setLabel] = useState('');
 
   useEffect(() => {
-    //   setLabel('');
     console.log(label);
   }, [weekIndex]);
   return (

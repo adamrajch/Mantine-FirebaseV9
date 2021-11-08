@@ -1,16 +1,18 @@
-import { ActionIcon, Button, Group, Menu, TextInput } from '@mantine/core';
+import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { AiFillSetting, AiOutlineDelete, AiOutlineFolderAdd, AiOutlineSave } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
+import { CgFolderAdd } from 'react-icons/cg';
+import BlockSelect from './formSections/BlockSelect';
 import DaySelect from './formSections/DaySelect';
 import WeekSection from './formSections/WeekSection';
 import WeekSelect from './formSections/WeekSelect';
 
-export default function DynamicTemplateForm(): ReactElement {
+export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement {
   const { values, handleChange } = useFormikContext();
   const [weekIndex, setWeekIndex] = useState<string | number | null>(0);
-  const [blockIndex, setBlockIndex] = useState<number>(0);
+  const [blockIndex, setBlockIndex] = useState<string | null | number>(0);
   const [dayIndex, setDayIndex] = useState<string | number | null>(0);
   useEffect(() => {
     setDayIndex(0);
@@ -20,25 +22,48 @@ export default function DynamicTemplateForm(): ReactElement {
   //   console.log('Week: ', weekIndex);
   //   console.log('Day: ', dayIndex);
   // }, [dayIndex, weekIndex, blockIndex]);
+  const newBlock = {
+    name: `Block ${values.blocks.length + 1}`,
+    summary: '',
+    weeks: [
+      {
+        name: 'Week 1',
+        summary: '',
+        days: [
+          {
+            name: 'Day 1',
+            summary: '',
+            workouts: [],
+          },
+        ],
+      },
+    ],
+  };
   return (
     <div>
-      {/* {blockIndex == null && 'Select Block'} */}
-      <div style={{ display: 'flex' }}>
-        {values.blocks.map((block, i: number) => {
-          return (
-            <Button
-              variant="outline"
-              key={i}
-              onClick={() => setBlockIndex(i)}
-              style={{
-                borderColor: blockIndex === i ? 'gold' : '',
-              }}
-            >
-              {block.name}
-            </Button>
-          );
-        })}
-      </div>
+      <Group position="left" spacing="lg" grow>
+        <div>
+          {values.blocks && values.blocks.length > 0 && (
+            <BlockSelect setBlockIndex={setBlockIndex} blockIndex={blockIndex} />
+          )}
+        </div>
+        <div>
+          {values.blocks[blockIndex].weeks && values.blocks[blockIndex].weeks.length > 0 && (
+            <WeekSelect setWeekIndex={setWeekIndex} blockIndex={blockIndex} />
+          )}
+        </div>
+        <div>
+          {values.blocks[blockIndex].weeks && values.blocks[blockIndex].weeks.length > 0 && (
+            <DaySelect setDayIndex={setDayIndex} weekIndex={weekIndex} blockIndex={blockIndex} />
+          )}
+        </div>
+        <Group position="right">
+          <ActionIcon onClick={() => blockHelpers.push(newBlock)}>
+            <CgFolderAdd />
+          </ActionIcon>
+        </Group>
+      </Group>
+
       {values.blocks[blockIndex] && (
         <div>
           <FieldArray
@@ -49,25 +74,13 @@ export default function DynamicTemplateForm(): ReactElement {
                   name={`blocks[${blockIndex}].weeks`}
                   render={(weekHelpers) => (
                     <div>
-                      <Group position="apart" style={{ marginBottom: 20 }}>
+                      <Group position="apart">
                         <TextInput
                           name={`blocks[${blockIndex}].name`}
                           value={values.blocks[blockIndex].name}
                           onChange={(e: any) => handleChange(e)}
                         />
-                        {values.blocks[blockIndex].weeks &&
-                          values.blocks[blockIndex].weeks.length > 0 && (
-                            <WeekSelect setWeekIndex={setWeekIndex} blockIndex={blockIndex} />
-                          )}
 
-                        {values.blocks[blockIndex].weeks &&
-                          values.blocks[blockIndex].weeks.length > 0 && (
-                            <DaySelect
-                              setDayIndex={setDayIndex}
-                              weekIndex={weekIndex}
-                              blockIndex={blockIndex}
-                            />
-                          )}
                         <Group position="right">
                           <ActionIcon
                             onClick={() =>

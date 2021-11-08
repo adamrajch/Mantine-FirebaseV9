@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Group, Menu, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
@@ -59,7 +59,20 @@ export default function LiftSection({
       >
         {(recordHelpers) => {
           return (
-            <div>
+            <Box
+              sx={(theme) => ({
+                width: '100%',
+                padding: 12,
+                marginTop: 2,
+                marginBottom: 2,
+                borderRadius: 8,
+                borderColor: theme.colors.gray[9],
+                '&:hover': {
+                  backgroundColor:
+                    theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+                },
+              })}
+            >
               <FlexContainer justify="space-between" align="center">
                 <TextInput
                   autoComplete="false"
@@ -176,7 +189,7 @@ export default function LiftSection({
                     />
                   </div>
                 ))}
-            </div>
+            </Box>
           );
         }}
       </FieldArray>

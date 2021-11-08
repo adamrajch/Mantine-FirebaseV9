@@ -1,34 +1,28 @@
-import { Button } from '@mantine/core';
+import { NativeSelect } from '@mantine/core';
 import { useFormikContext } from 'formik';
-import React, { ReactElement, useEffect, useState } from 'react';
-import DynamicTemplateForm from '../DynamicTemplateForm';
+import React, { ReactElement, useState } from 'react';
 
-export default function BlockSelect(): ReactElement {
+export default function BlockSelect({
+  setWeekIndex,
+  setBlockIndex,
+  blockIndex,
+  weekIndex,
+  setDayIndex,
+}: any): ReactElement {
   const { values } = useFormikContext();
-  const [blockValue, setBlockValue] = useState<number | null>(0);
+  const [label, setLabel] = useState('');
 
-  useEffect(() => {
-    console.log('select value: ', blockValue);
-  }, [blockValue]);
   return (
-    <div>
-      <div style={{ display: 'flex' }}>
-        {values.blocks.map((block, i: number) => {
-          return (
-            <Button
-              variant="outline"
-              key={i}
-              onClick={() => setBlockValue(i)}
-              style={{
-                borderColor: blockValue === i ? 'gold' : '',
-              }}
-            >
-              {block.name}
-            </Button>
-          );
-        })}
-      </div>
-      <DynamicTemplateForm blockIndex={blockValue} />
-    </div>
+    <NativeSelect
+      value={label}
+      data={values.blocks.map((block, i: number) => ({
+        value: i.toString(),
+        label: block.name,
+      }))}
+      onChange={(e) => {
+        setBlockIndex(e.target.value);
+        setLabel(e.target.value);
+      }}
+    />
   );
 }

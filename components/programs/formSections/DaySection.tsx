@@ -82,10 +82,13 @@ export default function DaySection({
         name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts`}
         render={(workoutHelpers) => (
           <>
-            <Group direction="column" my={24} grow>
+            <Group direction="column" grow>
               <Group position="apart" spacing={2}>
                 <Input
-                  placeholder="day name"
+                  size="lg"
+                  autoComplete="false"
+                  variant="unstyled"
+                  placeholder="$Day"
                   name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.name`}
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   onChange={handleChange}
@@ -104,6 +107,12 @@ export default function DaySection({
                       </ActionIcon>
                     ) : null
                   }
+                  styles={{
+                    input: {
+                      borderRadius: 'none',
+                      borderBottom: '1px solid',
+                    },
+                  }}
                 />
                 <Group>
                   <Button
