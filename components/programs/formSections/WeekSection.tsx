@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Input, Menu } from '@mantine/core';
+import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
@@ -72,7 +72,8 @@ export default function WeekSection({
         render={(dayHelpers) => (
           <div style={{ paddingLeft: 20 }}>
             <Group position="apart">
-              <Input
+              <TextInput
+                label="Week Name"
                 placeholder="week name"
                 name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
                 value={values.blocks[blockIndex].weeks[weekIndex].name}

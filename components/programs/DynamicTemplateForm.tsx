@@ -76,6 +76,8 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                     <div>
                       <Group position="apart">
                         <TextInput
+                          label="Block Name"
+                          // placeholder="Block Name"
                           name={`blocks[${blockIndex}].name`}
                           value={values.blocks[blockIndex].name}
                           onChange={(e: any) => handleChange(e)}
@@ -87,7 +89,13 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                               weekHelpers.push({
                                 name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
                                 summary: undefined,
-                                days: [],
+                                days: [
+                                  {
+                                    name: 'Day 1',
+                                    summary: '',
+                                    workouts: [],
+                                  },
+                                ],
                               })
                             }
                           >

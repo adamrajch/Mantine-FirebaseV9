@@ -76,6 +76,7 @@ export default function BlockSection({ blockIndex, blockHelpers }: any): ReactEl
           <div>
             <FlexContainer>
               <Input
+                placeholder="Block Name"
                 name={`blocks[${blockIndex}].name`}
                 value={values.blocks[blockIndex].name}
                 onChange={(e: any) => handleChange(e)}

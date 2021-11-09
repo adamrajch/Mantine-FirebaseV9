@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Group, Input } from '@mantine/core';
+import { ActionIcon, Button, Group, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -84,7 +84,8 @@ export default function DaySection({
           <>
             <Group direction="column" grow>
               <Group position="apart" spacing={2}>
-                <Input
+                <TextInput
+                  // label="Day Name"
                   size="lg"
                   autoComplete="false"
                   variant="unstyled"

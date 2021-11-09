@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Button, Collapse, Group, Text, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -37,17 +37,34 @@ export default function WorkoutSection({
       >
         {(liftHelpers) => {
           return (
-            <>
+            <Box
+              sx={(theme) => ({
+                width: '100%',
+                paddingTop:
+                  values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                    .type !== 'single'
+                    ? 12
+                    : 0,
+                paddingLeft: 8,
+                paddingBottom: 4,
+                marginTop: 2,
+                marginBottom: 2,
+                borderRadius: 8,
+                borderColor: theme.colors.gray[9],
+                '&:hover': {
+                  backgroundColor:
+                    theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+                },
+              })}
+            >
               {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
                 .type !== 'single' && (
-                <Box
-                  sx={{
-                    marginTop: 20,
-                  }}
-                >
+                <Box>
                   <FlexContainer justify="space-between">
-                    <div style={{ display: 'flex', alignContent: 'center' }}>
-                      <Text>{workoutIndex + 1}.</Text>
+                    <div
+                      style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}
+                    >
+                      {/* <Text>{workoutIndex + 1}.</Text> */}
                       <TextInput
                         autoComplete="false"
                         placeholder={
@@ -118,12 +135,12 @@ export default function WorkoutSection({
                         ].type !== 'single'
                           ? 0
                           : 10,
-                      marginBottom: 20,
+                      marginBottom: 5,
                       paddingLeft:
                         values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
                           workoutIndex
                         ].type !== 'single'
-                          ? 20
+                          ? 15
                           : 0,
                     }}
                   >
@@ -139,7 +156,7 @@ export default function WorkoutSection({
                     />
                   </div>
                 ))}
-            </>
+            </Box>
           );
         }}
       </FieldArray>

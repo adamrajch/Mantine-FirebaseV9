@@ -62,14 +62,18 @@ export default function LiftSection({
             <Box
               sx={(theme) => ({
                 width: '100%',
-                padding: 12,
+                padding: 4,
                 marginTop: 2,
                 marginBottom: 2,
                 borderRadius: 8,
                 borderColor: theme.colors.gray[9],
                 '&:hover': {
                   backgroundColor:
-                    theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+                    theme.colorScheme === 'dark' &&
+                    values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                      .type !== 'single'
+                      ? theme.colors.gray[8]
+                      : '',
                 },
               })}
             >
