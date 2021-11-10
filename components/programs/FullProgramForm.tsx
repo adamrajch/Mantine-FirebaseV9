@@ -168,7 +168,7 @@ export default function FullProgramForm(): ReactElement {
                 </Group>
                 <Group position="center" spacing="xl" role="group">
                   {periodizationCheckboxes.map((checkbox) => (
-                    <div>
+                    <div key={checkbox.value}>
                       <Field name="periodization" type="checkbox" value={checkbox.value}>
                         {({
                           field, // { name, value, onChange, onBlur }
@@ -195,17 +195,15 @@ export default function FullProgramForm(): ReactElement {
               <div>
                 <Group position="apart">
                   <Title>Template</Title>
-
                   <>
                     <Modal
                       opened={openTextModal}
                       onClose={() => setOpenTextModal(false)}
-                      hideCloseButton
+                      // hideCloseButton
                       size="70%"
                     >
-                      <TemplateText />
+                      <TemplateText values={values} />
                     </Modal>
-
                     <Group position="center">
                       <Button
                         variant="outline"
@@ -220,6 +218,8 @@ export default function FullProgramForm(): ReactElement {
 
                 <Divider />
               </div>
+
+              <div></div>
 
               <FieldArray
                 name="blocks"

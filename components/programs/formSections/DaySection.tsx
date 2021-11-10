@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Group, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
-import { AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { Workout } from '../../../types/types';
 import CreateActivityModal from '../CreateActivityModal';
 import WorkoutSection from './WorkoutSection';
@@ -15,11 +15,11 @@ const emptyWorkout: Workout = {
       records: [
         {
           type: 'working',
-          load: 135,
+          load: undefined,
           sets: 5,
           reps: 5,
           unit: 'lbs',
-          rpe: 8,
+          rpe: undefined,
           percent: undefined,
         },
       ],
@@ -93,21 +93,21 @@ export default function DaySection({
                   name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.name`}
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   onChange={handleChange}
-                  rightSection={
-                    values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name.length ? (
-                      <ActionIcon
-                        onClick={() =>
-                          setFieldValue(
-                            `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`,
-                            ''
-                          )
-                        }
-                        size="xs"
-                      >
-                        <AiOutlineClose color="cyan" />
-                      </ActionIcon>
-                    ) : null
-                  }
+                  // rightSection={
+                  //   values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name.length ? (
+                  //     <ActionIcon
+                  //       onClick={() =>
+                  //         setFieldValue(
+                  //           `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`,
+                  //           ''
+                  //         )
+                  //       }
+                  //       size="xs"
+                  //     >
+                  //       <AiOutlineClose color="cyan" />
+                  //     </ActionIcon>
+                  //   ) : null
+                  // }
                   styles={{
                     input: {
                       borderRadius: 'none',
@@ -149,7 +149,15 @@ export default function DaySection({
                     addWorkout={addWorkout}
                   />
 
-                  <ActionIcon size="lg" color="cyan" onClick={() => dayHelpers.remove(dayIndex)}>
+                  <ActionIcon
+                    size="lg"
+                    color="cyan"
+                    onClick={() => {
+                      console.log(values);
+                      console.log(dayIndex);
+                      dayHelpers.remove(dayIndex);
+                    }}
+                  >
                     <AiOutlineDelete />
                   </ActionIcon>
                 </Group>

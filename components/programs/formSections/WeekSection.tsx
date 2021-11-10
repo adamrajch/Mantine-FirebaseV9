@@ -46,11 +46,11 @@ const emptyWorkout: Workout = {
       records: [
         {
           type: 'working',
-          load: 135,
+          load: undefined,
           sets: 5,
           reps: 5,
           unit: 'lbs',
-          rpe: 8,
+          rpe: undefined,
           percent: undefined,
         },
       ],
@@ -95,7 +95,7 @@ export default function WeekSection({
                 <ActionIcon
                   onClick={() =>
                     dayHelpers.push({
-                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
+                      name: `New Day`,
                       workouts: [emptyWorkout],
                     })
                   }
@@ -124,7 +124,10 @@ export default function WeekSection({
                   </Menu.Item>
                   <Menu.Item
                     icon={<AiOutlineDelete />}
-                    onClick={() => weekHelpers.remove(weekIndex)}
+                    onClick={() => {
+                      console.log(values);
+                      weekHelpers.remove(weekIndex);
+                    }}
                   >
                     Delete
                   </Menu.Item>
@@ -132,14 +135,12 @@ export default function WeekSection({
               </Group>
             </Group>
             {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
-              <div>
-                <DaySection
-                  blockIndex={blockIndex}
-                  weekIndex={weekIndex}
-                  dayIndex={dayIndex}
-                  dayHelpers={dayHelpers}
-                />
-              </div>
+              <DaySection
+                blockIndex={blockIndex}
+                weekIndex={weekIndex}
+                dayIndex={dayIndex}
+                dayHelpers={dayHelpers}
+              />
             ) : (
               <div>Add Day</div>
             )}

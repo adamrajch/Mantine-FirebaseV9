@@ -48,14 +48,27 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           )}
         </div>
         <div>
-          {values.blocks[blockIndex].weeks && values.blocks[blockIndex].weeks.length > 0 && (
-            <WeekSelect setWeekIndex={setWeekIndex} blockIndex={blockIndex} />
-          )}
+          {values.blocks &&
+            values.blocks.length > 0 &&
+            values.blocks[blockIndex].weeks &&
+            values.blocks[blockIndex].weeks.length > 0 && (
+              <WeekSelect
+                setWeekIndex={setWeekIndex}
+                blockIndex={blockIndex}
+                setDayIndex={setDayIndex}
+                dayIndex={dayIndex}
+              />
+            )}
         </div>
         <div>
-          {values.blocks[blockIndex].weeks && values.blocks[blockIndex].weeks.length > 0 && (
-            <DaySelect setDayIndex={setDayIndex} weekIndex={weekIndex} blockIndex={blockIndex} />
-          )}
+          {weekIndex !== null &&
+            values.blocks &&
+            values.blocks.length > 0 &&
+            values.blocks[blockIndex].weeks &&
+            values.blocks[blockIndex].weeks[weekIndex].days &&
+            values.blocks[blockIndex].weeks[weekIndex].days.length > 0 && (
+              <DaySelect setDayIndex={setDayIndex} weekIndex={weekIndex} blockIndex={blockIndex} />
+            )}
         </div>
         <Group position="right">
           <ActionIcon onClick={() => blockHelpers.push(newBlock)}>

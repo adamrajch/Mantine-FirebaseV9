@@ -63,6 +63,11 @@ export default function RecordSection({
 
               if (event.currentTarget.checked == true) {
                 setHasLoad(false);
+              } else {
+                setFieldValue(
+                  `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].rpe`,
+                  undefined
+                );
               }
             }}
             styles={{
@@ -79,6 +84,11 @@ export default function RecordSection({
               setHasPercent(event.currentTarget.checked);
               if (event.currentTarget.checked == true) {
                 setHasLoad(false);
+              } else {
+                setFieldValue(
+                  `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].percent`,
+                  undefined
+                );
               }
             }}
             styles={{
@@ -96,6 +106,11 @@ export default function RecordSection({
               if (event.currentTarget.checked == true) {
                 setHasPercent(false);
                 setHasRPE(false);
+              } else {
+                setFieldValue(
+                  `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].load`,
+                  undefined
+                );
               }
             }}
             styles={{
