@@ -62,6 +62,8 @@ export default function WeekSection({
   blockIndex,
   weekHelpers,
   dayIndex,
+  setWeekIndex,
+  setDayIndex,
 }: any): ReactElement {
   const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Template } = useFormikContext();
@@ -126,6 +128,15 @@ export default function WeekSection({
                     icon={<AiOutlineDelete />}
                     onClick={() => {
                       console.log(values);
+
+                      if (values.blocks[blockIndex].weeks.length <= 1) {
+                        setWeekIndex(null);
+                        setDayIndex(null);
+                      } else {
+                        console.log('resetting week');
+                        setWeekIndex(0);
+                        setDayIndex(null);
+                      }
                       weekHelpers.remove(weekIndex);
                     }}
                   >
@@ -134,7 +145,9 @@ export default function WeekSection({
                 </Menu>
               </Group>
             </Group>
-            {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
+            {weekIndex !== null &&
+            dayIndex !== null &&
+            values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
               <DaySection
                 blockIndex={blockIndex}
                 weekIndex={weekIndex}

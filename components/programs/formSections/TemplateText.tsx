@@ -2,7 +2,6 @@ import { Badge, Group, Text, Title } from '@mantine/core';
 import React, { ReactElement } from 'react';
 
 export default function TemplateText({ values }: any): ReactElement {
-  console.log(values);
   return (
     <div>
       <Title align="center">{values.title}</Title>
@@ -34,12 +33,12 @@ export default function TemplateText({ values }: any): ReactElement {
       <div>
         {values.blocks.length &&
           values.blocks.map((block, blockIndex: number) => (
-            <div>
+            <div key={blockIndex}>
               <Title order={3}>{block.name}</Title>
               <div>
                 {values.blocks[blockIndex].weeks.length &&
                   values.blocks[blockIndex].weeks.map((week, weekIndex: number) => (
-                    <div style={{ paddingLeft: 10 }}>
+                    <div style={{ paddingLeft: 10 }} key={weekIndex}>
                       <Title order={3} align="center">
                         {week.name}
                       </Title>
@@ -48,6 +47,7 @@ export default function TemplateText({ values }: any): ReactElement {
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
                             (day, dayIndex: number) => (
                               <div
+                                key={dayIndex}
                                 style={{ border: '1px solid white', borderRadius: 5, padding: 12 }}
                               >
                                 <Title order={2} align="center">
@@ -59,10 +59,11 @@ export default function TemplateText({ values }: any): ReactElement {
                                     values.blocks[blockIndex].weeks[weekIndex].days[
                                       dayIndex
                                     ].workouts.map((w, workoutIndex: number) => (
-                                      <div>
+                                      <div key={workoutIndex}>
                                         <div>{w.type !== 'single' && <Text>{w.name}</Text>}</div>
-                                        {w.lifts.map((lift) => (
+                                        {w.lifts.map((lift, lIndex) => (
                                           <div
+                                            key={lIndex}
                                             style={{
                                               display: 'flex',
                                               justifyContent: 'flex-start',
@@ -74,8 +75,8 @@ export default function TemplateText({ values }: any): ReactElement {
                                             <div
                                               style={{ display: 'flex', flexDirection: 'column' }}
                                             >
-                                              {lift.records.map((r) => (
-                                                <Text>
+                                              {lift.records.map((r, rIndex) => (
+                                                <Text key={rIndex}>
                                                   {`${r.sets} x ${r.reps}`}{' '}
                                                   {r.rpe !== undefined && `@${r.rpe}`}
                                                   {r.percent !== undefined && `${r.percent}%`}

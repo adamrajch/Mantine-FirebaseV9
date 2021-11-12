@@ -1,6 +1,6 @@
 import { NativeSelect } from '@mantine/core';
 import { useFormikContext } from 'formik';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 export default function WeekSelect({
   setWeekIndex,
@@ -11,7 +11,9 @@ export default function WeekSelect({
 }: any): ReactElement {
   const { values } = useFormikContext();
   const [label, setLabel] = useState('');
-
+  useEffect(() => {
+    // setLabel(values.blocks[blockIndex].weeks[weekIndex].name);
+  }, [weekIndex]);
   return (
     <NativeSelect
       value={label}

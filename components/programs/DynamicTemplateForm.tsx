@@ -12,16 +12,34 @@ import WeekSelect from './formSections/WeekSelect';
 export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement {
   const { values, handleChange } = useFormikContext();
   const [weekIndex, setWeekIndex] = useState<string | number | null>(0);
-  const [blockIndex, setBlockIndex] = useState<string | null | number>(0);
+  const [blockIndex, setBlockIndex] = useState<null | string | number>(0);
   const [dayIndex, setDayIndex] = useState<string | number | null>(0);
   useEffect(() => {
-    setDayIndex(0);
+    if (weekIndex == 0) {
+      setDayIndex(0);
+    }
   }, [weekIndex]);
-  // useEffect(() => {
-  //   console.log('Block: ', blockIndex);
-  //   console.log('Week: ', weekIndex);
-  //   console.log('Day: ', dayIndex);
-  // }, [dayIndex, weekIndex, blockIndex]);
+  useEffect(() => {
+    console.log('reset indexes');
+    if (!values.blocks.length || values.blocks.length == 0) {
+      setBlockIndex(null);
+      setWeekIndex(null);
+      setDayIndex(null);
+    }
+  }, [values.blocks.length]);
+
+  useEffect(() => {
+    console.log('change in block');
+    if (blockIndex) {
+      if (!values.blocks[blockIndex].weeks.length || values.blocks[blockIndex].weeks.length == 0) {
+        setWeekIndex(null);
+        setDayIndex(null);
+      }
+    }
+    if (blockIndex && values.blocks[blockIndex].weeks.length && !weekIndex) {
+      setWeekIndex(0);
+    }
+  }, [values.blocks]);
   const newBlock = {
     name: `Block ${values.blocks.length + 1}`,
     summary: '',
@@ -39,6 +57,12 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       },
     ],
   };
+  function handleAddBlock() {
+    if (!values.blocks.length) {
+      setBlockIndex(0);
+    }
+    blockHelpers.push(newBlock);
+  }
   return (
     <div>
       <Group position="left" spacing="lg" grow>
@@ -48,7 +72,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           )}
         </div>
         <div>
-          {values.blocks &&
+          {blockIndex !== null &&
             values.blocks.length > 0 &&
             values.blocks[blockIndex].weeks &&
             values.blocks[blockIndex].weeks.length > 0 && (
@@ -61,7 +85,8 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
             )}
         </div>
         <div>
-          {weekIndex !== null &&
+          {blockIndex !== null &&
+            weekIndex !== null &&
             values.blocks &&
             values.blocks.length > 0 &&
             values.blocks[blockIndex].weeks &&
@@ -71,12 +96,16 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
             )}
         </div>
         <Group position="right">
-          <ActionIcon onClick={() => blockHelpers.push(newBlock)}>
+          <ActionIcon onClick={() => handleAddBlock()}>
             <CgFolderAdd />
           </ActionIcon>
         </Group>
       </Group>
-
+      <Group>
+        <div>{blockIndex == null && <div>No blocks index</div>}</div>
+        <div>{weekIndex == null && <div>No week index</div>}</div>
+        <div>{dayIndex == null && <div>No day index</div>}</div>
+      </Group>
       {values.blocks[blockIndex] && (
         <div>
           <FieldArray
@@ -98,7 +127,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
 
                         <Group position="right">
                           <ActionIcon
-                            onClick={() =>
+                            onClick={() => {
                               weekHelpers.push({
                                 name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
                                 summary: undefined,
@@ -106,11 +135,36 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                                   {
                                     name: 'Day 1',
                                     summary: '',
-                                    workouts: [],
+                                    workouts: [
+                                      {
+                                        name: 'New Lift',
+                                        type: 'single',
+                                        note: undefined,
+                                        lifts: [
+                                          {
+                                            name: 'New Lift',
+                                            records: [
+                                              {
+                                                type: 'working',
+                                                load: undefined,
+                                                sets: 5,
+                                                reps: 5,
+                                                unit: 'lbs',
+                                                rpe: undefined,
+                                                percent: undefined,
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                 ],
-                              })
-                            }
+                              });
+                              if (weekIndex == null) {
+                                setWeekIndex(0);
+                              }
+                            }}
                           >
                             <AiOutlineFolderAdd />
                           </ActionIcon>
@@ -141,7 +195,18 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                             </Menu.Item>
                             <Menu.Item
                               icon={<AiOutlineDelete />}
-                              onClick={() => blockHelpers.remove(blockIndex)}
+                              onClick={() => {
+                                blockHelpers.remove(blockIndex);
+                                if (!values.blocks.length) {
+                                  setBlockIndex(null);
+                                  setWeekIndex(null);
+                                  setDayIndex(null);
+                                } else {
+                                  setBlockIndex(0);
+                                  setWeekIndex(null);
+                                  setDayIndex(null);
+                                }
+                              }}
                               color="red"
                             >
                               Delete
@@ -149,13 +214,28 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           </Menu>
                         </Group>
                       </Group>
-                      {values.blocks[blockIndex].weeks &&
+
+                      {blockIndex !== null &&
+                        weekIndex == null &&
+                        values.blocks[blockIndex].weeks.length && (
+                          <div>
+                            Select Week
+                            {values.blocks[blockIndex].weeks.map((w) => (
+                              <div>{w.name}</div>
+                            ))}
+                          </div>
+                        )}
+                      {blockIndex !== null &&
+                        weekIndex !== null &&
+                        values.blocks[blockIndex].weeks &&
                         values.blocks[blockIndex].weeks.length > 0 && (
                           <WeekSection
                             weekHelpers={weekHelpers}
                             blockIndex={blockIndex}
                             weekIndex={weekIndex}
                             dayIndex={dayIndex}
+                            setWeekIndex={setWeekIndex}
+                            setDayIndex={setDayIndex}
                           />
                         )}
                     </div>
@@ -166,9 +246,9 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           />
         </div>
       )}
-      {/* <div>
+      <div>
         Block:{blockIndex} week:{weekIndex} day:{dayIndex}
-      </div> */}
+      </div>
     </div>
   );
 }
