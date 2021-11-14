@@ -1,15 +1,10 @@
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  GlobalStyles,
-  MantineProvider,
-  NormalizeCSS,
-} from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider, MantineProvider, NormalizeCSS } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useState } from 'react';
-
+import GlobalStyle from '../components/GlobalStyles';
+import { AuthProvider } from '../context/auth';
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState('light');
@@ -37,7 +32,6 @@ export default function App(props: AppProps) {
                 width: '100%',
               },
             },
-
             Group: {
               root: {
                 padding: 0,
@@ -47,9 +41,11 @@ export default function App(props: AppProps) {
           }}
         >
           <NormalizeCSS />
-          <GlobalStyles />
+          <GlobalStyle />
           <NotificationsProvider>
-            <Component {...pageProps} />
+            <AuthProvider>
+              <Component {...pageProps} />
+            </AuthProvider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

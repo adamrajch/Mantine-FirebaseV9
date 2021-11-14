@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react';
 export default function TemplateText({ values }: any): ReactElement {
   return (
     <div>
-      <Title align="center">{values.title}</Title>
+      <Title align="center">{values.title ? values.title : 'Program Title'}</Title>
       <Group>
         {values.category.map((cat: string) => (
           <Badge key={cat} variant="gradient" gradient={{ from: 'teal', to: 'blue' }}>
@@ -38,28 +38,39 @@ export default function TemplateText({ values }: any): ReactElement {
               <div>
                 {values.blocks[blockIndex].weeks.length &&
                   values.blocks[blockIndex].weeks.map((week, weekIndex: number) => (
-                    <div style={{ paddingLeft: 10 }} key={weekIndex}>
-                      <Title order={3} align="center">
+                    <div style={{ paddingLeft: 10, marginTop: 12 }} key={weekIndex}>
+                      <Title order={2} align="center">
                         {week.name}
                       </Title>
-                      <div style={{ display: 'flex', gap: 10 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          gap: 10,
+                          marginTop: 12,
+                        }}
+                      >
                         {values.blocks[blockIndex].weeks[weekIndex].days.length &&
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
                             (day, dayIndex: number) => (
                               <div
                                 key={dayIndex}
-                                style={{ border: '1px solid white', borderRadius: 5, padding: 12 }}
+                                style={{
+                                  border: '1px solid white',
+                                  borderRadius: 5,
+                                  padding: '12px 24px',
+                                }}
                               >
                                 <Title order={2} align="center">
                                   {day.name}
                                 </Title>
-                                <Group direction="column">
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
                                   {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex]
                                     .workouts.length &&
                                     values.blocks[blockIndex].weeks[weekIndex].days[
                                       dayIndex
                                     ].workouts.map((w, workoutIndex: number) => (
-                                      <div key={workoutIndex}>
+                                      <div key={workoutIndex} style={{ marginTop: 8 }}>
                                         <div>{w.type !== 'single' && <Text>{w.name}</Text>}</div>
                                         {w.lifts.map((lift, lIndex) => (
                                           <div
@@ -88,7 +99,7 @@ export default function TemplateText({ values }: any): ReactElement {
                                         ))}
                                       </div>
                                     ))}
-                                </Group>
+                                </div>
                               </div>
                             )
                           )}

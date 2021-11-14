@@ -9,15 +9,23 @@ import {
   SimpleGrid,
   Tab,
   Tabs,
+  Text,
   TextInput,
   Title,
 } from '@mantine/core';
 import { ChatBubbleIcon, ImageIcon } from '@modulz/radix-icons';
 import { Field, FieldArray, Formik } from 'formik';
-import React, { ReactElement, useState } from 'react';
+import React, { useState } from 'react';
+import * as Yup from 'yup';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import TemplateText from './formSections/TemplateText';
 import RichText from './RichText';
+
+const ProgramSchema = Yup.object().shape({
+  title: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  experience: Yup.array().of(Yup.string()).min(1, 'Check atleast one'),
+  category: Yup.array().of(Yup.string()).min(1, 'Check atleast one'),
+});
 type Program = {
   title: string;
   public: boolean;
@@ -55,7 +63,7 @@ type Program = {
     }>;
   }>;
 };
-export default function FullProgramForm(): ReactElement {
+export default function FullProgramForm(): JSX.Element {
   const [value, onChange] = useState<string>('');
   const [opened, setOpen] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
@@ -114,6 +122,7 @@ export default function FullProgramForm(): ReactElement {
         enableReinitialize={false}
         validateOnChange={false}
         validateOnBlur={false}
+        validationSchema={ProgramSchema}
       >
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, errors }) => (
           <form onSubmit={handleSubmit}>
@@ -121,20 +130,20 @@ export default function FullProgramForm(): ReactElement {
               <SimpleGrid cols={3} spacing="xs">
                 <div></div>
                 <div>
-                  <Title align="center">{values.title ? values.title : 'Create Program'}</Title>
+                  <Title align="center"> Create Program </Title>
                 </div>
 
                 <div></div>
               </SimpleGrid>
 
-              <Tabs>
+              <Tabs style={{ marginTop: 24 }}>
                 <Tab label="General" icon={<ImageIcon />}>
                   <Group direction="column" spacing="lg" grow>
                     <TextInput
                       autoComplete="false"
                       required
                       label="Program Title"
-                      error={errors.title && 'Title must be between 3 and 20 characters'}
+                      error={errors.title}
                       value={values.title}
                       name="title"
                       onChange={handleChange}
@@ -149,26 +158,33 @@ export default function FullProgramForm(): ReactElement {
                       ]}
                     />
 
-                    <Group position="center" grow>
-                      <MultiSelect
-                        required
-                        placeholder="Select atleast one discipline"
-                        data={multiSelectData}
-                        label="Focus"
-                        value={values.category}
-                        clearable
-                        onChange={(value) => setFieldValue('category', value)}
-                      />
-                      <MultiSelect
-                        required
-                        placeholder="Select experience levels"
-                        data={multiSelectExperience}
-                        label="Experience"
-                        value={values.experience}
-                        clearable
-                        onChange={(value) => setFieldValue('experience', value)}
-                      />
-                    </Group>
+                    <SimpleGrid cols={2}>
+                      <div>
+                        <MultiSelect
+                          name="category"
+                          required
+                          placeholder="Select atleast one discipline"
+                          data={multiSelectData}
+                          label="Focus"
+                          value={values.category}
+                          clearable
+                          onChange={(value) => setFieldValue('category', value)}
+                        />
+                        <Text color="red">{errors.category}</Text>
+                      </div>
+                      <div>
+                        <MultiSelect
+                          required
+                          placeholder="Select experience levels"
+                          data={multiSelectExperience}
+                          label="Experience"
+                          value={values.experience}
+                          clearable
+                          onChange={(value) => setFieldValue('experience', value)}
+                        />
+                        <Text color="red">{errors.experience}</Text>
+                      </div>
+                    </SimpleGrid>
                     <Group position="center" spacing="xl" role="group">
                       {periodizationCheckboxes.map((checkbox) => (
                         <div key={checkbox.value}>

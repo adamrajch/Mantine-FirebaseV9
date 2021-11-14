@@ -246,9 +246,9 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           />
         </div>
       )}
-      <div>
+      {/* <div>
         Block:{blockIndex} week:{weekIndex} day:{dayIndex}
-      </div>
+      </div> */}
     </div>
   );
 }
