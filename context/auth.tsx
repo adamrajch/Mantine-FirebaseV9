@@ -1,7 +1,7 @@
+import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import Login from '../components/auth/login';
+import SignUp from '../components/auth/signup';
 import { auth } from '../firebase';
-
 const AuthContext = createContext({});
 type Props = {
   children?: React.ReactNode;
@@ -11,16 +11,18 @@ export const AuthProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     return auth.onIdTokenChanged(async (user) => {
+      const token = await user.getIdToken();
       if (!user) {
         console.log('no user');
         setCurrentUser(null);
         setLoading(false);
+        nookies.set(undefined, '', token, {});
         return;
       }
-      const token = await user.getIdToken();
+
       setCurrentUser(user);
       setLoading(false);
-      console.log(token);
+      nookies.set(undefined, 'token', token, {});
       console.log(user);
     });
   }, []);
@@ -29,7 +31,7 @@ export const AuthProvider = ({ children }: Props) => {
   }
 
   if (!currentUser) {
-    return <Login />;
+    return <SignUp />;
   } else {
     return <AuthContext.Provider value={{ currentUser }}>{children}</AuthContext.Provider>;
   }

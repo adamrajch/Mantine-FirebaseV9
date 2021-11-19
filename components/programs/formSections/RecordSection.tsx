@@ -66,7 +66,7 @@ export default function RecordSection({
               } else {
                 setFieldValue(
                   `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].rpe`,
-                  undefined
+                  null
                 );
               }
             }}
@@ -87,7 +87,7 @@ export default function RecordSection({
               } else {
                 setFieldValue(
                   `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].percent`,
-                  undefined
+                  null
                 );
               }
             }}
@@ -109,7 +109,7 @@ export default function RecordSection({
               } else {
                 setFieldValue(
                   `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].load`,
-                  undefined
+                  null
                 );
               }
             }}

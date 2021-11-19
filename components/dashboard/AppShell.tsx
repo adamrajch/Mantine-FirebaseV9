@@ -1,5 +1,7 @@
 import {
+  ActionIcon,
   AppShell,
+  Avatar,
   Box,
   Burger,
   Group,
@@ -10,6 +12,9 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import React, { useState } from 'react';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { useAuth } from '../../context/auth';
+import { auth } from '../../firebase';
 import ColorModeSwitch from '../ColorModeSwitch';
 
 type Props = {
@@ -19,6 +24,8 @@ type Props = {
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
+  const { currentUser } = useAuth();
+
   return (
     <AppShell
       navbarOffsetBreakpoint="sm"
@@ -34,6 +41,19 @@ export default function Layout({ children }: Props) {
             <Text component="a" href="/programs">
               Programs
             </Text>
+
+            {currentUser ? (
+              <Text component="a" href="/dashboard/myprograms">
+                My Programs
+              </Text>
+            ) : null}
+            <Group position="center" noWrap>
+              <Avatar size="md" src={currentUser.photoURL} alt="user" />
+              <Text size="sm">{currentUser.displayName}</Text>
+              <ActionIcon onClick={() => auth.signOut()}>
+                <AiOutlineLogout />
+              </ActionIcon>
+            </Group>
           </Group>
         </Navbar>
       }

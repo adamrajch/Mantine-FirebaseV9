@@ -1,3 +1,4 @@
+import { addDoc, collection, Timestamp } from '@firebase/firestore';
 import {
   Button,
   Checkbox,
@@ -17,6 +18,8 @@ import { ChatBubbleIcon, ImageIcon } from '@modulz/radix-icons';
 import { Field, FieldArray, Formik } from 'formik';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
+import { useAuth } from '../../context/auth';
+import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import TemplateText from './formSections/TemplateText';
 import RichText from './RichText';
@@ -35,7 +38,7 @@ type Program = {
   experience: string[];
   blocks: Array<{
     name: string;
-    summary?: string;
+    summary: string | null;
     weeks?: Array<{
       name: string;
       summary?: string;
@@ -67,6 +70,8 @@ export default function FullProgramForm(): JSX.Element {
   const [value, onChange] = useState<string>('');
   const [opened, setOpen] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
+  const { currentUser } = useAuth();
+  console.log(currentUser.email);
   const initialValues: Program = {
     title: '',
     public: false,
@@ -77,7 +82,7 @@ export default function FullProgramForm(): JSX.Element {
     blocks: [
       {
         name: 'Block 1',
-        summary: undefined,
+        summary: '',
         weeks: [
           {
             name: 'Week 1',
@@ -114,11 +119,20 @@ export default function FullProgramForm(): JSX.Element {
     { label: 'Step', value: 'step' },
     { label: 'Reverse', value: 'reverse' },
   ];
+
   return (
     <div>
       <Formik
         initialValues={initialValues}
-        onSubmit={async (values) => alert(JSON.stringify(values, null, 2))}
+        onSubmit={async (values) => {
+          console.log(values);
+          await addDoc(collection(db, 'programs'), {
+            email: currentUser.email,
+            summary: value,
+            template: values,
+            createdDate: Timestamp.fromDate(new Date()),
+          });
+        }}
         enableReinitialize={false}
         validateOnChange={false}
         validateOnBlur={false}
@@ -234,7 +248,7 @@ export default function FullProgramForm(): JSX.Element {
 
               <Group position="right" my={8}>
                 <Button variant="outline" type="submit">
-                  Save
+                  Create
                 </Button>
               </Group>
             </Container>

@@ -14,9 +14,9 @@ const emptyLift = {
       sets: 5,
       reps: 5,
       unit: 'lbs',
-      rpe: undefined,
-      percent: undefined,
-      load: undefined,
+      rpe: null,
+      percent: null,
+      load: null,
     },
   ],
 };

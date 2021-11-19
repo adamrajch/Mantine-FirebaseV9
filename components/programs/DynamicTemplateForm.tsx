@@ -130,7 +130,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                             onClick={() => {
                               weekHelpers.push({
                                 name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
-                                summary: undefined,
+                                summary: '',
                                 days: [
                                   {
                                     name: 'Day 1',
@@ -139,19 +139,19 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                                       {
                                         name: 'New Lift',
                                         type: 'single',
-                                        note: undefined,
+                                        note: null,
                                         lifts: [
                                           {
                                             name: 'New Lift',
                                             records: [
                                               {
                                                 type: 'working',
-                                                load: undefined,
+                                                load: null,
                                                 sets: 5,
                                                 reps: 5,
                                                 unit: 'lbs',
-                                                rpe: undefined,
-                                                percent: undefined,
+                                                rpe: null,
+                                                percent: null,
                                               },
                                             ],
                                           },

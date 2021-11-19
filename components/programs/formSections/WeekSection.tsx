@@ -8,27 +8,27 @@ import DaySection from './DaySection';
 type Template = {
   blocks: Array<{
     name: string;
-    summary?: string;
+    summary: string | null;
     weeks?: Array<{
       name: string;
-      summary?: string;
+      summary: string | null;
       days: Array<{
         name: string;
-        summary?: string;
+        summary: string | null;
         workouts?: Array<{
           name: string;
           type: string;
-          note?: string;
+          note: string | null;
           lifts?: Array<{
             name: string;
             records?: Array<{
               type: string;
               sets: number;
               reps: number;
-              rpe?: number;
-              load?: number;
-              unit?: string;
-              percent?: number;
+              rpe: number | null;
+              load: number | null;
+              unit: string | null;
+              percent: number | null;
             }>;
           }>;
         }>;
@@ -39,19 +39,19 @@ type Template = {
 const emptyWorkout: Workout = {
   name: 'New Lift',
   type: 'single',
-  note: undefined,
+  note: '',
   lifts: [
     {
       name: 'New Lift',
       records: [
         {
           type: 'working',
-          load: undefined,
+          load: null,
           sets: 5,
           reps: 5,
           unit: 'lbs',
-          rpe: undefined,
-          percent: undefined,
+          rpe: null,
+          percent: null,
         },
       ],
     },
