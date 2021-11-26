@@ -1,4 +1,5 @@
-import { ColorScheme, ColorSchemeProvider, MantineProvider, NormalizeCSS } from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -24,7 +25,7 @@ export default function App(props: AppProps) {
             primaryColor: 'cyan',
             fontFamily: 'Verdana, sans-serif',
             fontFamilyMonospace: 'Monaco, Courier, monospace',
-            headings: { fontFamily: 'Greycliff CF, sans-serif' },
+            headings: { fontFamily: 'monospace' },
           }}
           styles={{
             Box: {
@@ -38,15 +39,22 @@ export default function App(props: AppProps) {
                 margin: 0,
               },
             },
+            Title: {
+              root: {
+                color: 'white',
+              },
+            },
           }}
+          withNormalizeCSS
         >
-          <NormalizeCSS />
-          <GlobalStyle />
-          <NotificationsProvider>
-            <AuthProvider>
-              <Component {...pageProps} />
-            </AuthProvider>
-          </NotificationsProvider>
+          <ModalsProvider>
+            <GlobalStyle />
+            <NotificationsProvider>
+              <AuthProvider>
+                <Component {...pageProps} />
+              </AuthProvider>
+            </NotificationsProvider>
+          </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </>

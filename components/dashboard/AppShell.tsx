@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Burger,
+  Divider,
   Group,
   Header,
   MediaQuery,
@@ -16,10 +17,24 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
 import { auth } from '../../firebase';
 import ColorModeSwitch from '../ColorModeSwitch';
+import NavBarLink from '../NavBarLink';
+import Footer from './Footer';
 
 type Props = {
   children: React.ReactNode;
 };
+const generalLinks = [
+  { href: 'programs', title: 'Programs' },
+  { href: 'basics', title: 'Learn Basics' },
+  { href: 'faq', title: 'FAQ' },
+  { href: 'about', title: 'About' },
+];
+const userLinks = [
+  { href: '/dashboard/create', title: 'Create Program' },
+  { href: '/dashboard/myprograms', title: 'My Programs' },
+  { href: '/dashboard/schedule', title: 'Schedule' },
+  { href: '/dashboard/journal', title: 'Journal' },
+];
 
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
@@ -28,6 +43,7 @@ export default function Layout({ children }: Props) {
 
   return (
     <AppShell
+      padding={0}
       navbarOffsetBreakpoint="sm"
       fixed
       navbar={
@@ -35,26 +51,41 @@ export default function Layout({ children }: Props) {
           padding="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ base: 250, breakpoints: { sm: '100%', lg: 300 } }}
+          width={{ sm: 200, lg: 250 }}
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[7],
+          })}
         >
-          <Group position="center" direction="column">
-            <Text component="a" href="/programs">
-              Programs
-            </Text>
-
-            {currentUser ? (
-              <Text component="a" href="/dashboard/myprograms">
-                My Programs
-              </Text>
-            ) : null}
-            <Group position="center" noWrap>
-              <Avatar size="md" src={currentUser.photoURL} alt="user" />
-              <Text size="sm">{currentUser.displayName}</Text>
-              <ActionIcon onClick={() => auth.signOut()}>
-                <AiOutlineLogout />
-              </ActionIcon>
+          <Navbar.Section>
+            <Group position="left" direction="column" spacing={0}>
+              {generalLinks.map((g) => (
+                <NavBarLink key={g.href} href={g.href} title={g.title} />
+              ))}
             </Group>
-          </Group>
+          </Navbar.Section>
+          <Divider my="sm" />
+          <Navbar.Section grow>
+            {currentUser ? (
+              <Group position="left" direction="column" spacing={0}>
+                {userLinks.map((g) => (
+                  <NavBarLink key={g.href} href={g.href} title={g.title} />
+                ))}
+              </Group>
+            ) : null}
+          </Navbar.Section>
+          <Navbar.Section>
+            <div>
+              <Divider my="sm" />
+              <Group position="center" noWrap>
+                <Avatar size="md" src={currentUser.photoURL} alt="user" />
+                <Text size="sm">{currentUser.displayName}</Text>
+                <ActionIcon onClick={() => auth.signOut()}>
+                  <AiOutlineLogout />
+                </ActionIcon>
+              </Group>
+            </div>
+          </Navbar.Section>
         </Navbar>
       }
       header={
@@ -93,7 +124,23 @@ export default function Layout({ children }: Props) {
         </Header>
       }
     >
-      {children}
+      <div
+        className="app-wrap"
+        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      >
+        <Box
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.dark[7],
+
+            padding: '20px 10px 200px 10px',
+            flex: '1 0 auto',
+          })}
+        >
+          {children}
+        </Box>
+        <Footer />
+      </div>
     </AppShell>
   );
 }

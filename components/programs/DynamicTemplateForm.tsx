@@ -1,7 +1,14 @@
 import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { AiFillSetting, AiOutlineDelete, AiOutlineFolderAdd, AiOutlineSave } from 'react-icons/ai';
+import {
+  AiFillSetting,
+  AiOutlineCaretLeft,
+  AiOutlineCaretRight,
+  AiOutlineDelete,
+  AiOutlineFolderAdd,
+  AiOutlineSave,
+} from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { CgFolderAdd } from 'react-icons/cg';
 import BlockSelect from './formSections/BlockSelect';
@@ -12,15 +19,15 @@ import WeekSelect from './formSections/WeekSelect';
 export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement {
   const { values, handleChange } = useFormikContext();
   const [weekIndex, setWeekIndex] = useState<string | number | null>(0);
-  const [blockIndex, setBlockIndex] = useState<null | string | number>(0);
+  const [blockIndex, setBlockIndex] = useState<string | number | null>(0);
   const [dayIndex, setDayIndex] = useState<string | number | null>(0);
+
   useEffect(() => {
     if (weekIndex == 0) {
       setDayIndex(0);
     }
   }, [weekIndex]);
   useEffect(() => {
-    console.log('reset indexes');
     if (!values.blocks.length || values.blocks.length == 0) {
       setBlockIndex(null);
       setWeekIndex(null);
@@ -29,9 +36,12 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
   }, [values.blocks.length]);
 
   useEffect(() => {
-    console.log('change in block');
     if (blockIndex) {
-      if (!values.blocks[blockIndex].weeks.length || values.blocks[blockIndex].weeks.length == 0) {
+      if (
+        !values.blocks[blockIndex].weeks.length ||
+        values.blocks[blockIndex].weeks.length == 0 ||
+        values.blocks[blockIndex].weeks.length == undefined
+      ) {
         setWeekIndex(null);
         setDayIndex(null);
       }
@@ -40,6 +50,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       setWeekIndex(0);
     }
   }, [values.blocks]);
+
   const newBlock = {
     name: `Block ${values.blocks.length + 1}`,
     summary: '',
@@ -64,13 +75,14 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
     blockHelpers.push(newBlock);
   }
   return (
-    <div>
+    <Group position="left" direction="column" grow>
       <Group position="left" spacing="lg" grow>
         <div>
           {values.blocks && values.blocks.length > 0 && (
             <BlockSelect setBlockIndex={setBlockIndex} blockIndex={blockIndex} />
           )}
         </div>
+
         <div>
           {blockIndex !== null &&
             values.blocks.length > 0 &&
@@ -106,6 +118,43 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
         <div>{weekIndex == null && <div>No week index</div>}</div>
         <div>{dayIndex == null && <div>No day index</div>}</div>
       </Group>
+
+      {values.blocks && values.blocks.length > 0 && blockIndex !== null && (
+        <Group direction="row">
+          {values.blocks.length >= 2 && blockIndex > 0 && (
+            <ActionIcon>
+              <AiOutlineCaretLeft
+                onClick={() => {
+                  console.log(blockIndex);
+                  setBlockIndex((curr) => curr - 1);
+                }}
+              />
+            </ActionIcon>
+          )}
+          <TextInput
+            variant="default"
+            name={`values.blocks[${blockIndex}].name`}
+            value={values.blocks[blockIndex].name}
+            onChange={() => console.log('hi')}
+          />
+          {blockIndex < values.blocks.length - 1 && (
+            <ActionIcon>
+              <AiOutlineCaretRight
+                onClick={() => {
+                  console.log(blockIndex);
+
+                  setBlockIndex((curr) => curr + 1);
+                  if (!values.blocks[blockIndex].weeks.length) {
+                    setWeekIndex(null);
+                  } else {
+                  }
+                }}
+              />
+            </ActionIcon>
+          )}
+        </Group>
+      )}
+
       {values.blocks[blockIndex] && (
         <div>
           <FieldArray
@@ -116,13 +165,16 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                   name={`blocks[${blockIndex}].weeks`}
                   render={(weekHelpers) => (
                     <div>
-                      <Group position="apart">
+                      <Group position="apart" mb="md">
                         <TextInput
                           label="Block Name"
-                          // placeholder="Block Name"
+                          placeholder="Block Name"
                           name={`blocks[${blockIndex}].name`}
                           value={values.blocks[blockIndex].name}
                           onChange={(e: any) => handleChange(e)}
+                          styles={{
+                            input: { borderLeft: '2px solid blue' },
+                          }}
                         />
 
                         <Group position="right">
@@ -216,16 +268,6 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                       </Group>
 
                       {blockIndex !== null &&
-                        weekIndex == null &&
-                        values.blocks[blockIndex].weeks.length && (
-                          <div>
-                            Select Week
-                            {values.blocks[blockIndex].weeks.map((w) => (
-                              <div>{w.name}</div>
-                            ))}
-                          </div>
-                        )}
-                      {blockIndex !== null &&
                         weekIndex !== null &&
                         values.blocks[blockIndex].weeks &&
                         values.blocks[blockIndex].weeks.length > 0 && (
@@ -249,6 +291,6 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       {/* <div>
         Block:{blockIndex} week:{weekIndex} day:{dayIndex}
       </div> */}
-    </div>
+    </Group>
   );
 }

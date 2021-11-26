@@ -1,7 +1,7 @@
-import { ActionIcon, NumberInput, SegmentedControl, Switch } from '@mantine/core';
+import { ActionIcon, Menu, NumberInput, Select } from '@mantine/core';
 import { useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { AiFillSetting, AiOutlineDelete } from 'react-icons/ai';
 import { FlexContainer } from '../../FlexContainer';
 
 export default function RecordSection({
@@ -21,41 +21,8 @@ export default function RecordSection({
   return (
     <div>
       <FlexContainer justify="space-between" align="center">
-        <SegmentedControl
-          size="xs"
-          color="cyan"
-          value={
-            values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex].lifts[
-              liftIndex
-            ].records[recordIndex].type
-          }
-          onChange={(value) => {
-            setFieldValue(
-              `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].type`,
-              value
-            );
-          }}
-          data={[
-            { label: 'warmup', value: 'warmup' },
-            { label: 'working set', value: 'working' },
-            { label: 'backdown', value: 'backdown' },
-          ]}
-          my={6}
-          styles={{
-            root: {
-              width: '100%',
-            },
-            controlActive: {
-              backgroundColor: '#2782b0',
-              borderRadius: 4,
-            },
-            active: {
-              backgroundColor: '#2782b0',
-            },
-          }}
-        />
         <FlexContainer justify="flex-end" align="center">
-          <Switch
+          {/* <Switch
             label="RPE"
             checked={hasRPE}
             onChange={(event) => {
@@ -119,19 +86,7 @@ export default function RecordSection({
                 padding: 2,
               },
             }}
-          />
-          <ActionIcon
-            onClick={() => recordHelpers.remove(recordIndex)}
-            color="red"
-            styles={{
-              root: {
-                marginTop: 'auto',
-                marginBottom: 'auto',
-              },
-            }}
-          >
-            <AiOutlineDelete />
-          </ActionIcon>
+          /> */}
         </FlexContainer>
       </FlexContainer>
 
@@ -185,8 +140,107 @@ export default function RecordSection({
             }}
             icon={<span>r</span>}
           />
+          <NumberInput
+            autoComplete="false"
+            min={1}
+            step={1}
+            max={10}
+            value={
+              values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts[liftIndex].records[recordIndex].rpe
+            }
+            name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].rpe`}
+            onChange={(value) =>
+              setFieldValue(
+                `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].rpe`,
+                value
+              )
+            }
+            styles={{
+              icon: {
+                fontSize: 12,
+              },
+            }}
+            icon={<span>rpe</span>}
+          />
+          <NumberInput
+            autoComplete="false"
+            min={1}
+            step={5}
+            max={100}
+            value={
+              values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts[liftIndex].records[recordIndex].percent
+            }
+            name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].percent`}
+            onChange={(value) =>
+              setFieldValue(
+                `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].percent`,
+                value
+              )
+            }
+            styles={{
+              icon: {
+                fontSize: 12,
+              },
+            }}
+            icon={<span>%</span>}
+          />
+          <NumberInput
+            autoComplete="false"
+            min={0}
+            step={45}
+            max={9999}
+            value={
+              values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts[liftIndex].records[recordIndex].load
+            }
+            name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].load`}
+            onChange={(value) =>
+              setFieldValue(
+                `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].load`,
+                value
+              )
+            }
+            styles={{
+              icon: {
+                fontSize: 12,
+              },
+            }}
+            icon={<span>lbs</span>}
+          />
+          <Select
+            // label="Your favorite framework/library"
+            value={
+              values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                .lifts[liftIndex].records[recordIndex].type
+            }
+            onChange={(value) => {
+              setFieldValue(
+                `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts[${workoutIndex}].lifts[${liftIndex}].records[${recordIndex}].type`,
+                value
+              );
+            }}
+            data={[
+              { label: 'warmup', value: 'warmup' },
+              { label: 'working ', value: 'working' },
+              { label: 'backdown', value: 'backdown' },
+            ]}
+          />
+          <Menu
+            control={
+              <ActionIcon size="lg" color="cyan">
+                <AiFillSetting />
+              </ActionIcon>
+            }
+            zIndex={1200}
+          >
+            <Menu.Item icon={<AiOutlineDelete />} onClick={() => recordHelpers.remove(recordIndex)}>
+              Delete
+            </Menu.Item>
+          </Menu>
         </FlexContainer>
-
+        {/* 
         <FlexContainer justify="flex-end" align="center">
           {hasRPE && (
             <NumberInput
@@ -263,7 +317,7 @@ export default function RecordSection({
               icon={<span>lbs</span>}
             />
           )}
-        </FlexContainer>
+        </FlexContainer> */}
       </FlexContainer>
     </div>
   );

@@ -1,110 +1,56 @@
-import { collection, deleteDoc, onSnapshot, query } from '@firebase/firestore';
-import { ActionIcon, Box, Container, Divider, Group, Menu, Text } from '@mantine/core';
-import { GearIcon, PinRightIcon, TrashIcon } from '@modulz/radix-icons';
-import { doc, orderBy, where } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { AiOutlineEdit } from 'react-icons/ai';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
+import { Container, Title } from '@mantine/core';
+import { GetServerSideProps } from 'next';
+import nookies from 'nookies';
+import React from 'react';
 import Layout from '../../components/dashboard/AppShell';
-import { useAuth } from '../../context/auth';
+import ProgramList from '../../components/programs/ProgramList';
 import { db } from '../../firebase';
-export default function MyPrograms(): JSX.Element {
-  const [programs, setPrograms] = useState<any>([]);
-  const { currentUser } = useAuth();
+import { verifyIdToken } from '../../firebaseAdmin';
 
-  useEffect(() => {
-    const collectionRef = collection(db, 'programs');
+export default function MyPrograms({ programsProps }): JSX.Element {
+  console.log('serverside props: ', JSON.parse(programsProps));
+  const programs = JSON.parse(programsProps);
 
-    const q = query(
-      collectionRef,
-      where('email', '==', currentUser?.email),
-      orderBy('createdDate', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setPrograms(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          timestamp: doc.data().createdDate?.toDate().getTime(),
-        }))
-      );
-    });
-
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    console.log(programs);
-  }, [programs]);
-
-  async function deleteProgram(id) {
-    await deleteDoc(doc(db, 'programs', id));
-  }
   return (
     <Layout>
       <Container>
-        My Programs
+        <Title order={2} align="center">
+          My Programs
+        </Title>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {programs.map((p) => {
-            return (
-              <Box
-                key={p.id}
-                sx={(theme) => ({
-                  width: '100%',
-                  border: '2px solid gray',
-                  paddingLeft: 8,
-                  paddingBottom: 4,
-                  marginTop: 2,
-                  marginBottom: 2,
-                  borderRadius: 8,
-                  borderColor: theme.colors.gray[8],
-                  '&:hover': {
-                    backgroundColor:
-                      theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
-                  },
-                })}
-              >
-                <Group position="apart">
-                  <Group direction="column" position="center">
-                    <Text component="a" href={`dashboard/programs/${p.id}`}>
-                      {p.template.title}
-                    </Text>
-                    <Text>Created: {p.timestamp}</Text>
-                  </Group>
-
-                  <Group position="right">
-                    <ActionIcon component="a" _target="blank" href={`/programs/${p.id}`}>
-                      <AiOutlineEdit />
-                    </ActionIcon>
-
-                    <Menu
-                      control={
-                        <ActionIcon>
-                          <BsThreeDotsVertical />
-                        </ActionIcon>
-                      }
-                    >
-                      <Menu.Label>Application</Menu.Label>
-                      <Menu.Item icon={<GearIcon />}>Settings</Menu.Item>
-                      <Divider />
-                      <Menu.Label>Danger zone</Menu.Label>
-                      <Menu.Item icon={<PinRightIcon />}>Archive</Menu.Item>,
-                      <Menu.Item
-                        color="red"
-                        icon={<TrashIcon />}
-                        onClick={() => deleteProgram(p.id)}
-                      >
-                        Delete Program
-                      </Menu.Item>
-                    </Menu>
-                  </Group>
-                </Group>
-              </Box>
-            );
-          })}
+          <ProgramList programsProps={programsProps} />
         </div>
       </Container>
     </Layout>
   );
 }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const cookies = nookies.get(context);
+    const token = await verifyIdToken(cookies.token);
+
+    const { email } = token;
+    console.log('email : ', email);
+    const collectionRef = collection(db, 'programs');
+    const q = query(collectionRef, where('email', '==', email), orderBy('createdDate', 'desc'));
+    const querySnapshot = await getDocs(q);
+    let programs = [];
+    querySnapshot.forEach((doc) => {
+      programs.push({
+        ...doc.data(),
+        id: doc.id,
+        timestamp: doc.data().createdDate.toDate().getTime(),
+      });
+    });
+
+    return {
+      props: {
+        programsProps: JSON.stringify(programs) || [],
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return { props: {} };
+  }
+};

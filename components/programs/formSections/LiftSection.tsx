@@ -164,35 +164,35 @@ export default function LiftSection({
                   )}
                 </Group>
               </FlexContainer>
-              {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
-                .lifts[liftIndex].records &&
-                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
-                  .lifts[liftIndex].records.length > 0 &&
-                values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
-                  workoutIndex
-                ].lifts[liftIndex].records.map((r, recordIndex: number) => (
-                  <div
-                    key={recordIndex}
-                    style={{
-                      marginTop: 2,
-                      marginBottom: 2,
-                      paddingLeft: 10,
-                    }}
-                  >
-                    <RecordSection
-                      workoutIndex={workoutIndex}
-                      workoutHelpers={workoutHelpers}
-                      blockIndex={blockIndex}
-                      weekIndex={weekIndex}
-                      dayIndex={dayIndex}
-                      liftHelpers={liftHelpers}
-                      liftIndex={liftIndex}
-                      recordIndex={recordIndex}
-                      recordHelpers={recordHelpers}
-                      key={liftIndex}
-                    />
-                  </div>
-                ))}
+              <Group direction="column" mt="md">
+                {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                  .lifts[liftIndex].records &&
+                  values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
+                    .lifts[liftIndex].records.length > 0 &&
+                  values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[
+                    workoutIndex
+                  ].lifts[liftIndex].records.map((r, recordIndex: number) => (
+                    <div
+                      key={recordIndex}
+                      style={{
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <RecordSection
+                        workoutIndex={workoutIndex}
+                        workoutHelpers={workoutHelpers}
+                        blockIndex={blockIndex}
+                        weekIndex={weekIndex}
+                        dayIndex={dayIndex}
+                        liftHelpers={liftHelpers}
+                        liftIndex={liftIndex}
+                        recordIndex={recordIndex}
+                        recordHelpers={recordHelpers}
+                        key={liftIndex}
+                      />
+                    </div>
+                  ))}
+              </Group>
             </Box>
           );
         }}

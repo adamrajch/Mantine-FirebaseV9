@@ -1,4 +1,4 @@
-import { addDoc, collection, Timestamp } from '@firebase/firestore';
+import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 import {
   Button,
   Checkbox,
@@ -14,7 +14,8 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { ChatBubbleIcon, ImageIcon } from '@modulz/radix-icons';
+import { useNotifications } from '@mantine/notifications';
+import { doc, updateDoc } from 'firebase/firestore';
 import { Field, FieldArray, Formik } from 'formik';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
@@ -55,10 +56,10 @@ type Program = {
               type: string;
               sets: number;
               reps: number;
-              rpe?: number;
-              load?: number;
-              unit?: string;
-              percent?: number;
+              rpe: number | null;
+              load: number | null;
+              unit: string | null;
+              percent: number | null;
             }>;
           }>;
         }>;
@@ -66,39 +67,62 @@ type Program = {
     }>;
   }>;
 };
-export default function FullProgramForm(): JSX.Element {
-  const [value, onChange] = useState<string>('');
-  const [opened, setOpen] = useState(false);
-  const [openTextModal, setOpenTextModal] = useState(false);
+export default function FullProgramForm({ program, programID }: any): JSX.Element {
+  const [value, onChange] = useState<string>(program ? program.summary : '');
+  const notifications = useNotifications();
   const { currentUser } = useAuth();
-  console.log(currentUser.email);
-  const initialValues: Program = {
-    title: '',
-    public: false,
-    type: 'routine',
-    category: [],
-    experience: ['beginner', 'intermediate', 'advanced'],
-    periodization: [],
-    blocks: [
-      {
-        name: 'Block 1',
-        summary: '',
-        weeks: [
+  const initialValues: Program = program
+    ? program.template
+    : {
+        title: '',
+        public: false,
+        type: 'routine',
+        category: [],
+        experience: ['beginner', 'intermediate', 'advanced'],
+        periodization: [],
+        blocks: [
           {
-            name: 'Week 1',
+            name: 'Block 1',
             summary: '',
-            days: [
+            weeks: [
               {
-                name: 'Day 1',
+                name: 'Week 1',
                 summary: '',
-                workouts: [],
+                days: [
+                  {
+                    name: 'Day 1',
+                    summary: '',
+                    workouts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        lifts: [
+                          {
+                            name: 'New Lift',
+                            records: [
+                              {
+                                type: 'working',
+                                load: null,
+                                sets: 5,
+                                reps: 5,
+                                unit: 'lbs',
+                                rpe: null,
+                                percent: null,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
         ],
-      },
-    ],
-  };
+      };
+
   const multiSelectData = [
     { value: 'bodybuilding', label: 'bodybuilding' },
     { value: 'olympic weightlifting', label: 'olympic weightlifting' },
@@ -126,12 +150,42 @@ export default function FullProgramForm(): JSX.Element {
         initialValues={initialValues}
         onSubmit={async (values) => {
           console.log(values);
-          await addDoc(collection(db, 'programs'), {
-            email: currentUser.email,
-            summary: value,
-            template: values,
-            createdDate: Timestamp.fromDate(new Date()),
-          });
+          if (!program) {
+            try {
+              await addDoc(collection(db, 'programs'), {
+                email: currentUser.email,
+                summary: value,
+                template: values,
+                createdDate: serverTimestamp(),
+              });
+              notifications.showNotification({
+                title: 'Created Program',
+                message: `Successfully Created ${values.title}`,
+              });
+            } catch (error) {
+              console.log('from create : ', error);
+            }
+          } else {
+            try {
+              const docRef = doc(db, 'programs', programID);
+              const updatedProgram = {
+                template: values,
+                summary: value,
+                updatedDate: serverTimestamp(),
+              };
+              await updateDoc(docRef, updatedProgram);
+              notifications.showNotification({
+                title: 'Updated Program',
+                message: `Successfully updated ${values.title}`,
+              });
+            } catch (error) {
+              notifications.showNotification({
+                title: 'Failed Update',
+                message: `Unsucessfully updated your program. Try again soon`,
+              });
+              console.log('from update : ', error);
+            }
+          }
         }}
         enableReinitialize={false}
         validateOnChange={false}
@@ -141,18 +195,13 @@ export default function FullProgramForm(): JSX.Element {
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <Container size="xl">
-              <SimpleGrid cols={3} spacing="xs">
-                <div></div>
-                <div>
-                  <Title align="center"> Create Program </Title>
-                </div>
-
-                <div></div>
-              </SimpleGrid>
-
-              <Tabs style={{ marginTop: 24 }}>
-                <Tab label="General" icon={<ImageIcon />}>
+              <Tabs style={{ marginTop: 24 }} variant="pills">
+                <Tab label="General">
                   <Group direction="column" spacing="lg" grow>
+                    <Text my="lg">
+                      Fill in and detail your program in this form. You can always edit your program
+                      details and template after you create it
+                    </Text>
                     <TextInput
                       autoComplete="false"
                       required
@@ -167,8 +216,8 @@ export default function FullProgramForm(): JSX.Element {
                       value={values.type}
                       onChange={(value) => setFieldValue('type', value)}
                       data={[
-                        { label: 'Routine', value: 'routine' },
-                        { label: 'Program', value: 'program' },
+                        { label: 'Custom', value: 'custom' },
+                        { label: 'Generated', value: 'gen' },
                       ]}
                     />
 
@@ -218,16 +267,14 @@ export default function FullProgramForm(): JSX.Element {
                     />
                   </Group>
                 </Tab>
-                <Tab label="Summary" icon={<ChatBubbleIcon />}>
+                <Tab label="Summary">
                   <div>
                     <RichText value={value} onChange={onChange} />
                   </div>
                 </Tab>
-                <Tab label="Template" icon={<ChatBubbleIcon />}>
-                  <div>
-                    <Group position="apart">
-                      <Title>Template</Title>
-                    </Group>
+                <Tab label="Template">
+                  <Group position="left" direction="column" grow>
+                    <Title>Program Template</Title>
 
                     <Divider />
 
@@ -239,16 +286,16 @@ export default function FullProgramForm(): JSX.Element {
                         </div>
                       )}
                     />
-                  </div>
+                  </Group>
                 </Tab>
-                <Tab label="Text">
+                <Tab label="View As Text">
                   <TemplateText values={values} />
                 </Tab>
               </Tabs>
 
               <Group position="right" my={8}>
                 <Button variant="outline" type="submit">
-                  Create
+                  {program ? 'Save' : 'Create'}
                 </Button>
               </Group>
             </Container>

@@ -29,6 +29,10 @@ export default function GlobalStyle(): ReactElement {
         [`.full`]: {
           height: '100%',
         },
+        a: {
+          textDecoration: 'none',
+          color: 'inherit',
+        },
       })}
     />
   );

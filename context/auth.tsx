@@ -2,27 +2,29 @@ import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import SignUp from '../components/auth/signup';
 import { auth } from '../firebase';
-const AuthContext = createContext({});
+
 type Props = {
   children?: React.ReactNode;
 };
+
+const AuthContext = createContext({});
 export const AuthProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     return auth.onIdTokenChanged(async (user) => {
-      const token = await user.getIdToken();
       if (!user) {
         console.log('no user');
         setCurrentUser(null);
         setLoading(false);
-        nookies.set(undefined, '', token, {});
+        // nookies.destroy(undefined, 'token');
         return;
       }
 
+      const token = await user.getIdToken();
       setCurrentUser(user);
       setLoading(false);
-      nookies.set(undefined, 'token', token, {});
+      nookies.set(undefined, 'token', token, { maxAge: 30 * 24 * 60 * 60 });
       console.log(user);
     });
   }, []);

@@ -347,13 +347,13 @@
     "exec-sh" "^0.3.2"
     "minimist" "^1.2.0"
 
-"@emotion/cache@^11.4.0", "@emotion/cache@^11.5.0":
-  "integrity" "sha512-mAZ5QRpLriBtaj/k2qyrXwck6yeoz1V5lMt/jfj6igWU35yYlNKs2LziXVgvH81gnJZ+9QQNGelSsnuoAy6uIw=="
-  "resolved" "https://registry.npmjs.org/@emotion/cache/-/cache-11.5.0.tgz"
-  "version" "11.5.0"
+"@emotion/cache@^11.4.0", "@emotion/cache@^11.6.0":
+  "integrity" "sha512-ElbsWY1KMwEowkv42vGo0UPuLgtPYfIs9BxxVrmvsaJVvktknsHYYlx5NQ5g6zLDcOTyamlDc7FkRg2TAcQDKQ=="
+  "resolved" "https://registry.npmjs.org/@emotion/cache/-/cache-11.6.0.tgz"
+  "version" "11.6.0"
   dependencies:
     "@emotion/memoize" "^0.7.4"
-    "@emotion/sheet" "^1.0.3"
+    "@emotion/sheet" "^1.1.0"
     "@emotion/utils" "^1.0.0"
     "@emotion/weak-memoize" "^0.2.5"
     "stylis" "^4.0.10"
@@ -369,14 +369,14 @@
   "version" "0.7.5"
 
 "@emotion/react@^11.4.1":
-  "integrity" "sha512-MYq/bzp3rYbee4EMBORCn4duPQfgpiEB5XzrZEBnUZAL80Qdfr7CEv/T80jwaTl/dnZmt9SnTa8NkTrwFNpLlw=="
-  "resolved" "https://registry.npmjs.org/@emotion/react/-/react-11.5.0.tgz"
-  "version" "11.5.0"
+  "integrity" "sha512-23MnRZFBN9+D1lHXC5pD6z4X9yhPxxtHr6f+iTGz6Fv6Rda0GdefPrsHL7otsEf+//7uqCdT5QtHeRxHCERzuw=="
+  "resolved" "https://registry.npmjs.org/@emotion/react/-/react-11.6.0.tgz"
+  "version" "11.6.0"
   dependencies:
     "@babel/runtime" "^7.13.10"
-    "@emotion/cache" "^11.5.0"
+    "@emotion/cache" "^11.6.0"
     "@emotion/serialize" "^1.0.2"
-    "@emotion/sheet" "^1.0.3"
+    "@emotion/sheet" "^1.1.0"
     "@emotion/utils" "^1.0.0"
     "@emotion/weak-memoize" "^0.2.5"
     "hoist-non-react-statics" "^3.3.1"
@@ -402,10 +402,10 @@
     "multipipe" "^1.0.2"
     "through" "^2.3.8"
 
-"@emotion/sheet@^1.0.3":
-  "integrity" "sha512-YoX5GyQ4db7LpbmXHMuc8kebtBGP6nZfRC5Z13OKJMixBEwdZrJ914D6yJv/P+ZH/YY3F5s89NYX2hlZAf3SRQ=="
-  "resolved" "https://registry.npmjs.org/@emotion/sheet/-/sheet-1.0.3.tgz"
-  "version" "1.0.3"
+"@emotion/sheet@^1.1.0":
+  "integrity" "sha512-u0AX4aSo25sMAygCuQTzS+HsImZFuS8llY8O7b9MDRzbJM0kVJlAz6KNDqcG7pOuQZJmj/8X/rAW+66kMnMW+g=="
+  "resolved" "https://registry.npmjs.org/@emotion/sheet/-/sheet-1.1.0.tgz"
+  "version" "1.1.0"
 
 "@emotion/unitless@^0.7.5":
   "integrity" "sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg=="
@@ -1117,21 +1117,21 @@
     "@types/yargs" "^15.0.0"
     "chalk" "^4.0.0"
 
-"@mantine/core@^3.1.6", "@mantine/core@3.1.6":
-  "integrity" "sha512-Nq7YIt7frv0Tekg3rnbD3cFoPO3u588y71eG53NP2b/3Odh3uO7b1U69qfQmizeXMb+0lOyQnNV0cjk8P/ZwNg=="
-  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/core@^3.2.1", "@mantine/core@3.2.1":
+  "integrity" "sha512-uOl1fY3r/SfI23C9dj5lo2Cvrsr0xwjchUbDoVFyYWSABXCgVmOVUvv+QEdSTPF+PohrVOgBpQQtGcvst//uyg=="
+  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
-    "@mantine/styles" "3.1.6"
+    "@mantine/styles" "3.2.1"
     "@popperjs/core" "^2.9.3"
     "clsx" "^1.1.1"
     "react-popper" "^2.2.5"
     "react-textarea-autosize" "^8.3.2"
 
-"@mantine/dates@^3.1.6":
-  "integrity" "sha512-690YkNBWZyjtSy6AVAPx3Fug7qeVqCoiyDO6QY+VLz5lYXmaQW5SCuptWeprdmypGEz6tR5ji/wxok4kkDwEIA=="
-  "resolved" "https://registry.npmjs.org/@mantine/dates/-/dates-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/dates@^3.2.1":
+  "integrity" "sha512-76biCOG2bv0RmK5LCRqP8KhWZPVMmlzPUddXi7dEvqTuiNGD74CzGHoKk8U0hFSUdVNB52FvjbX5FPgRXFmVPg=="
+  "resolved" "https://registry.npmjs.org/@mantine/dates/-/dates-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
     "@popperjs/core" "^2.9.3"
     "clsx" "^1.1.1"
@@ -1142,61 +1142,58 @@
   "resolved" "https://registry.npmjs.org/@mantine/eslint-config/-/eslint-config-3.0.0.tgz"
   "version" "3.0.0"
 
-"@mantine/hooks@^3.1.6", "@mantine/hooks@3.1.6":
-  "integrity" "sha512-aEHqmvYvbbxSPrRY1SJ7FuVXmtZa6bmnvt9Q+ZF3YjAIIiIwLTtORiwTWajvQsNbDqAztXFb+uBKChpJ6LuRhg=="
-  "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/hooks@^3.2.1", "@mantine/hooks@3.2.1":
+  "integrity" "sha512-l/H8uFUWBsqTQEoxHpa/UFvcV+BN+6aDkV50kz9pRYojDSnREmjWhIORohBwuQTH025na9bWRlbfy6a1oqcsJA=="
+  "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-3.2.1.tgz"
+  "version" "3.2.1"
 
-"@mantine/next@^3.1.6":
-  "integrity" "sha512-WOUZhGITBPkot8L00+9etb0ytaXoYD8Dvyr0hsAXdLsz+UZwnyX1sEuAFQc29FZPJmfnzJOoE1GDwEyfCsHmCw=="
-  "resolved" "https://registry.npmjs.org/@mantine/next/-/next-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/modals@^3.2.1":
+  "integrity" "sha512-JeLWLf/3D8Q0nyPbbao+pUa2Ey5w8l8CS9Zbmjo2kgxV9PLA0ahC7e4Veto4+l7iXt8HGXC3i1c2BkISqLGJcQ=="
+  "resolved" "https://registry.npmjs.org/@mantine/modals/-/modals-3.2.1.tgz"
+  "version" "3.2.1"
+
+"@mantine/next@^3.2.1":
+  "integrity" "sha512-Zyy5/UgPxieKQUIHiqmTrXDk5sqVEwv3VlQRaL42Tn4eRmK7iqnR6lS57mZKZmdrTgXL9lgPQ82pei6t3MAgaA=="
+  "resolved" "https://registry.npmjs.org/@mantine/next/-/next-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
-    "@mantine/ssr" "3.1.6"
+    "@mantine/ssr" "3.2.1"
 
-"@mantine/notifications@^3.1.6":
-  "integrity" "sha512-uWJdzWHX8LPXpgKilxpP3Ipnlq+8kgmO2nv9IoU+A8C59r+Hj7prDEE8P7JSXfc71xrlphkruieQRBzGN8QFDg=="
-  "resolved" "https://registry.npmjs.org/@mantine/notifications/-/notifications-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/notifications@^3.2.1":
+  "integrity" "sha512-FIsQkAXPCBAng780cQwOPWF6khu1Z/4CQrfqR55sJG8ziH64wYgAAb9QsZ53z33QP9Doql4dbWn3yz1ddQZNZA=="
+  "resolved" "https://registry.npmjs.org/@mantine/notifications/-/notifications-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
     "clsx" "^1.1.1"
     "react-transition-group" "^4.4.2"
 
-"@mantine/prism@^3.1.6":
-  "integrity" "sha512-A6T0Ac2v6XdL13CAGOi6OjJIPVTVuDQYdmfrckNCDW68Z/8RFB9+BTzVyoDWsZrSh1x+O+3+69lOjja1GkA6gg=="
-  "resolved" "https://registry.npmjs.org/@mantine/prism/-/prism-3.1.6.tgz"
-  "version" "3.1.6"
-  dependencies:
-    "clsx" "^1.1.1"
-    "prism-react-renderer" "^1.2.1"
-
-"@mantine/rte@^3.1.6":
-  "integrity" "sha512-G64hVVSZ6aJtENhm8w+uUQd6+dG3aPGxML0Jmwd1oeOz+6VDJprcRR7BB7dzsogvJlfGJRHzG1iBmbt57c684A=="
-  "resolved" "https://registry.npmjs.org/@mantine/rte/-/rte-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/rte@^3.2.1":
+  "integrity" "sha512-W/3ElubMbklb7m2sucKg5WbRsXyFeKQiC5irMODVq3p+685D0U1SRRU/GZs05Q8pij9anzebDrOvF4+dq19xBg=="
+  "resolved" "https://registry.npmjs.org/@mantine/rte/-/rte-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
     "@modulz/radix-icons" "^4.0.0"
     "clsx" "^1.1.1"
     "react-quill" "2.0.0-beta.4"
 
-"@mantine/ssr@3.1.6":
-  "integrity" "sha512-GCY6HrCeGV72d/vrNPDPLM9XnuWsq8oe0CafgPfp+yhDuReNQAXhEW2COcJjhzS0J5CQywVC/JxzGg1e212Y2Q=="
-  "resolved" "https://registry.npmjs.org/@mantine/ssr/-/ssr-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/ssr@3.2.1":
+  "integrity" "sha512-0q/4f27REslZzY03Z+Y4GhaMsoqasl+wrPFaZf1iEjf9jzIqdyGNAKAmgJ6OXoWMzHfMKAxBOZK8r1yCEcEBiQ=="
+  "resolved" "https://registry.npmjs.org/@mantine/ssr/-/ssr-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
     "@emotion/cache" "^11.4.0"
     "@emotion/react" "^11.4.1"
     "@emotion/serialize" "^1.0.2"
     "@emotion/server" "^11.4.0"
     "@emotion/utils" "^1.0.0"
-    "@mantine/styles" "3.1.6"
+    "@mantine/styles" "3.2.1"
     "csstype" "^3.0.9"
     "html-react-parser" "^1.3.0"
 
-"@mantine/styles@3.1.6":
-  "integrity" "sha512-P0oujBz6cMd/bnB2ApoqtXIzVa0HsyEGKlYbI7Y7pKyZOv7KNVRk1NqLH+So7rMfZ3v81z34Zfeubucdg6NDxQ=="
-  "resolved" "https://registry.npmjs.org/@mantine/styles/-/styles-3.1.6.tgz"
-  "version" "3.1.6"
+"@mantine/styles@3.2.1":
+  "integrity" "sha512-TSzdXaPLDOKqB8L+bkoDVYXAP12zP6NXCe6a7W8RMP4bcCJ9ydoavcyKSttjg3MmdzupcSrzcWSonwZ66oSiKQ=="
+  "resolved" "https://registry.npmjs.org/@mantine/styles/-/styles-3.2.1.tgz"
+  "version" "3.2.1"
   dependencies:
     "@emotion/cache" "^11.4.0"
     "@emotion/react" "^11.4.1"

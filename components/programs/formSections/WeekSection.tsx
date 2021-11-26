@@ -92,6 +92,9 @@ export default function WeekSection({
                     </ActionIcon>
                   ) : null
                 }
+                styles={{
+                  input: { borderLeft: '2px solid yellow' },
+                }}
               />
               <Group position="right">
                 <ActionIcon

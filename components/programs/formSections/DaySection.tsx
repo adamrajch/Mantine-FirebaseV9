@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Group, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Button, Group, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -76,42 +76,26 @@ export default function DaySection({
     dayHelpers.push(workout);
   }
   return (
-    <div>
+    <Box style={{ marginTop: 40 }}>
       <FieldArray
         key={dayIndex}
         name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].workouts`}
         render={(workoutHelpers) => (
           <>
             <Group direction="column" grow>
-              <Group position="apart" spacing={2}>
+              <Group position="apart" spacing={2} my="md">
                 <TextInput
-                  // label="Day Name"
+                  label="Day Name"
                   size="lg"
                   autoComplete="false"
-                  variant="unstyled"
+                  variant="default"
                   placeholder="$Day"
                   name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.name`}
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   onChange={handleChange}
-                  // rightSection={
-                  //   values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name.length ? (
-                  //     <ActionIcon
-                  //       onClick={() =>
-                  //         setFieldValue(
-                  //           `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`,
-                  //           ''
-                  //         )
-                  //       }
-                  //       size="xs"
-                  //     >
-                  //       <AiOutlineClose color="cyan" />
-                  //     </ActionIcon>
-                  //   ) : null
-                  // }
                   styles={{
                     input: {
                       borderRadius: 'none',
-                      borderBottom: '1px solid',
                     },
                   }}
                 />
@@ -165,7 +149,7 @@ export default function DaySection({
             </Group>
             {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts &&
             values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts.length ? (
-              <>
+              <Group direction="column" grow>
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts.map(
                   (workout, workoutIndex) => (
                     <WorkoutSection
@@ -178,11 +162,13 @@ export default function DaySection({
                     />
                   )
                 )}
-              </>
-            ) : null}
+              </Group>
+            ) : (
+              <></>
+            )}
           </>
         )}
       />
-    </div>
+    </Box>
   );
 }

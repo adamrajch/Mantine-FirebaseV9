@@ -44,11 +44,10 @@ export default function WorkoutSection({
                   values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].workouts[workoutIndex]
                     .type !== 'single'
                     ? 12
-                    : 0,
+                    : 1,
                 paddingLeft: 8,
                 paddingBottom: 4,
-                marginTop: 2,
-                marginBottom: 2,
+
                 borderRadius: 8,
                 borderColor: theme.colors.gray[9],
                 '&:hover': {

@@ -1,35 +1,43 @@
-import { Badge, Group, Text, Title } from '@mantine/core';
+import { Group, Text, Title } from '@mantine/core';
 import React, { ReactElement } from 'react';
 
 export default function TemplateText({ values }: any): ReactElement {
   return (
-    <div>
+    <Group direction="column" position="left">
       <Title align="center">{values.title ? values.title : 'Program Title'}</Title>
-      <Group>
-        {values.category.map((cat: string) => (
-          <Badge key={cat} variant="gradient" gradient={{ from: 'teal', to: 'blue' }}>
-            {cat}
-          </Badge>
-        ))}
-      </Group>
-      <Group>
-        {values.experience.map((exp: string) => (
-          <Badge key={exp} variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
-            {exp}
-          </Badge>
-        ))}
-      </Group>
-      {values.periodization.length > 0 && (
-        <Text>
-          {`Periodization: `}
-          {values.periodization.map((x: string, i: number) => (
-            <Text component="span" mx={2} key={x}>
-              {x}
-              {i < values.periodization.length - 1 && ','}
+      <Group direction="column" position="left" spacing={0}>
+        <Text mx={0}>
+          {`Discipline: `}
+          {values.category.map((e: string, i: number) => (
+            <Text key={e} component="span" mx={2}>
+              {e}
+              {i < values.category.length - 1 && ','}
             </Text>
           ))}
         </Text>
-      )}
+        <Text mx={0}>
+          {`Level: `}
+          {values.experience.map((e: string, i: number) => (
+            <Text key={e} component="span" mx={2}>
+              {e}
+              {i < values.experience.length - 1 && ','}
+            </Text>
+          ))}
+        </Text>
+
+        {values.periodization.length > 0 && (
+          <Text>
+            {`Periodization: `}
+            {values.periodization.map((x: string, i: number) => (
+              <Text component="span" mx={2} key={x}>
+                {x}
+                {i < values.periodization.length - 1 && ','}
+              </Text>
+            ))}
+          </Text>
+        )}
+      </Group>
+
       <div>
         {values.blocks.length &&
           values.blocks.map((block, blockIndex: number) => (
@@ -89,9 +97,9 @@ export default function TemplateText({ values }: any): ReactElement {
                                               {lift.records.map((r, rIndex) => (
                                                 <Text key={rIndex}>
                                                   {`${r.sets} x ${r.reps}`}{' '}
-                                                  {r.rpe !== undefined && `@${r.rpe}`}
-                                                  {r.percent !== undefined && `${r.percent}%`}
-                                                  {r.load !== undefined && `${r.load}${r.unit}`}
+                                                  {r.rpe !== null && `@${r.rpe}`}
+                                                  {r.percent !== null && `${r.percent}%`}
+                                                  {r.load !== null && `${r.load}${r.unit}`}
                                                 </Text>
                                               ))}
                                             </div>
@@ -110,6 +118,6 @@ export default function TemplateText({ values }: any): ReactElement {
             </div>
           ))}
       </div>
-    </div>
+    </Group>
   );
 }
