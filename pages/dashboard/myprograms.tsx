@@ -1,5 +1,5 @@
 import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
-import { Container, Title } from '@mantine/core';
+import { Button, Container, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
 import React from 'react';
@@ -18,9 +18,22 @@ export default function MyPrograms({ programsProps }): JSX.Element {
         <Title order={2} align="center">
           My Programs
         </Title>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <ProgramList programsProps={programsProps} />
-        </div>
+        <Group position="center" direction="column">
+          {programs.length > 0 ? (
+            <ProgramList programsProps={programsProps} />
+          ) : (
+            <div>
+              <Text size="xl">You have no programs in your collection 😅</Text>
+
+              <Button size="xl" variant="outline">
+                Create A Program
+              </Button>
+              <Button variant="outline" size="xl">
+                Learn the Basics
+              </Button>
+            </div>
+          )}
+        </Group>
       </Container>
     </Layout>
   );
