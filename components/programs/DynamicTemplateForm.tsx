@@ -62,7 +62,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           {
             name: 'Day 1',
             summary: '',
-            workouts: [],
+            lifts: [],
           },
         ],
       },
@@ -187,25 +187,20 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                                   {
                                     name: 'Day 1',
                                     summary: '',
-                                    workouts: [
+                                    lifts: [
                                       {
-                                        name: 'New Lift',
+                                        name: 'Lift',
                                         type: 'single',
-                                        note: null,
-                                        lifts: [
+                                        note: '',
+                                        records: [
                                           {
-                                            name: 'New Lift',
-                                            records: [
-                                              {
-                                                type: 'working',
-                                                load: null,
-                                                sets: 5,
-                                                reps: 5,
-                                                unit: 'lbs',
-                                                rpe: null,
-                                                percent: null,
-                                              },
-                                            ],
+                                            type: 'working',
+                                            load: null,
+                                            sets: 5,
+                                            reps: 5,
+                                            unit: 'lbs',
+                                            rpe: null,
+                                            percent: null,
                                           },
                                         ],
                                       },

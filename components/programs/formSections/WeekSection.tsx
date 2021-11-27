@@ -3,7 +3,6 @@ import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
-import { Workout } from '../../../types/types';
 import DaySection from './DaySection';
 type Template = {
   blocks: Array<{
@@ -15,48 +14,25 @@ type Template = {
       days: Array<{
         name: string;
         summary: string | null;
-        workouts?: Array<{
+        lifts?: Array<{
           name: string;
+          note: string;
           type: string;
-          note: string | null;
-          lifts?: Array<{
-            name: string;
-            records?: Array<{
-              type: string;
-              sets: number;
-              reps: number;
-              rpe: number | null;
-              load: number | null;
-              unit: string | null;
-              percent: number | null;
-            }>;
+          records?: Array<{
+            type: string;
+            sets: number;
+            reps: number;
+            rpe: number | null;
+            load: number | null;
+            unit: string | null;
+            percent: number | null;
           }>;
         }>;
       }>;
     }>;
   }>;
 };
-const emptyWorkout: Workout = {
-  name: 'New Lift',
-  type: 'single',
-  note: '',
-  lifts: [
-    {
-      name: 'New Lift',
-      records: [
-        {
-          type: 'working',
-          load: null,
-          sets: 5,
-          reps: 5,
-          unit: 'lbs',
-          rpe: null,
-          percent: null,
-        },
-      ],
-    },
-  ],
-};
+
 export default function WeekSection({
   weekIndex,
   blockIndex,
@@ -100,8 +76,8 @@ export default function WeekSection({
                 <ActionIcon
                   onClick={() =>
                     dayHelpers.push({
-                      name: `New Day`,
-                      workouts: [emptyWorkout],
+                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
+                      lifts: [],
                     })
                   }
                 >
@@ -148,18 +124,20 @@ export default function WeekSection({
                 </Menu>
               </Group>
             </Group>
-            {weekIndex !== null &&
-            dayIndex !== null &&
-            values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
-              <DaySection
-                blockIndex={blockIndex}
-                weekIndex={weekIndex}
-                dayIndex={dayIndex}
-                dayHelpers={dayHelpers}
-              />
-            ) : (
-              <div>Add Day</div>
-            )}
+            <Group direction="column" grow>
+              {weekIndex !== null &&
+              dayIndex !== null &&
+              values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
+                <DaySection
+                  blockIndex={blockIndex}
+                  weekIndex={weekIndex}
+                  dayIndex={dayIndex}
+                  dayHelpers={dayHelpers}
+                />
+              ) : (
+                <div>Add Day</div>
+              )}
+            </Group>
           </div>
         )}
       />

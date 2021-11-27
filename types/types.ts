@@ -10,6 +10,8 @@ export type Record = {
 
 export type Lift = {
   name: string;
+  type: string;
+  note: string;
   records: Record[];
 };
 

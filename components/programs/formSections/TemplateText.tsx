@@ -1,11 +1,11 @@
-import { Group, Text, Title } from '@mantine/core';
+import { Col, Grid, Group, Table, Text, Title } from '@mantine/core';
 import React, { ReactElement } from 'react';
 
 export default function TemplateText({ values }: any): ReactElement {
   return (
-    <Group direction="column" position="left">
+    <Group direction="column" position="left" grow>
       <Title align="center">{values.title ? values.title : 'Program Title'}</Title>
-      <Group direction="column" position="left" spacing={0}>
+      <Group direction="column" position="left" spacing={0} grow>
         <Text mx={0}>
           {`Discipline: `}
           {values.category.map((e: string, i: number) => (
@@ -38,86 +38,90 @@ export default function TemplateText({ values }: any): ReactElement {
         )}
       </Group>
 
-      <div>
+      <Group direction="column" grow>
         {values.blocks.length &&
           values.blocks.map((block, blockIndex: number) => (
-            <div key={blockIndex}>
+            <Group direction="column" grow key={blockIndex}>
               <Title order={3}>{block.name}</Title>
-              <div>
+              <Group direction="column" grow>
                 {values.blocks[blockIndex].weeks.length &&
                   values.blocks[blockIndex].weeks.map((week, weekIndex: number) => (
-                    <div style={{ paddingLeft: 10, marginTop: 12 }} key={weekIndex}>
+                    <Group
+                      direction="column"
+                      grow
+                      style={{ paddingLeft: 10, marginTop: 12, width: '100%' }}
+                      key={weekIndex}
+                    >
                       <Title order={2} align="center">
                         {week.name}
                       </Title>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          gap: 10,
-                          marginTop: 12,
-                        }}
-                      >
-                        {values.blocks[blockIndex].weeks[weekIndex].days.length &&
+                      <Grid justify="space-around">
+                        {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
                             (day, dayIndex: number) => (
-                              <div
-                                key={dayIndex}
-                                style={{
-                                  border: '1px solid white',
-                                  borderRadius: 5,
-                                  padding: '12px 24px',
-                                }}
-                              >
-                                <Title order={2} align="center">
-                                  {day.name}
-                                </Title>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                  {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex]
-                                    .workouts.length &&
-                                    values.blocks[blockIndex].weeks[weekIndex].days[
-                                      dayIndex
-                                    ].workouts.map((w, workoutIndex: number) => (
-                                      <div key={workoutIndex} style={{ marginTop: 8 }}>
-                                        <div>{w.type !== 'single' && <Text>{w.name}</Text>}</div>
-                                        {w.lifts.map((lift, lIndex) => (
-                                          <div
-                                            key={lIndex}
-                                            style={{
-                                              display: 'flex',
-                                              justifyContent: 'flex-start',
-                                              paddingLeft: w.type !== 'single' ? 10 : '',
-                                              gap: 20,
-                                            }}
-                                          >
-                                            <Text>{lift.name}</Text>
-                                            <div
-                                              style={{ display: 'flex', flexDirection: 'column' }}
-                                            >
-                                              {lift.records.map((r, rIndex) => (
-                                                <Text key={rIndex}>
-                                                  {`${r.sets} x ${r.reps}`}{' '}
-                                                  {r.rpe !== null && `@${r.rpe}`}
-                                                  {r.percent !== null && `${r.percent}%`}
-                                                  {r.load !== null && `${r.load}${r.unit}`}
-                                                </Text>
-                                              ))}
-                                            </div>
-                                          </div>
+                              <Col span={12} lg={6}>
+                                <Group
+                                  direction="column"
+                                  grow
+                                  key={dayIndex}
+                                  style={{
+                                    border: '1px solid white',
+                                    borderRadius: 5,
+                                    padding: '12px 24px',
+                                  }}
+                                >
+                                  <Title order={2} align="center">
+                                    {day.name}
+                                  </Title>
+                                  <Text>{day.summary}</Text>
+
+                                  <Table highlightOnHover>
+                                    <thead>
+                                      <tr>
+                                        <th>Movement</th>
+                                        <th>Sets</th>
+                                        <th>Reps</th>
+                                        <th>RPE</th>
+                                        <th>%</th>
+                                        <th>Load</th>
+                                        <th>Note</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex]
+                                        .lifts.length > 0 &&
+                                        values.blocks[blockIndex].weeks[weekIndex].days[dayIndex]
+                                          .lifts !== undefined &&
+                                        values.blocks[blockIndex].weeks[weekIndex].days[
+                                          dayIndex
+                                        ].lifts.map((l, liftIndex: number) => (
+                                          <>
+                                            {l.records.map((t, tIndex) => (
+                                              <tr key={tIndex}>
+                                                <td>{tIndex == 0 && l.name}</td>
+                                                <td>{t.sets}</td>
+                                                <td>{t.reps}</td>
+                                                <td>{t.rpe}</td>
+                                                <td>{t.percent}</td>
+                                                <td>{t.load}</td>
+                                                <td>{t.note}</td>
+                                              </tr>
+                                            ))}
+                                          </>
                                         ))}
-                                      </div>
-                                    ))}
-                                </div>
-                              </div>
+                                    </tbody>
+                                  </Table>
+                                </Group>
+                              </Col>
                             )
                           )}
-                      </div>
-                    </div>
+                      </Grid>
+                    </Group>
                   ))}
-              </div>
-            </div>
+              </Group>
+            </Group>
           ))}
-      </div>
+      </Group>
     </Group>
   );
 }

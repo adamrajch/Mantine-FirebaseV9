@@ -1,3 +1,4 @@
+import { Center, Loader } from '@mantine/core';
 import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import SignUp from '../components/auth/signup';
@@ -29,7 +30,11 @@ export const AuthProvider = ({ children }: Props) => {
     });
   }, []);
   if (loading) {
-    return <div>loading</div>;
+    return (
+      <Center style={{ height: '100%' }}>
+        <Loader color="cyan" variant="bars" />
+      </Center>
+    );
   }
 
   if (!currentUser) {

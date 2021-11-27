@@ -46,21 +46,18 @@ type Program = {
       days: Array<{
         name: string;
         summary?: string;
-        workouts?: Array<{
+        lifts?: Array<{
           name: string;
-          type: string;
           note?: string;
-          lifts?: Array<{
-            name: string;
-            records?: Array<{
-              type: string;
-              sets: number;
-              reps: number;
-              rpe: number | null;
-              load: number | null;
-              unit: string | null;
-              percent: number | null;
-            }>;
+          type: string;
+          records?: Array<{
+            type: string;
+            sets: number;
+            reps: number;
+            rpe: number | null;
+            load: number | null;
+            unit: string | null;
+            percent: number | null;
           }>;
         }>;
       }>;
@@ -92,25 +89,19 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                   {
                     name: 'Day 1',
                     summary: '',
-                    workouts: [
+                    lifts: [
                       {
                         name: 'New Lift',
                         type: 'single',
-                        note: '',
-                        lifts: [
+                        records: [
                           {
-                            name: 'New Lift',
-                            records: [
-                              {
-                                type: 'working',
-                                load: null,
-                                sets: 5,
-                                reps: 5,
-                                unit: 'lbs',
-                                rpe: null,
-                                percent: null,
-                              },
-                            ],
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
                           },
                         ],
                       },
