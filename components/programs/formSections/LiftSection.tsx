@@ -1,8 +1,8 @@
-import { ActionIcon, Box, Group, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
-import { BiReset } from 'react-icons/bi';
+import { FaRegStickyNote } from 'react-icons/fa';
 import { FlexContainer } from '../../FlexContainer';
 import RecordSection from './RecordSection';
 
@@ -38,7 +38,7 @@ export default function LiftSection({
   liftIndex,
 }: any): ReactElement {
   const { values, handleChange, setFieldValue } = useFormikContext();
-
+  const [open, setOpen] = useState(false);
   const emptyRecord = {
     sets: 5,
     reps: 5,
@@ -77,32 +77,33 @@ export default function LiftSection({
                     values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].name
                   }
                   name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.lifts[${liftIndex}].name`}
+                  onChange={handleChange}
                   style={{
                     marginTop: 'auto',
                     marginBottom: 'auto',
                   }}
                 />
-                {/* validation for nested input */}
+
                 <Group position="right">
-                  <ActionIcon
+                  <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                    <FaRegStickyNote />
+                  </ActionIcon>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => recordHelpers.push(emptyRecord)}
+                    leftIcon={<AiOutlinePlus style={{ height: 18, width: 18 }} />}
+                  >
+                    Record
+                  </Button>
+                  {/* <ActionIcon
                     onClick={() => recordHelpers.push(emptyRecord)}
                     size="lg"
                     color="cyan"
                   >
                     <AiOutlinePlus style={{ height: 18, width: 18 }} />
-                  </ActionIcon>
-                  <ActionIcon
-                    onClick={() =>
-                      setFieldValue(
-                        `blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.lifts[${liftIndex}]`,
-                        emptyLift
-                      )
-                    }
-                    size="lg"
-                    color="cyan"
-                  >
-                    <BiReset style={{ height: 18, width: 18 }} />
-                  </ActionIcon>
+                  </ActionIcon> */}
+
                   {values.type !== 'single' && (
                     <ActionIcon
                       onClick={() => liftHelpers.remove(liftIndex)}
@@ -114,6 +115,16 @@ export default function LiftSection({
                   )}
                 </Group>
               </FlexContainer>
+              <Collapse in={open} my={8}>
+                <Textarea
+                  placeholder="Add description for lift"
+                  name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].note`}
+                  value={
+                    values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note
+                  }
+                  onChange={handleChange}
+                />
+              </Collapse>
               <Group direction="column" mt="md">
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]
                   .records &&

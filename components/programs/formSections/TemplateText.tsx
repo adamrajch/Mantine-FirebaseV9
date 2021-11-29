@@ -1,29 +1,34 @@
 import { Col, Grid, Group, Table, Text, Title } from '@mantine/core';
 import React, { ReactElement } from 'react';
+import { FaRegStickyNote } from 'react-icons/fa';
 
 export default function TemplateText({ values }: any): ReactElement {
   return (
     <Group direction="column" position="left" grow>
-      <Title align="center">{values.title ? values.title : 'Program Title'}</Title>
+      <Title align="left">{values.title ? values.title : 'Program Title'}</Title>
       <Group direction="column" position="left" spacing={0} grow>
-        <Text mx={0}>
-          {`Discipline: `}
-          {values.category.map((e: string, i: number) => (
-            <Text key={e} component="span" mx={2}>
-              {e}
-              {i < values.category.length - 1 && ','}
-            </Text>
-          ))}
-        </Text>
-        <Text mx={0}>
-          {`Level: `}
-          {values.experience.map((e: string, i: number) => (
-            <Text key={e} component="span" mx={2}>
-              {e}
-              {i < values.experience.length - 1 && ','}
-            </Text>
-          ))}
-        </Text>
+        {values.category.length > 0 && (
+          <Text mx={0}>
+            {`Discipline: `}
+            {values.category.map((e: string, i: number) => (
+              <Text key={e} component="span" mx={2}>
+                {e}
+                {i < values.category.length - 1 && ','}
+              </Text>
+            ))}
+          </Text>
+        )}
+        {values.experience.length > 0 && (
+          <Text mx={0}>
+            {`Level: `}
+            {values.experience.map((e: string, i: number) => (
+              <Text key={e} component="span" mx={2}>
+                {e}
+                {i < values.experience.length - 1 && ','}
+              </Text>
+            ))}
+          </Text>
+        )}
 
         {values.periodization.length > 0 && (
           <Text>
@@ -104,7 +109,11 @@ export default function TemplateText({ values }: any): ReactElement {
                                                 <td>{t.rpe}</td>
                                                 <td>{t.percent}</td>
                                                 <td>{t.load}</td>
-                                                <td>{t.note}</td>
+                                                <td>
+                                                  {tIndex == 0 && l.note}
+
+                                                  <FaRegStickyNote color="yellow" />
+                                                </td>
                                               </tr>
                                             ))}
                                           </>

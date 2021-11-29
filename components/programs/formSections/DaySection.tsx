@@ -64,6 +64,7 @@ export default function DaySection({
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`}
                   variant="default"
+                  onChange={handleChange}
                 />
 
                 <Group position="right">

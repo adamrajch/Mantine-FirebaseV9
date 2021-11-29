@@ -66,8 +66,10 @@ type Program = {
 };
 export default function FullProgramForm({ program, programID }: any): JSX.Element {
   const [value, onChange] = useState<string>(program ? program.summary : '');
+  const [submitLoading, setSubmitLoading] = useState(false);
   const notifications = useNotifications();
   const { currentUser } = useAuth();
+  console.log('program,', program);
   const initialValues: Program = program
     ? program.template
     : {
@@ -93,6 +95,7 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                       {
                         name: 'New Lift',
                         type: 'single',
+                        note: '',
                         records: [
                           {
                             type: 'working',
@@ -143,6 +146,7 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
           console.log(values);
           if (!program) {
             try {
+              setSubmitLoading(true);
               await addDoc(collection(db, 'programs'), {
                 email: currentUser.email,
                 summary: value,
@@ -153,6 +157,7 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                 title: 'Created Program',
                 message: `Successfully Created ${values.title}`,
               });
+              setSubmitLoading(false);
             } catch (error) {
               console.log('from create : ', error);
             }
@@ -186,13 +191,20 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <Container size="xl">
+              <Title align="center">
+                {program ? `${program.template.title}` : 'Create Your Program'}
+              </Title>
               <Tabs style={{ marginTop: 24 }} variant="pills">
                 <Tab label="General">
                   <Group direction="column" spacing="lg" grow>
-                    <Text my="lg">
-                      Fill in and detail your program in this form. You can always edit your program
-                      details and template after you create it
-                    </Text>
+                    {program == undefined ? (
+                      <div></div>
+                    ) : (
+                      <Text my="lg">
+                        Fill in and detail your program in this form. You can always edit your
+                        program details and template after you create it
+                      </Text>
+                    )}
                     <TextInput
                       autoComplete="false"
                       required
@@ -285,12 +297,12 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
               </Tabs>
 
               <Group position="right" my={8}>
-                <Button variant="outline" type="submit">
+                <Button variant="outline" type="submit" loading={submitLoading}>
                   {program ? 'Save' : 'Create'}
                 </Button>
               </Group>
             </Container>
-            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+            <pre>{JSON.stringify(values, null, 2)}</pre>
           </form>
         )}
       </Formik>

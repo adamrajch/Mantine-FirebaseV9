@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
+import { ActionIcon, Collapse, Group, Menu, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { CgFolderAdd } from 'react-icons/cg';
+import { FaRegStickyNote } from 'react-icons/fa';
 import BlockSelect from './formSections/BlockSelect';
 import DaySelect from './formSections/DaySelect';
 import WeekSection from './formSections/WeekSection';
@@ -21,7 +22,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
   const [weekIndex, setWeekIndex] = useState<string | number | null>(0);
   const [blockIndex, setBlockIndex] = useState<string | number | null>(0);
   const [dayIndex, setDayIndex] = useState<string | number | null>(0);
-
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     if (weekIndex == 0) {
       setDayIndex(0);
@@ -215,7 +216,9 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           >
                             <AiOutlineFolderAdd />
                           </ActionIcon>
-
+                          <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                            <FaRegStickyNote />
+                          </ActionIcon>
                           <Menu
                             control={
                               <ActionIcon size="lg" color="cyan">
@@ -261,7 +264,14 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           </Menu>
                         </Group>
                       </Group>
-
+                      <Collapse in={open} my={8}>
+                        <Textarea
+                          placeholder="Add summary for block"
+                          name={`blocks[${blockIndex}].summary`}
+                          value={values.blocks[blockIndex].summary}
+                          onChange={handleChange}
+                        />
+                      </Collapse>
                       {blockIndex !== null &&
                         weekIndex !== null &&
                         values.blocks[blockIndex].weeks &&

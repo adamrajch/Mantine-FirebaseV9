@@ -1,8 +1,9 @@
-import { ActionIcon, Input, Menu } from '@mantine/core';
+import { ActionIcon, Collapse, Input, Menu, Textarea } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { AiFillSetting, AiOutlineDelete, AiOutlineFolderAdd, AiOutlineSave } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
+import { FaRegStickyNote } from 'react-icons/fa';
 import { Day, Workout } from '../../../types/types';
 import { FlexContainer } from '../../FlexContainer';
 import WeekSection from './WeekSection';
@@ -61,13 +62,13 @@ const emptyWorkout: Workout = {
 
 const emptyDay: Day = {
   name: 'New Day',
-  summary: undefined,
+  summary: null,
   workouts: [emptyWorkout],
 };
 export default function BlockSection({ blockIndex, blockHelpers }: any): ReactElement {
   const { handleChange } = useFormikContext();
   const { values }: { values: Template } = useFormikContext();
-
+  const [open, setOpen] = useState(false);
   return (
     <div>
       <FieldArray
@@ -93,7 +94,9 @@ export default function BlockSection({ blockIndex, blockHelpers }: any): ReactEl
                 >
                   <AiOutlineFolderAdd />
                 </ActionIcon>
-
+                <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                  <FaRegStickyNote />
+                </ActionIcon>
                 <Menu
                   control={
                     <ActionIcon size="lg" color="cyan">
@@ -128,6 +131,14 @@ export default function BlockSection({ blockIndex, blockHelpers }: any): ReactEl
                 </Menu>
               </FlexContainer>
             </FlexContainer>
+            <Collapse in={open} my={8}>
+              <Textarea
+                placeholder="Add description for lift"
+                name={`blocks[${blockIndex}].summaru`}
+                value={values.blocks[blockIndex].summary}
+                onChange={handleChange}
+              />
+            </Collapse>
             <div>
               {values.blocks[blockIndex].weeks &&
                 values.blocks[blockIndex].weeks.length > 0 &&
