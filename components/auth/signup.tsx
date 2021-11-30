@@ -1,5 +1,6 @@
 import { signInWithPopup } from '@firebase/auth';
 import { Button, Center, Group, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { Formik } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';

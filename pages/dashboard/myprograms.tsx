@@ -14,11 +14,11 @@ export default function MyPrograms({ programsProps }): JSX.Element {
 
   return (
     <Layout>
-      <Container>
+      <Container size="md">
         <Title order={2} align="center">
           My Programs
         </Title>
-        <Group position="center" direction="column">
+        <Group position="center" direction="column" grow>
           {programs.length > 0 ? (
             <ProgramList programsProps={programsProps} />
           ) : (

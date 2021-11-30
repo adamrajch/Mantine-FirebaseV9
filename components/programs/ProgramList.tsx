@@ -43,7 +43,7 @@ export default function ProgramList({ programsProps }): JSX.Element {
     await deleteDoc(doc(db, 'programs', id));
   }
   return (
-    <Group direction="column">
+    <Group direction="column" position="apart" grow>
       {programs.map((p) => (
         <Box
           key={p.id}

@@ -1,7 +1,6 @@
-import { Group, Title } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { GetStaticProps } from 'next';
-import Link from 'next/link';
 import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import FullProgramForm from '../../components/programs/FullProgramForm';
@@ -35,9 +34,9 @@ export default function Program({ programProps, programID }: any): ReactElement 
     <Layout>
       <Group direction="column" spacing={2} position="center">
         <Group direction="column" key={p.id} spacing={0}>
-          <Link href={`programs/${p.id}`}>
+          {/* <Link href={`programs/${p.id}`}>
             <Title order={1}>{p.template.title}</Title>
-          </Link>
+          </Link> */}
           {/* <Text>Created {dayjs(p.createdDate.toDate().getTime()).format('MMMM DD YYYY')}</Text>
           {p.hasOwnProperty('updatedDate') && (
             <Text>Updated {dayjs(p.timestamp).format('MMMM DD YYYY')}</Text>

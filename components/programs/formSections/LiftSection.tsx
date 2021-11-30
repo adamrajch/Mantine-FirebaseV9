@@ -4,6 +4,7 @@ import React, { ReactElement, useState } from 'react';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote } from 'react-icons/fa';
 import { FlexContainer } from '../../FlexContainer';
+import RecordModal from '../RecordModal';
 import RecordSection from './RecordSection';
 
 const emptyLift = {
@@ -96,6 +97,8 @@ export default function LiftSection({
                   >
                     Record
                   </Button>
+
+                  <RecordModal />
                   {/* <ActionIcon
                     onClick={() => recordHelpers.push(emptyRecord)}
                     size="lg"
