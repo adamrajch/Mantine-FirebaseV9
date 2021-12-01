@@ -1,12 +1,13 @@
-import { Box } from '@mantine/core';
+import { Box, Group, Text } from '@mantine/core';
 import React, { ReactElement } from 'react';
 
 type Props = {
   href: string;
   title: string;
+  Component?: any;
 };
 
-export default function NavBarLink({ href, title }: Props): ReactElement {
+export default function NavBarLink({ href, title, Component }: Props): ReactElement {
   return (
     <Box
       component="a"
@@ -23,7 +24,10 @@ export default function NavBarLink({ href, title }: Props): ReactElement {
         },
       })}
     >
-      {title}
+      <Group position="apart">
+        <Text>{title}</Text>
+        {Component}
+      </Group>
     </Box>
   );
 }

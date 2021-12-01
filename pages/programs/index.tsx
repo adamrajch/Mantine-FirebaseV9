@@ -24,7 +24,7 @@ export default function ProgramFeed(): ReactElement {
 
   useEffect(() => {
     if (programs.length) {
-      console.log(programs);
+      console.log('home programs', programs);
     }
   }, [programs]);
   return (
@@ -34,35 +34,34 @@ export default function ProgramFeed(): ReactElement {
           programs.map((p: any) => (
             <Group direction="column" key={p.id} spacing={0}>
               <Link href={`programs/${p.id}`}>
-                <Title order={1}>{p.data.title}</Title>
+                <Title order={1}>{p.data.template.title}</Title>
               </Link>
-              <Text>Created {new Date(p.data.createdDate * 1000).toLocaleDateString()}</Text>
 
               <Text mx={0}>
                 {`Level: `}
-                {p.data.experience.map((e: string, i: number) => (
+                {p.data.template.experience.map((e: string, i: number) => (
                   <Text key={e} component="span" mx={2}>
                     {e}
-                    {i < p.data.experience.length - 1 && ','}
+                    {i < p.data.template.experience.length - 1 && ','}
                   </Text>
                 ))}
               </Text>
               <Text mx={0}>
                 {`Discipline: `}
-                {p.data.category.map((e: string, i: number) => (
+                {p.data.template.category.map((e: string, i: number) => (
                   <Text key={e} component="span" mx={2}>
                     {e}
-                    {i < p.data.category.length - 1 && ','}
+                    {i < p.data.template.category.length - 1 && ','}
                   </Text>
                 ))}
               </Text>
-              {p.data.periodization.length > 0 && (
+              {p.data.template.periodization.length > 0 && (
                 <Text>
                   {`Periodization: `}
-                  {p.data.periodization.map((x: string, i: number) => (
+                  {p.data.template.periodization.map((x: string, i: number) => (
                     <Text component="span" mx={2} key={x}>
                       {x}
-                      {i < p.data.periodization.length - 1 && ','}
+                      {i < p.data.template.periodization.length - 1 && ','}
                     </Text>
                   ))}
                 </Text>

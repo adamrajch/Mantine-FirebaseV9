@@ -1,13 +1,16 @@
-import { Group } from '@mantine/core';
+import { Container } from '@mantine/core';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { GetStaticProps } from 'next';
 import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
+import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
+import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
   const p = JSON.parse(programProps);
   console.log('individual program: ', p);
+  const { currentUser } = useAuth();
   // console.log('date', p.createdDate);
   // console.log('dateP', p.createdDate.toDate().getTime());
   // console.log('timestamp', p.timestamp);
@@ -32,18 +35,11 @@ export default function Program({ programProps, programID }: any): ReactElement 
   };
   return (
     <Layout>
-      <Group direction="column" spacing={2} position="center">
-        <Group direction="column" key={p.id} spacing={0}>
-          {/* <Link href={`programs/${p.id}`}>
-            <Title order={1}>{p.template.title}</Title>
-          </Link> */}
-          {/* <Text>Created {dayjs(p.createdDate.toDate().getTime()).format('MMMM DD YYYY')}</Text>
-          {p.hasOwnProperty('updatedDate') && (
-            <Text>Updated {dayjs(p.timestamp).format('MMMM DD YYYY')}</Text>
-          )} */}
-        </Group>
-      </Group>
-      <FullProgramForm program={JSON.parse(programProps)} programID={programID} />
+      <Container size="xl">
+        <FullProgramForm program={JSON.parse(programProps)} programID={programID} />
+
+        <CommentSection programID={programID} user={currentUser} programAuthor={p.email} />
+      </Container>
     </Layout>
   );
 }

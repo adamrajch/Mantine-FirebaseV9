@@ -15,7 +15,6 @@ import {
 import React, { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
-import { auth } from '../../firebase';
 import ColorModeSwitch from '../ColorModeSwitch';
 import NavBarLink from '../NavBarLink';
 import Footer from './Footer';
@@ -24,10 +23,10 @@ type Props = {
   children: React.ReactNode;
 };
 const generalLinks = [
-  { href: 'programs', title: 'Programs' },
-  { href: 'basics', title: 'Learn Basics' },
-  { href: 'faq', title: 'FAQ' },
-  { href: 'about', title: 'About' },
+  { href: '/programs', title: 'Programs' },
+  { href: '/basics', title: 'Learn Basics' },
+  { href: '/faq', title: 'FAQ' },
+  { href: '/about', title: 'About' },
 ];
 const userLinks = [
   { href: '/dashboard/create', title: 'Create Program' },
@@ -39,7 +38,7 @@ const userLinks = [
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
-  const { currentUser } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <AppShell
@@ -66,7 +65,7 @@ export default function Layout({ children }: Props) {
           </Navbar.Section>
           <Divider my="sm" />
           <Navbar.Section grow>
-            {currentUser ? (
+            {user ? (
               <Group position="left" direction="column" spacing={0}>
                 {userLinks.map((g) => (
                   <NavBarLink key={g.href} href={g.href} title={g.title} />
@@ -75,16 +74,31 @@ export default function Layout({ children }: Props) {
             ) : null}
           </Navbar.Section>
           <Navbar.Section>
-            <div>
-              <Divider my="sm" />
-              <Group position="center" noWrap>
-                <Avatar size="md" src={currentUser.photoURL} alt="user" />
-                <Text size="sm">{currentUser.displayName}</Text>
-                <ActionIcon onClick={() => auth.signOut()}>
-                  <AiOutlineLogout />
-                </ActionIcon>
+            {user ? (
+              <div>
+                <Divider my="sm" />
+                <Group position="center" noWrap>
+                  <Avatar size="md" src={user.photoURL} alt="user" />
+                  <Text size="sm">{user.displayName}</Text>
+                  <ActionIcon onClick={() => logout()}>
+                    <AiOutlineLogout />
+                  </ActionIcon>
+                </Group>
+              </div>
+            ) : (
+              <Group position="apart" noWrap>
+                <NavBarLink
+                  key="afk"
+                  href="/signup"
+                  title="Login"
+                  Component={
+                    <ActionIcon>
+                      <AiOutlineLogout />
+                    </ActionIcon>
+                  }
+                />
               </Group>
-            </div>
+            )}
           </Navbar.Section>
         </Navbar>
       }

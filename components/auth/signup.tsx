@@ -1,10 +1,10 @@
-import { signInWithPopup } from '@firebase/auth';
 import { Button, Center, Group, SimpleGrid, TextInput, Title } from '@mantine/core';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import React, { ReactElement } from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
+import { useAuth } from '../../context/auth';
 import { auth, provider } from '../../firebase';
 
 const SignUpSchema = Yup.object().shape({
@@ -12,15 +12,18 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(20, 'Too Long!').required('Required'),
 });
 export default function SignUp({}: any): ReactElement {
+  const { user, setUser, setError } = useAuth();
+
   const loginWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
         // ...
+        setUser(user);
       })
       .catch((error) => {
         // Handle Errors here.
@@ -30,6 +33,7 @@ export default function SignUp({}: any): ReactElement {
         const email = error.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
+        setError(errorMessage);
         // ...
       });
   };

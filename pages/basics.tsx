@@ -2,7 +2,7 @@ import { Container, Group, List, Text, ThemeIcon, Title } from '@mantine/core';
 import { useScrollIntoView } from '@mantine/hooks';
 import React from 'react';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
-import Layout from '../../components/dashboard/AppShell';
+import Layout from '../components/dashboard/AppShell';
 
 const definitions = [
   {
@@ -63,6 +63,7 @@ export default function Basics(): JSX.Element {
             periodization and training techniques to stay injury free and keep smashing personal
             records
           </Text>
+
           <Group direction="column" spacing={48} grow>
             <Group direction="column" grow>
               <Title align="center" ref={keyDefRef}>
@@ -70,7 +71,7 @@ export default function Basics(): JSX.Element {
               </Title>
               <Group direction="column">
                 {definitions.map((def) => (
-                  <Text>
+                  <Text key={def.d}>
                     <Text component="span" color="cyan">
                       {def.w}:{' '}
                     </Text>
@@ -302,7 +303,17 @@ export default function Basics(): JSX.Element {
             </Group>
           </Group>
         </Container>
-        <Group direction="column" position="left" style={{ position: 'fixed' }}>
+
+        <Group
+          direction="column"
+          position="left"
+          sx={(theme) => ({
+            position: 'fixed',
+            '@media (max-width: 1650px)': {
+              display: 'none',
+            },
+          })}
+        >
           <Group direction="row" position="left">
             <ThemeIcon>
               <AiOutlineUnorderedList />
@@ -316,26 +327,9 @@ export default function Basics(): JSX.Element {
             }}
           >
             <List.Item onClick={() => scrollIntoView()}>Key Definitions</List.Item>
-            <List.Item onClick={() => scrollIntoPR()}>
-              Foundational Principles
-              {/* <List withPadding listStyleType="disc">
-                <List.Item>Specificity</List.Item>
-                <List.Item>Overload</List.Item>
-                <List.Item>Individuality</List.Item>
-                <List.Item>Diminishing Returns</List.Item>
-                <List.Item>Reversibility</List.Item>
-                <List.Item>Overtraining</List.Item>
-              </List> */}
-            </List.Item>
+            <List.Item onClick={() => scrollIntoPR()}>Foundational Principles</List.Item>
 
-            <List.Item onClick={() => scrollIntoPeriodization()}>
-              Periodization
-              {/* <List withPadding listStyleType="disc">
-                <List.Item>Macrocycles, Blocks, Microcycles</List.Item>
-                <List.Item>Basic Types</List.Item>
-                <List.Item>Examples</List.Item>
-              </List> */}
-            </List.Item>
+            <List.Item onClick={() => scrollIntoPeriodization()}>Periodization</List.Item>
 
             <List.Item onClick={() => scrollIntoView()}>Program Design</List.Item>
           </List>

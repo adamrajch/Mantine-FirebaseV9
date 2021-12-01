@@ -62,7 +62,9 @@ export default function ProgramList({ programsProps }): JSX.Element {
           <Group position="apart">
             <Group direction="column" position="left" spacing={0}>
               <Anchor href={`/programs/${p.id}`} component={Link}>
-                <Text size="lg">{p.template.title}</Text>
+                <Text size="lg" style={{ cursor: 'pointer' }}>
+                  {p.template.title}
+                </Text>
               </Anchor>
 
               <Text size="sm">Created: {dayjs(p.timestamp).format('MMMM DD YYYY')}</Text>

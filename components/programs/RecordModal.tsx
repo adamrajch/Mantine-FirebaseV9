@@ -18,6 +18,7 @@ export default function RecordModal(props: any) {
   const [opened, setOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [rpe, setRPE] = useState(8);
+  const [percent, setPercent] = useState(75);
   const handleSubmit = async (values) => {
     alert(values);
   };
@@ -33,8 +34,18 @@ export default function RecordModal(props: any) {
     { value: 9, label: '9' },
     { value: 10, label: '10' },
   ];
-
-  const initialValues = {};
+  type FormValues = {
+    rpe: number | undefined;
+    percent: number | undefined;
+    load: number | undefined;
+    unit: string | undefined;
+  };
+  const initialValues: FormValues = {
+    rpe: 8,
+    percent: 75,
+    load: undefined,
+    unit: 'lbs',
+  };
   return (
     <>
       <Modal
@@ -54,11 +65,27 @@ export default function RecordModal(props: any) {
             <Form>
               <Group direction="column" position="left" grow>
                 <Text>RPE</Text>
+                <NumberInput
+                  autoComplete="false"
+                  min={1}
+                  step={1}
+                  max={10}
+                  value={values.rpe}
+                  name={`rpe`}
+                  onChange={handleChange}
+                  styles={{
+                    icon: {
+                      fontSize: 12,
+                    },
+                  }}
+                  icon={<span>RPE</span>}
+                />
                 <Slider
+                  labelAlwaysOn
                   max={10}
                   label={(value) => value.toFixed(1)}
-                  value={rpe}
-                  onChange={setRPE}
+                  value={values.rpe}
+                  onChange={handleChange}
                   step={0.5}
                   radius={5}
                   marks={MARKS}
@@ -68,13 +95,14 @@ export default function RecordModal(props: any) {
               <Group direction="column" position="left" grow>
                 <Text>%</Text>
                 <Slider
-                  max={10}
-                  label={(value) => value.toFixed(1)}
-                  value={rpe}
-                  onChange={setRPE}
-                  step={0.5}
+                  labelAlwaysOn
+                  max={100}
+                  label={(value) => `${value.toFixed(2)} %`}
+                  value={percent}
+                  onChange={setPercent}
                   radius={5}
-                  marks={MARKS}
+                  step={0.01}
+                  // marks={PERCENT_MARKS}
                   styles={{ markLabel: { display: 'none' } }}
                 />
               </Group>
@@ -96,10 +124,10 @@ export default function RecordModal(props: any) {
                   fullWidth
                   size="xs"
                   color="cyan"
-                  //   value={}
-                  //   onChange={(value) => {
-
-                  //   }
+                  value={values.unit}
+                  onChange={(value) => {
+                    setFieldValue('unit', value);
+                  }}
                   data={[
                     { label: 'lbs', value: 'lbs' },
                     { label: 'kg', value: 'kg' },
@@ -119,18 +147,42 @@ export default function RecordModal(props: any) {
                     },
                   }}
                 />
-                <NumberInput
-                  autoComplete="false"
-                  min={0}
-                  step={45}
-                  max={9999}
-                  styles={{
-                    icon: {
-                      fontSize: 12,
-                    },
-                  }}
-                  icon={<span>lbs</span>}
-                />
+                {values.unit == 'lbs' && (
+                  <NumberInput
+                    autoComplete="false"
+                    min={0}
+                    step={45}
+                    max={9999}
+                    value={values.load}
+                    name="load"
+                    onChange={(value) => setFieldValue(`load`, value)}
+                    styles={{
+                      icon: {
+                        fontSize: 12,
+                      },
+                    }}
+                    icon={<span>lbs</span>}
+                  />
+                )}
+
+                {values.unit == 'kg' && (
+                  <NumberInput
+                    type="number"
+                    autoComplete="false"
+                    min={0}
+                    step={45}
+                    max={9999}
+                    value={values.load}
+                    name="load"
+                    onChange={(value) => setFieldValue(`load`, value)}
+                    styles={{
+                      icon: {
+                        fontSize: 12,
+                      },
+                    }}
+                    icon={<span>kg</span>}
+                  />
+                )}
 
                 <TimeInput icon={<ClockIcon />} withSeconds />
               </Group>

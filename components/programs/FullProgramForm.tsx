@@ -198,12 +198,12 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                 <Tab label="General">
                   <Group direction="column" spacing="lg" grow>
                     {program == undefined ? (
-                      <div></div>
-                    ) : (
                       <Text my="lg">
                         Fill in and detail your program in this form. You can always edit your
                         program details and template after you create it
                       </Text>
+                    ) : (
+                      <div></div>
                     )}
                     <TextInput
                       autoComplete="false"
@@ -302,7 +302,7 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                 </Button>
               </Group>
             </Container>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
           </form>
         )}
       </Formik>
