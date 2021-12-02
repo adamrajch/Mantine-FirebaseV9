@@ -174,7 +174,11 @@ export default function RecordModal(props: any) {
                     max={9999}
                     value={values.load}
                     name="load"
-                    onChange={(value) => setFieldValue(`load`, value)}
+                    onChange={(value) => {
+                      let result = parseInt(value, 10)
+                      isNaN(result)
+                      setFieldValue(`load`, value)
+                    }}
                     styles={{
                       icon: {
                         fontSize: 12,

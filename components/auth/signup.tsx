@@ -1,51 +1,54 @@
-import { Button, Center, Group, SimpleGrid, TextInput, Title } from '@mantine/core';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
+import { useNotifications } from '@mantine/notifications';
 import { Formik } from 'formik';
+import NextLink from 'next/link';
 import React, { ReactElement } from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
 import { useAuth } from '../../context/auth';
-import { auth, provider } from '../../firebase';
 
 const SignUpSchema = Yup.object().shape({
-  username: Yup.string().min(2, 'Too Short!').max(20, 'Too Long!').required('Required'),
-  password: Yup.string().min(6, 'Too Short!').max(20, 'Too Long!').required('Required'),
+  email: Yup.string().min(2, 'Too Short!').max(40, 'Too Long!').required('Required'),
+  password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function SignUp({}: any): ReactElement {
-  const { user, setUser, setError } = useAuth();
-
-  const loginWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-        setUser(user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        setError(errorMessage);
-        // ...
-      });
-  };
+  const { user, setUser, setError, signinWithGoogle, createUserWithEmail } = useAuth();
+  console.log(createUserWithEmail);
+  // const loginWithGoogle = () => {
+  //   signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       // This gives you a Google Access Token. You can use it to access the Google API.
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       // const token = credential.accessToken;
+  //       // The signed-in user info.
+  //       const user = result.user;
+  //       // ...
+  //       setUser(user);
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       const email = error.email;
+  //       // The AuthCredential type that was used.
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       setError(errorMessage);
+  //       // ...
+  //     });
+  // };
   const initialValues = {
-    username: '',
+    email: '',
     password: '',
   };
+  const notifications = useNotifications();
   return (
     <Center style={{ width: '100%', height: '100%' }}>
       <Formik
         initialValues={initialValues}
-        onSubmit={async (values) => alert(JSON.stringify(values, null, 2))}
+        onSubmit={async (values) => {
+          createUserWithEmail(values.email, values.password);
+        }}
         enableReinitialize={false}
         validateOnChange={false}
         validateOnBlur={false}
@@ -68,9 +71,9 @@ export default function SignUp({}: any): ReactElement {
                   type="email"
                   label="email"
                   required
-                  name="username"
+                  name="email"
                   onChange={handleChange}
-                  error={errors.username}
+                  error={errors.email}
                 />
                 <TextInput
                   type="password"
@@ -80,6 +83,13 @@ export default function SignUp({}: any): ReactElement {
                   onChange={handleChange}
                   error={errors.password}
                 />
+                <Group position="right">
+                  <NextLink href="/forgot-password">
+                    <Text size="sm" style={{ cursor: 'pointer' }}>
+                      Forgot Password?
+                    </Text>
+                  </NextLink>
+                </Group>
                 <Button variant="outline" type="submit">
                   Submit
                 </Button>
@@ -87,7 +97,7 @@ export default function SignUp({}: any): ReactElement {
                   <Button
                     variant="outline"
                     leftIcon={<AiOutlineGoogle />}
-                    onClick={loginWithGoogle}
+                    onClick={() => signinWithGoogle('/dashboard')}
                   >
                     Google
                   </Button>

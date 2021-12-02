@@ -1,82 +1,145 @@
-import { Center, Loader } from '@mantine/core';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth';
+import router from 'next/router';
+import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, provider } from '../firebase';
-import AuthService from '../service/AuthService';
-import AuthStateChanged from './AuthStateChanged';
-
+import { auth } from '../firebase';
+import { createUser } from '../hooks/createUser';
 type Props = {
   children?: React.ReactNode;
 };
 
 const AuthContext = createContext<any>({});
-export const AuthProvider = ({ children }: Props) => {
+
+export function AuthProvider({ children }: Props) {
+  const auth = useProvideAuth();
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+export const useAuth = () => useContext(AuthContext);
+
+function useProvideAuth() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  useEffect(() => {
-    // return auth.onIdTokenChanged(async (user) => {
-    //   if (!user) {
-    //     console.log('no user');
-    //     setUser(null);
-    //     setLoading(false);
-    //     // nookies.destroy(undefined, 'token');
-    //     return;
-    //   }
 
-    //   const token = await user.getIdToken();
-    //   setUser(user);
-    //   setLoading(false);
-    //   nookies.set(undefined, 'token', token, { maxAge: 30 * 24 * 60 * 60 });
-    //   console.log(user);
-    // });
-    AuthService.waitForUser((userCred: any) => {
-      setUser(userCred);
+  const handleUser = async (rawUser: any) => {
+    if (rawUser) {
+      const user = await formatUser(rawUser);
+      const { token, ...userWithoutToken } = user;
+
+      createUser(user.uid, userWithoutToken);
+      setUser(user);
+      nookies.set(undefined, 'token', user.token, {});
       setLoading(false);
-    });
-  }, []);
+      return user;
+    } else {
+      setUser(false);
+      nookies.set(undefined, 'token', '', {});
 
-  const loginWithGoogle = async () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        setUser(user ?? null);
+      setLoading(false);
+      return false;
+    }
+  };
+
+  const createUserWithEmail = (email: string, password: string) => {
+    setLoading(true);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+
+        handleUser(userCredential.user);
+        router.push('/dashboard');
+        return user;
         // ...
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        setError(error.message);
-        // ...
+        console.log(errorMessage, errorCode);
+        return errorMessage;
+        // ..
       });
   };
-  const logout = async () => {
-    await AuthService.logout();
-    setUser(null);
+
+  const signinWithEmail = (email: string, password: string) => {
+    setLoading(true);
+
+    return signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        handleUser(userCredential.user);
+        router.push('/dashboard');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorMessage, errorCode);
+      });
   };
-  if (loading) {
-    return (
-      <Center style={{ height: '100%' }}>
-        <Loader color="cyan" variant="bars" />
-      </Center>
-    );
-  }
-  const value = { user, error, loginWithGoogle, logout, setUser };
 
-  return (
-    <AuthContext.Provider value={value}>
-      <AuthStateChanged>{children}</AuthStateChanged>
-    </AuthContext.Provider>
-  );
+  const signinWithGoogle = (redirect: any) => {
+    setLoading(true);
+
+    return signInWithPopup(auth, new GoogleAuthProvider())
+      .then((response) => {
+        handleUser(response.user);
+
+        if (redirect) {
+          router.push(redirect);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage, errorCode);
+      });
+  };
+
+  const signout = () => {
+    router.push('/');
+
+    return signOut(auth)
+      .then(() => {
+        console.log('sucessfully logged out');
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      handleUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return {
+    user,
+    loading,
+    signinWithEmail,
+    signinWithGoogle,
+    createUserWithEmail,
+    signout,
+  };
+}
+const formatUser = async (user) => {
+  const token = await user.getIdToken();
+  return {
+    uid: user.uid,
+    email: user.email,
+    name: user.displayName,
+    provider: user.providerData[0].providerId,
+    photoUrl: user.photoURL,
+    // stripeRole: await getStripeRole(),
+    token,
+  };
 };
-
-export const useAuth = () => useContext(AuthContext);

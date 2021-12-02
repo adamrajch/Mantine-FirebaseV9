@@ -38,7 +38,7 @@ const userLinks = [
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
-  const { user, logout } = useAuth();
+  const { user, signout } = useAuth();
 
   return (
     <AppShell
@@ -79,8 +79,8 @@ export default function Layout({ children }: Props) {
                 <Divider my="sm" />
                 <Group position="center" noWrap>
                   <Avatar size="md" src={user.photoURL} alt="user" />
-                  <Text size="sm">{user.displayName}</Text>
-                  <ActionIcon onClick={() => logout()}>
+                  <Text size="sm">{user.name ? user.name : user.email}</Text>
+                  <ActionIcon onClick={() => signout()}>
                     <AiOutlineLogout />
                   </ActionIcon>
                 </Group>

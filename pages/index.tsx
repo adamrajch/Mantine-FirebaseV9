@@ -1,10 +1,12 @@
-import { useNotifications } from '@mantine/notifications';
 import Head from 'next/head';
 import ColorModeSwitch from '../components/ColorModeSwitch';
 import Layout from '../components/dashboard/AppShell';
+import { useAuth } from '../context/auth';
 
 export default function Home() {
-  const notifications = useNotifications();
+  const { user, loading } = useAuth();
+  console.log(user);
+  console.log(loading);
   return (
     <>
       <Head>
