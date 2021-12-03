@@ -78,7 +78,7 @@ export default function TemplateText({ values }: any): ReactElement {
                                   <Title order={2} align="center">
                                     {day.name}
                                   </Title>
-                                  <Text>{day.summary}</Text>
+                                  <Text size="sm">{day.summary}</Text>
 
                                   <Table highlightOnHover>
                                     <thead>

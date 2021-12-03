@@ -1,8 +1,9 @@
-import { ActionIcon, Group, Menu, TextInput } from '@mantine/core';
+import { ActionIcon, Button, Collapse, Group, Menu, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
-import React, { ReactElement } from 'react';
-import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
+import React, { ReactElement, useState } from 'react';
+import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
+import { FaRegStickyNote } from 'react-icons/fa';
 import DaySection from './DaySection';
 type Template = {
   blocks: Array<{
@@ -43,12 +44,13 @@ export default function WeekSection({
 }: any): ReactElement {
   const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Template } = useFormikContext();
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <div>
       <FieldArray
         name={`blocks[${blockIndex}].weeks[${weekIndex}].days`}
         render={(dayHelpers) => (
-          <div style={{ paddingLeft: 20 }}>
+          <div>
             <Group position="apart">
               <TextInput
                 label="Week Name"
@@ -73,7 +75,20 @@ export default function WeekSection({
                 }}
               />
               <Group position="right">
-                <ActionIcon
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    dayHelpers.push({
+                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
+                      lifts: [],
+                    })
+                  }
+                  leftIcon={<AiOutlinePlus />}
+                  size="xs"
+                >
+                  Day
+                </Button>
+                {/* <ActionIcon
                   onClick={() =>
                     dayHelpers.push({
                       name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
@@ -82,8 +97,10 @@ export default function WeekSection({
                   }
                 >
                   <AiOutlineFileAdd />
+                </ActionIcon> */}
+                <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                  <FaRegStickyNote />
                 </ActionIcon>
-
                 <Menu
                   control={
                     <ActionIcon size="lg" color="cyan">
@@ -124,6 +141,14 @@ export default function WeekSection({
                 </Menu>
               </Group>
             </Group>
+            <Collapse in={open} my={8}>
+              <Textarea
+                placeholder="Add summary for week"
+                name={`blocks[${blockIndex}].weeks[${weekIndex}].summary`}
+                value={values.blocks[blockIndex].weeks[weekIndex].summary}
+                onChange={handleChange}
+              />
+            </Collapse>
             <Group direction="column" grow>
               {weekIndex !== null &&
               dayIndex !== null &&

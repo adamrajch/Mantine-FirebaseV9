@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import AuthButton from '../components/AuthButton';
 import ColorModeSwitch from '../components/ColorModeSwitch';
 import Layout from '../components/dashboard/AppShell';
 import { useAuth } from '../context/auth';
@@ -15,6 +16,8 @@ export default function Home() {
       </Head>
       <Layout>
         <ColorModeSwitch />
+
+        <AuthButton />
       </Layout>
     </>
   );

@@ -1,5 +1,5 @@
-import React, { forwardRef } from 'react';
 import Link from 'next/link';
+import React, { forwardRef } from 'react';
 
 export const NextLink = forwardRef(
   (

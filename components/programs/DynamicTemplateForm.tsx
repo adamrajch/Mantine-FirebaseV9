@@ -1,4 +1,4 @@
-import { ActionIcon, Collapse, Group, Menu, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Button, Collapse, Group, Menu, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import {
@@ -6,11 +6,10 @@ import {
   AiOutlineCaretLeft,
   AiOutlineCaretRight,
   AiOutlineDelete,
-  AiOutlineFolderAdd,
+  AiOutlinePlus,
   AiOutlineSave,
 } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
-import { CgFolderAdd } from 'react-icons/cg';
 import { FaRegStickyNote } from 'react-icons/fa';
 import BlockSelect from './formSections/BlockSelect';
 import DaySelect from './formSections/DaySelect';
@@ -109,9 +108,17 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
             )}
         </div>
         <Group position="right">
-          <ActionIcon onClick={() => handleAddBlock()}>
+          <Button
+            variant="outline"
+            onClick={() => handleAddBlock()}
+            leftIcon={<AiOutlinePlus />}
+            size="xs"
+          >
+            Block
+          </Button>
+          {/* <ActionIcon onClick={() => handleAddBlock()}>
             <CgFolderAdd />
-          </ActionIcon>
+          </ActionIcon> */}
         </Group>
       </Group>
       <Group>
@@ -179,7 +186,8 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                         />
 
                         <Group position="right">
-                          <ActionIcon
+                          <Button
+                            variant="outline"
                             onClick={() => {
                               weekHelpers.push({
                                 name: `Week ${values.blocks[blockIndex].weeks.length + 1}`,
@@ -213,9 +221,14 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                                 setWeekIndex(0);
                               }
                             }}
+                            leftIcon={<AiOutlinePlus />}
+                            size="xs"
                           >
+                            Week
+                          </Button>
+                          {/* <ActionIcon>
                             <AiOutlineFolderAdd />
-                          </ActionIcon>
+                          </ActionIcon> */}
                           <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                             <FaRegStickyNote />
                           </ActionIcon>

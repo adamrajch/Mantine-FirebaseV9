@@ -56,7 +56,7 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
             <Group position="right">
               <Button color="dark">Cancel</Button>
               <Button variant="outline" type="submit" loading={submitting}>
-                Write
+                Post
               </Button>
             </Group>
           </Group>

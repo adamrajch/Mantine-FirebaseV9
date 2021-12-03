@@ -10,10 +10,8 @@ import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
   const p = JSON.parse(programProps);
   console.log('individual program: ', p);
-  const { currentUser } = useAuth();
-  // console.log('date', p.createdDate);
-  // console.log('dateP', p.createdDate.toDate().getTime());
-  // console.log('timestamp', p.timestamp);
+  const { user, loading } = useAuth();
+
   const initialValues: any = {
     blocks: [
       {
@@ -37,8 +35,9 @@ export default function Program({ programProps, programID }: any): ReactElement 
     <Layout>
       <Container size="xl">
         <FullProgramForm program={JSON.parse(programProps)} programID={programID} />
-
-        <CommentSection programID={programID} user={currentUser} programAuthor={p.email} />
+        {!loading && user && (
+          <CommentSection programID={programID} user={user} programAuthor={p.email} />
+        )}
       </Container>
     </Layout>
   );

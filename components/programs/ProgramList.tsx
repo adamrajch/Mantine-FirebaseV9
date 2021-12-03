@@ -1,7 +1,7 @@
 import { ActionIcon, Anchor, Box, Divider, Group, Menu, Text } from '@mantine/core';
 import { GearIcon, PinRightIcon, TrashIcon } from '@modulz/radix-icons';
 import dayjs from 'dayjs';
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -18,25 +18,25 @@ export default function ProgramList({ programsProps }): JSX.Element {
     setPrograms(JSON.parse(programsProps));
   }, []);
 
-  useEffect(() => {
-    const collectionRef = collection(db, 'programs');
-    const q = query(
-      collectionRef,
-      where('email', '==', currentUser.email),
-      orderBy('createdDate', 'desc')
-    );
+  // useEffect(() => {
+  //   const collectionRef = collection(db, 'programs');
+  //   const q = query(
+  //     collectionRef,
+  //     where('email', '==', currentUser.email),
+  //     orderBy('createdDate', 'desc')
+  //   );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setPrograms(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          timestamp: doc.data().createdDate?.toDate().getTime(),
-        }))
-      );
-    });
-    return unsubscribe;
-  }, []);
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     setPrograms(
+  //       querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //         timestamp: doc.data().createdDate?.toDate().getTime(),
+  //       }))
+  //     );
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   async function deleteProgram(id, e) {
     e.stopPropagation();
