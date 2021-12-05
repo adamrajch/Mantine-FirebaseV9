@@ -12,6 +12,7 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
@@ -79,7 +80,12 @@ export default function Layout({ children }: Props) {
                 <Divider my="sm" />
                 <Group position="center" noWrap>
                   <Avatar size="md" src={user.photoURL} alt="user" />
-                  <Text size="sm">{user.name ? user.name : user.email}</Text>
+                  <Link href="/dashboard/profile">
+                    <Text size="sm" style={{ cursor: 'pointer' }}>
+                      {user.name ? user.name : user.email}
+                    </Text>
+                  </Link>
+
                   <ActionIcon onClick={() => signout()}>
                     <AiOutlineLogout />
                   </ActionIcon>

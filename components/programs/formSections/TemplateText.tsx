@@ -64,7 +64,7 @@ export default function TemplateText({ values }: any): ReactElement {
                         {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
                             (day, dayIndex: number) => (
-                              <Col span={12} lg={6}>
+                              <Col span={12} lg={12}>
                                 <Group
                                   direction="column"
                                   grow
@@ -78,7 +78,7 @@ export default function TemplateText({ values }: any): ReactElement {
                                   <Title order={2} align="center">
                                     {day.name}
                                   </Title>
-                                  <Text size="sm">{day.summary}</Text>
+                                  <Text size="sm">Summary: {day.summary}</Text>
 
                                   <Table highlightOnHover>
                                     <thead>
@@ -110,9 +110,9 @@ export default function TemplateText({ values }: any): ReactElement {
                                                 <td>{t.percent}</td>
                                                 <td>{t.load}</td>
                                                 <td>
-                                                  {tIndex == 0 && l.note}
-
-                                                  <FaRegStickyNote color="yellow" />
+                                                  {tIndex == 0 && l.note && (
+                                                    <FaRegStickyNote color="yellow" />
+                                                  )}
                                                 </td>
                                               </tr>
                                             ))}

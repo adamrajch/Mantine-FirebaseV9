@@ -3,7 +3,6 @@ import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { GetStaticProps } from 'next';
 import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
-import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
@@ -34,10 +33,15 @@ export default function Program({ programProps, programID }: any): ReactElement 
   return (
     <Layout>
       <Container size="xl">
-        <FullProgramForm program={JSON.parse(programProps)} programID={programID} />
-        {!loading && user && (
+        <FullProgramForm
+          program={JSON.parse(programProps)}
+          programID={programID}
+          user={user}
+          programAuthor={p.email}
+        />
+        {/* {!loading && user && (
           <CommentSection programID={programID} user={user} programAuthor={p.email} />
-        )}
+        )} */}
       </Container>
     </Layout>
   );

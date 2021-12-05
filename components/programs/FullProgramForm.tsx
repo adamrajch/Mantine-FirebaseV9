@@ -21,6 +21,7 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
+import CommentSection from './Comments/CommentSection';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import TemplateText from './formSections/TemplateText';
 import RichText from './RichText';
@@ -64,11 +65,17 @@ type Program = {
     }>;
   }>;
 };
-export default function FullProgramForm({ program, programID }: any): JSX.Element {
+export default function FullProgramForm({
+  program,
+  programID,
+
+  programAuthor,
+}: any): JSX.Element {
   const [value, onChange] = useState<string>(program ? program.summary : '');
   const [submitLoading, setSubmitLoading] = useState(false);
   const notifications = useNotifications();
-  const { currentUser } = useAuth();
+  const { user, loading } = useAuth();
+
   console.log('program,', program);
   const initialValues: Program = program
     ? program.template
@@ -148,7 +155,7 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
             try {
               setSubmitLoading(true);
               await addDoc(collection(db, 'programs'), {
-                email: currentUser.email,
+                author: user,
                 summary: value,
                 template: values,
                 createdDate: serverTimestamp(),
@@ -294,6 +301,15 @@ export default function FullProgramForm({ program, programID }: any): JSX.Elemen
                 <Tab label="View As Text">
                   <TemplateText values={values} />
                 </Tab>
+                {program && !loading && user ? (
+                  <Tab label="Comments">
+                    <CommentSection
+                      programID={programID}
+                      user={user}
+                      programAuthor={programAuthor}
+                    />
+                  </Tab>
+                ) : null}
               </Tabs>
 
               <Group position="right" my={8}>

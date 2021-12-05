@@ -10,7 +10,6 @@ type FormValues = {
 };
 export default function CommentForm({ programID, user }: any): JSX.Element {
   const [submitting, setSubmitting] = useState(false);
-
   const notifications = useNotifications();
 
   const form = useForm({
@@ -42,10 +41,11 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
       console.log('from comment : ', error);
     }
   }
+
   return (
     <div>
       {user && (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form>
           <Group position="left" direction="column" grow>
             <Textarea
               error={form.errors.comment && 'Must be between 1-500 characters'}
@@ -55,7 +55,11 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
 
             <Group position="right">
               <Button color="dark">Cancel</Button>
-              <Button variant="outline" type="submit" loading={submitting}>
+              <Button
+                variant="outline"
+                onClick={() => handleSubmit(form.values)}
+                loading={submitting}
+              >
                 Post
               </Button>
             </Group>
