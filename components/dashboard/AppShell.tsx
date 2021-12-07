@@ -79,7 +79,7 @@ export default function Layout({ children }: Props) {
               <div>
                 <Divider my="sm" />
                 <Group position="center" noWrap>
-                  <Avatar size="md" src={user.photoURL} alt="user" />
+                  <Avatar size="md" src={user.photoUrl} alt="user" />
                   <Link href="/dashboard/profile">
                     <Text size="sm" style={{ cursor: 'pointer' }}>
                       {user.name ? user.name : user.email}

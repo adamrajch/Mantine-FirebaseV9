@@ -29,11 +29,6 @@ export default function CommentsList({ programID, user, programAuthor }: any): R
   //   });
 
   const collectionRef = collection(db, 'comments');
-  const q = query(
-    collectionRef,
-    where('programID', '==', programID),
-    orderBy('createdDate', 'asc')
-  );
 
   useEffect(() => {
     getComments();

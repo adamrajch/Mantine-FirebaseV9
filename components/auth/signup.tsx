@@ -13,7 +13,7 @@ const SignUpSchema = Yup.object().shape({
 });
 export default function SignUp({}: any): ReactElement {
   const { user, setUser, setError, signinWithGoogle, createUserWithEmail } = useAuth();
-  console.log(createUserWithEmail);
+
   // const loginWithGoogle = () => {
   //   signInWithPopup(auth, provider)
   //     .then((result) => {

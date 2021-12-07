@@ -6,37 +6,14 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 
 export default function ProgramList({ programsProps }): JSX.Element {
   const [programs, setPrograms] = useState<any>([]);
-
-  const { currentUser } = useAuth();
-
+  console.log(programsProps);
   useEffect(() => {
-    setPrograms(JSON.parse(programsProps));
+    setPrograms(programsProps.sort((a, b) => b.updated - a.updated));
   }, []);
-
-  // useEffect(() => {
-  //   const collectionRef = collection(db, 'programs');
-  //   const q = query(
-  //     collectionRef,
-  //     where('email', '==', currentUser.email),
-  //     orderBy('createdDate', 'desc')
-  //   );
-
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     setPrograms(
-  //       querySnapshot.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //         timestamp: doc.data().createdDate?.toDate().getTime(),
-  //       }))
-  //     );
-  //   });
-  //   return unsubscribe;
-  // }, []);
 
   async function deleteProgram(id, e) {
     e.stopPropagation();
@@ -66,8 +43,12 @@ export default function ProgramList({ programsProps }): JSX.Element {
                   {p.template.title}
                 </Text>
               </Anchor>
-
-              <Text size="sm">Created: {dayjs(p.timestamp).format('MMMM DD YYYY')}</Text>
+              <Group position="left">
+                <Text size="sm">Created: {dayjs(p.created).format('MMMM DD YYYY')}</Text>
+                {p.updated !== p.created ? (
+                  <Text size="sm">Last Updated: {dayjs(p.updated).format('MMMM DD YYYY')}</Text>
+                ) : null}
+              </Group>
             </Group>
 
             <Group position="right">

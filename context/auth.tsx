@@ -1,3 +1,4 @@
+import { doc } from '@firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -6,10 +7,11 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
+import { getDoc } from 'firebase/firestore';
 import router from 'next/router';
 import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { createUser } from '../hooks/createUser';
 type Props = {
   children?: React.ReactNode;
@@ -31,9 +33,17 @@ function useProvideAuth() {
     if (rawUser) {
       const user = await formatUser(rawUser);
       const { token, ...userWithoutToken } = user;
+      const docRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(docRef);
+      //check if user exists, set the user or if it doesnt create one
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        setUser(docSnap.data());
+      } else {
+        createUser(user.uid, userWithoutToken);
+        setUser(user);
+      }
 
-      createUser(user.uid, userWithoutToken);
-      setUser(user);
       nookies.set(undefined, 'token', user.token, {});
       setLoading(false);
       return user;
@@ -139,7 +149,6 @@ const formatUser = async (user) => {
     name: user.displayName,
     provider: user.providerData[0].providerId,
     photoUrl: user.photoURL,
-    // stripeRole: await getStripeRole(),
     token,
   };
 };

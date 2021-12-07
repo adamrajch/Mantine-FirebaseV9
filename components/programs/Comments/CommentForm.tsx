@@ -1,28 +1,25 @@
 import { Button, Group, Textarea } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { Form, Formik } from 'formik';
 import { useState } from 'react';
+import * as Yup from 'yup';
 import { db } from '../../../firebase';
 
 type FormValues = {
   comment: string;
 };
+const CommentSchema = Yup.object().shape({
+  comment: Yup.string()
+    .min(2, 'Must be between 1-500')
+    .max(200, 'Must be between 1-500')
+    .required('Required'),
+});
 export default function CommentForm({ programID, user }: any): JSX.Element {
   const [submitting, setSubmitting] = useState(false);
   const notifications = useNotifications();
 
-  const form = useForm({
-    initialValues: {
-      comment: '',
-    },
-
-    validationRules: {
-      comment: (value) => value.length > 0 && value.length < 500,
-    },
-  });
-
-  async function handleSubmit(values: FormValues) {
+  async function handleSub(values: FormValues, resetForm: any) {
     try {
       setSubmitting(true);
       await addDoc(collection(db, 'comments'), {
@@ -35,36 +32,58 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
         title: 'Comment Posted',
         message: `Successfully posted your comment!`,
       });
-      form.reset();
+      resetForm();
       setSubmitting(false);
     } catch (error) {
       console.log('from comment : ', error);
     }
   }
-
+  const initialValues: FormValues = {
+    comment: '',
+  };
   return (
     <div>
       {user && (
-        <form>
-          <Group position="left" direction="column" grow>
-            <Textarea
-              error={form.errors.comment && 'Must be between 1-500 characters'}
-              value={form.values.comment}
-              onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
-            />
+        <Formik
+          initialValues={initialValues}
+          // onSubmit={async (values) => handleSubmit(values)}
+          enableReinitialize={false}
+          validateOnChange={false}
+          validateOnBlur={false}
+          validationSchema={CommentSchema}
+        >
+          {({
+            handleSubmit,
+            setFieldValue,
+            handleChange,
+            handleBlur,
+            values,
+            errors,
+            resetForm,
+          }) => (
+            <Form>
+              <Group position="left" direction="column" grow>
+                <Textarea
+                  error={errors.comment}
+                  name="comment"
+                  value={values.comment}
+                  onChange={handleChange}
+                />
 
-            <Group position="right">
-              <Button color="dark">Cancel</Button>
-              <Button
-                variant="outline"
-                onClick={() => handleSubmit(form.values)}
-                loading={submitting}
-              >
-                Post
-              </Button>
-            </Group>
-          </Group>
-        </form>
+                <Group position="right">
+                  <Button color="dark">Cancel</Button>
+                  <Button
+                    variant="outline"
+                    onClick={(e) => handleSub(values, resetForm)}
+                    loading={submitting}
+                  >
+                    Post
+                  </Button>
+                </Group>
+              </Group>
+            </Form>
+          )}
+        </Formik>
       )}
     </div>
   );

@@ -158,7 +158,9 @@ export default function FullProgramForm({
                 author: user,
                 summary: value,
                 template: values,
+                heartCount: 0,
                 createdDate: serverTimestamp(),
+                updatedDate: serverTimestamp(),
               });
               notifications.showNotification({
                 title: 'Created Program',
