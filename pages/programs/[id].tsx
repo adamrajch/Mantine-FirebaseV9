@@ -1,8 +1,18 @@
 import { Container } from '@mantine/core';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 import { GetStaticProps } from 'next';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
+import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
@@ -10,41 +20,66 @@ export default function Program({ programProps, programID }: any): ReactElement 
   const p = JSON.parse(programProps);
   console.log('individual program: ', p);
   const { user, loading } = useAuth();
+  const [comments, setComments] = useState<any>([]);
 
-  const initialValues: any = {
-    blocks: [
-      {
-        name: 'Block 1',
-        weeks: [
-          {
-            name: 'Week 1',
-            days: [
-              {
-                name: 'Day 1',
-                summary: '',
-                workouts: [],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
+  useEffect(() => {
+    getComments();
+    return;
+  }, []);
+
+  useEffect(() => {
+    console.log('comments : ', comments);
+  }, [comments]);
+
+  async function getComments() {
+    const q = query(
+      collection(db, 'comments'),
+      where('programID', '==', programID),
+      orderBy('createdDate', 'desc')
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      setComments(
+        querySnapshot.docs.map((d) => {
+          const docObj = {
+            id: d.id,
+            data: d.data(),
+          };
+          return docObj;
+        })
+      );
+    });
+
+    return unsubscribe;
+  }
   return (
     <Layout>
-      <Container size="xl">
+      <Container
+        size="xl"
+        sx={(theme) => ({
+          '@media (max-width: 755px)': {
+            padding: theme.spacing.sm,
+          },
+        })}
+      >
         {!loading && (
           <FullProgramForm
             program={JSON.parse(programProps)}
             programID={programID}
             user={user}
             programAuthor={p.author}
+            comments={comments}
           />
         )}
 
-        {/* {!loading && user && (
-          <CommentSection programID={programID} user={user} programAuthor={p.email} />
-        )} */}
+        {!loading && user && (
+          <CommentSection
+            programID={programID}
+            user={user}
+            programAuthor={p.email}
+            comments={comments}
+          />
+        )}
       </Container>
     </Layout>
   );

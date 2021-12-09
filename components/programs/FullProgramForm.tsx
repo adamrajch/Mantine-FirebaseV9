@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Button, Container, Divider, Group, Tab, Tabs, Title } from '@mantine/core';
+import { Button, Divider, Group, Tab, Tabs, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { doc, updateDoc } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { db } from '../../firebase';
-import CommentSection from './Comments/CommentSection';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import GeneralSection from './formSections/GeneralSection';
 import TemplateText from './formSections/TemplateText';
@@ -59,6 +58,7 @@ export default function FullProgramForm({
   programID,
   programAuthor,
   user,
+  comments,
 }: any): JSX.Element {
   const [value, onChange] = useState<string>(program ? program.summary : '');
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -187,59 +187,59 @@ export default function FullProgramForm({
       >
         {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <Container size="xl">
-              <Title align="center">
-                {program ? `${program.template.title}` : 'Create Your Program'}
-              </Title>
-              <Tabs style={{ marginTop: 24 }} variant="pills">
-                {(!program || programAuthor?.uid === user?.uid) && (
-                  <Tab label="General">
-                    <GeneralSection program={program} />
-                  </Tab>
-                )}
-
-                <Tab label="Summary">
-                  <div>
-                    <RichText value={value} onChange={onChange} />
-                  </div>
+            <Title align="center">
+              {program ? `${program.template.title}` : 'Create Your Program'}
+            </Title>
+            <Tabs style={{ marginTop: 24 }} variant="pills">
+              {(!program || programAuthor?.uid === user?.uid) && (
+                <Tab label="General">
+                  <GeneralSection program={program} />
                 </Tab>
+              )}
 
-                {(program || programAuthor?.uid === user?.uid) && (
-                  <Tab label="Template">
-                    <Group position="left" direction="column" grow>
-                      <Title>Program Template</Title>
-                      <Divider />
-                      <FieldArray
-                        name="blocks"
-                        render={(blockHelpers) => (
-                          <div>
-                            <DynamicTemplateForm blockHelpers={blockHelpers} />
-                          </div>
-                        )}
-                      />
-                    </Group>
-                  </Tab>
-                )}
+              <Tab label="Summary">
+                <div>
+                  <RichText value={value} onChange={onChange} />
+                </div>
+              </Tab>
 
-                <Tab label="View As Text">
-                  <TemplateText values={values} />
+              {(program || programAuthor?.uid === user?.uid) && (
+                <Tab label="Template">
+                  <Group position="left" direction="column" grow>
+                    <Title>Program Template</Title>
+                    <Divider />
+                    <FieldArray
+                      name="blocks"
+                      render={(blockHelpers) => (
+                        <div>
+                          <DynamicTemplateForm blockHelpers={blockHelpers} comments={comments} />
+                        </div>
+                      )}
+                    />
+                  </Group>
                 </Tab>
-                {program ? (
+              )}
+
+              <Tab label="View As Text">
+                <TemplateText values={values} />
+              </Tab>
+              {/* {program ? (
                   <Tab label="Comments">
                     <CommentSection
                       programID={programID}
                       user={user}
                       programAuthor={programAuthor}
+                      preFetchedComments={comments}
                     />
                   </Tab>
-                ) : null}
-              </Tabs>
-              <Group position="right" my={42}>
-                <Button variant="outline" type="submit" loading={submitLoading}>
-                  {program ? 'Save' : 'Create'}
-                </Button>
-              </Group>
-            </Container>
+                ) : null} */}
+            </Tabs>
+            <Group position="right" my={42}>
+              <Button variant="outline" type="submit" loading={submitLoading}>
+                {program ? 'Save' : 'Create'}
+              </Button>
+            </Group>
+
             {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
           </form>
         )}

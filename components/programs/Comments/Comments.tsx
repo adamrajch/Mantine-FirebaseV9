@@ -12,34 +12,35 @@ type Comment = {
   userID: string;
   comment: string;
 };
-export default function CommentsList({ programID, user, programAuthor }: any): ReactElement {
+export default function CommentsList({
+  programID,
+  user,
+  programAuthor,
+  preFetchedComments,
+}: any): ReactElement {
   const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<Array<any>>([]);
   const [opened, setOpened] = useState(false);
-  console.log('comment user', user);
-  // const modals = useModals();
-  // const openDeleteModal = () =>
-  //   modals.openConfirmModal({
-  //     title: 'Delete your comment',
-  //     children: <Text size="sm">Are you sure you want to delete your comment?</Text>,
-  //     labels: { confirm: 'Delete', cancel: 'Sike!' },
-  //     confirmProps: { color: 'red' },
-  //     onCancel: () => console.log('Cancel'),
-  //     onConfirm: () => deleteComment(),
-  //   });
 
   const collectionRef = collection(db, 'comments');
 
   useEffect(() => {
-    getComments();
+    if (!preFetchedComments) {
+      getComments();
+    } else {
+      setComments(preFetchedComments);
+      setLoading(false);
+    }
+
     return;
   }, []);
 
-  useEffect(() => {
-    console.log('comments : ', comments);
-  }, [comments]);
+  // useEffect(() => {
+  //   console.log('comments : ', comments);
+  // }, [comments]);
 
   async function getComments() {
+    console.log('fetching');
     const q = query(
       collection(db, 'comments'),
       where('programID', '==', programID),
@@ -61,13 +62,13 @@ export default function CommentsList({ programID, user, programAuthor }: any): R
     setLoading(false);
     return unsubscribe;
   }
-  async function deleteComment(id) {
+  async function deleteComment(id: string) {
     await deleteDoc(doc(db, 'comments', id));
   }
   async function likeComment() {}
   return (
     <div>
-      {loading && <Loader />}
+      {loading && !preFetchedComments && <Loader />}
       {!comments.length && <div>No comments</div>}
       <div>
         {!!(comments.length > 0) && !loading && (
