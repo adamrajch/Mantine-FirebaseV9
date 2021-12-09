@@ -33,12 +33,15 @@ export default function Program({ programProps, programID }: any): ReactElement 
   return (
     <Layout>
       <Container size="xl">
-        <FullProgramForm
-          program={JSON.parse(programProps)}
-          programID={programID}
-          user={user}
-          programAuthor={p.email}
-        />
+        {!loading && (
+          <FullProgramForm
+            program={JSON.parse(programProps)}
+            programID={programID}
+            user={user}
+            programAuthor={p.author}
+          />
+        )}
+
         {/* {!loading && user && (
           <CommentSection programID={programID} user={user} programAuthor={p.email} />
         )} */}
