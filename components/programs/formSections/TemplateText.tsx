@@ -1,8 +1,9 @@
-import { Col, Grid, Group, Table, Text, Title } from '@mantine/core';
+import { Col, Grid, Group, Table, Text, Title, useMantineTheme } from '@mantine/core';
 import React, { ReactElement } from 'react';
 import { FaRegStickyNote } from 'react-icons/fa';
 
 export default function TemplateText({ values }: any): ReactElement {
+  const theme = useMantineTheme();
   return (
     <Group direction="column" position="left" grow>
       <Title align="left">{values.title ? values.title : 'Program Title'}</Title>
@@ -57,7 +58,7 @@ export default function TemplateText({ values }: any): ReactElement {
                       style={{ paddingLeft: 10, marginTop: 12, width: '100%' }}
                       key={weekIndex}
                     >
-                      <Title order={2} align="center">
+                      <Title order={2} align="left">
                         {week.name}
                       </Title>
                       <Grid justify="space-around">
@@ -70,12 +71,17 @@ export default function TemplateText({ values }: any): ReactElement {
                                   grow
                                   key={dayIndex}
                                   style={{
-                                    border: '1px solid white',
+                                    border: '2px solid  ',
                                     borderRadius: 5,
                                     padding: '12px 24px',
+                                    borderColor: theme.colors.dark[3],
                                   }}
                                 >
-                                  <Title order={2} align="center">
+                                  <Title
+                                    order={3}
+                                    align="center"
+                                    style={{ color: theme.colors.dark[2] }}
+                                  >
                                     {day.name}
                                   </Title>
                                   <Text size="sm">Summary: {day.summary}</Text>

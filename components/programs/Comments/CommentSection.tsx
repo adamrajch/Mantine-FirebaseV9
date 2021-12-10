@@ -10,7 +10,7 @@ export default function CommentSection({
   programAuthor,
   preFetchedComments,
 }: any): JSX.Element {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <Group position="left" direction="column" grow>
       <Group position="apart">

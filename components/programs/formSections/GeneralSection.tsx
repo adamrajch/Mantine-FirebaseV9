@@ -45,15 +45,6 @@ export default function GeneralSection({ program }: any): ReactElement {
         name="title"
         onChange={handleChange}
       />
-      {/* <SegmentedControl
-        fullWidth
-        value={values.type}
-        onChange={(value) => setFieldValue('type', value)}
-        data={[
-          { label: 'Custom', value: 'custom' },
-          { label: 'Generated', value: 'gen' },
-        ]}
-      /> */}
 
       <SimpleGrid cols={2}>
         <div>
@@ -100,23 +91,26 @@ export default function GeneralSection({ program }: any): ReactElement {
         onChange={(event) => setFieldValue('public', event.currentTarget.checked)}
       />
       {/*  stop sending request on autocomplete*/}
-      <TextInput
-        autoComplete="false"
-        label="Cover Photo URL"
-        error={errors.photoUrl}
-        value={values.photoUrl}
-        name="photoUrl"
-        onChange={handleChange}
-      />
-      {values.photoUrl.length > 0 && (
-        <ErrorImage
-          src={values.photoUrl}
-          height={280}
-          width={280}
-          alt="program picture"
-          fallback={<div>No valid image </div>}
+      <Group grow position="left">
+        <TextInput
+          autoComplete="false"
+          label="Cover Photo URL"
+          error={errors.photoUrl}
+          value={values.photoUrl}
+          name="photoUrl"
+          onChange={handleChange}
+          onKeyDown={(event: any) => event.code === 'Enter' && event.preventDefault()}
         />
-      )}
+        {values.photoUrl?.length > 0 && (
+          <ErrorImage
+            src={values.photoUrl}
+            height={280}
+            width={280}
+            alt="program picture"
+            fallback={<div>No valid image </div>}
+          />
+        )}
+      </Group>
     </Group>
   );
 }

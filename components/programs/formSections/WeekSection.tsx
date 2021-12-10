@@ -80,7 +80,25 @@ export default function WeekSection({
                   onClick={() =>
                     dayHelpers.push({
                       name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
-                      lifts: [],
+                      summary: '',
+                      lifts: [
+                        {
+                          name: 'New Lift',
+                          type: 'single',
+                          note: '',
+                          records: [
+                            {
+                              type: 'working',
+                              load: null,
+                              sets: 5,
+                              reps: 5,
+                              unit: 'lbs',
+                              rpe: null,
+                              percent: null,
+                            },
+                          ],
+                        },
+                      ],
                     })
                   }
                   leftIcon={<AiOutlinePlus />}

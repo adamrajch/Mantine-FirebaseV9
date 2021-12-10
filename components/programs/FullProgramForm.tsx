@@ -114,7 +114,21 @@ export default function FullProgramForm({
           },
         ],
       };
+  function calculateWeeks(values: Program) {
+    let blocks = values.blocks;
+    let sum = 0;
+    if (!blocks.length) {
+      return 0;
+    }
 
+    for (var index in blocks) {
+      for (let i = 0; i < blocks[index].weeks.length; i++) {
+        sum++;
+      }
+    }
+    console.log(sum);
+    return sum;
+  }
   return (
     <div>
       <Formik
@@ -125,16 +139,18 @@ export default function FullProgramForm({
             try {
               setSubmitLoading(true);
               await addDoc(collection(db, 'programs'), {
-                author: user,
-                summary: value,
-                template: values,
+                title: values.title,
                 photoUrl: values.photoUrl,
                 experience: values.experience,
                 category: values.category,
                 periodization: values.periodization,
+                author: user,
+                numberOfWeeks: calculateWeeks(values),
                 heartCount: 0,
+                summary: value,
                 createdDate: serverTimestamp(),
                 updatedDate: serverTimestamp(),
+                template: values,
               })
                 .then((docRef) => {
                   router.push(`/programs/${docRef.id}`);
@@ -157,11 +173,14 @@ export default function FullProgramForm({
             try {
               const docRef = doc(db, 'programs', programID);
               const updatedProgram = {
+                title: values.title,
+                numberOfWeeks: calculateWeeks(values),
                 template: values,
                 summary: value,
                 experience: values.experience,
                 category: values.category,
                 periodization: values.periodization,
+
                 updatedDate: serverTimestamp(),
               };
               await updateDoc(docRef, updatedProgram);
@@ -203,7 +222,7 @@ export default function FullProgramForm({
                 </div>
               </Tab>
 
-              {(program || programAuthor?.uid === user?.uid) && (
+              {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="Template">
                   <Group position="left" direction="column" grow>
                     <Title>Program Template</Title>

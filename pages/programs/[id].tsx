@@ -55,7 +55,7 @@ export default function Program({ programProps, programID }: any): ReactElement 
   return (
     <Layout>
       <Container
-        size="xl"
+        size="lg"
         sx={(theme) => ({
           '@media (max-width: 755px)': {
             padding: theme.spacing.sm,
