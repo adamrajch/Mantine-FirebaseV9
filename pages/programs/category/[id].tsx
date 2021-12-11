@@ -1,4 +1,4 @@
-import { Col, Container, Grid, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { Container, SimpleGrid, TextInput, Title } from '@mantine/core';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -13,20 +13,17 @@ export default function CategorySearchPage({ programsProps, id }: any): JSX.Elem
     setPrograms(JSON.parse(programsProps));
   }, [id]);
 
-  console.log('cat programs', JSON.parse(programsProps));
+  // console.log('cat programs', JSON.parse(programsProps));
+  console.log(id);
+  console.log(id == 'olympicweightlifting');
+  const title = id === 'olympicweightlifting?' ? 'poo' : id[0].toUpperCase() + id.slice(1);
   return (
     <Layout>
       <Container size="xl">
-        <Grid>
-          <Col span={10}>
-            <Title order={1} align="center" mb={20}>
-              {id[0].toUpperCase() + id.slice(1)} Programs
-            </Title>
-          </Col>
-          <Col span={2}>
-            <TextInput icon={<BiSearch />} placeholder="Search by title" />
-          </Col>
-        </Grid>
+        <Title order={1} align="center" mb={20}>
+          {title} Programs
+        </Title>
+        <TextInput icon={<BiSearch />} placeholder="Search by title" />
         <ProgramsNav />
         <SimpleGrid
           breakpoints={[
@@ -51,6 +48,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
     let q;
     if (id == 'featured') {
       q = query(collection(db, 'programs'), where('featured', '==', true));
+    } else if (id == 'olympicweightlifting') {
+      q = query(
+        collection(db, 'programs'),
+        where('category', 'array-contains', 'olympic weightlifting')
+      );
     } else {
       q = query(collection(db, 'programs'), where('category', 'array-contains', id));
     }

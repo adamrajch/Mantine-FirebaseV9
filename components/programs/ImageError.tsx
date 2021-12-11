@@ -1,7 +1,7 @@
 import { Image } from '@mantine/core';
 import React, { useState } from 'react';
 
-export const ErrorImage = ({ src, alt, fallback, height, width }: any) => {
+export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any) => {
   const [error, setError] = useState(false);
 
   const onError = () => {
@@ -19,11 +19,20 @@ export const ErrorImage = ({ src, alt, fallback, height, width }: any) => {
           width={width}
           fit="contain"
           alt="invalid pic"
+          {...props}
           // onError={onError}
         />
       )}
     </>
   ) : (
-    <Image src={src} height={height} width={width} alt={alt} onError={onError} />
+    <Image
+      src={src}
+      height={height}
+      width={width}
+      alt={alt}
+      onError={onError}
+      {...props}
+      style={{ objectPosition: 'center' }}
+    />
   );
 };

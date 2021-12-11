@@ -1,10 +1,9 @@
-import { Tabs, TextInput, Title } from '@mantine/core';
-import { ImageIcon } from '@modulz/radix-icons';
+import { TextInput, Title } from '@mantine/core';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import Layout from '../../components/dashboard/AppShell';
-import FeaturedPrograms from '../../components/programs/FilteredPages/FeaturedPrograms';
+import ProgramsNav from '../../components/programs/ProgramsNav';
 import { db } from '../../firebase';
 export default function ProgramFeed(): ReactElement {
   const [programs, setPrograms] = useState<any>([]);
@@ -34,12 +33,9 @@ export default function ProgramFeed(): ReactElement {
       <Title order={1} align="center" mb={20}>
         Programs
       </Title>
+      <ProgramsNav />
       <TextInput icon={<BiSearch />} placeholder="Search by title" />
-      <Tabs position="center" variant="pills" color="cyan" tabPadding="xl">
-        <Tabs.Tab label="Featured" icon={<ImageIcon />}>
-          <FeaturedPrograms />
-        </Tabs.Tab>
-      </Tabs>
+
       {/* <SimpleGrid
         breakpoints={[
           { minWidth: 'sm', cols: 1, spacing: 'sm' },

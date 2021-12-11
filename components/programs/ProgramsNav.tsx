@@ -15,8 +15,8 @@ const links = [
     title: 'Bodybuilding',
   },
   {
-    href: '/programs/category/olylifting',
-    title: 'Olympic Weightlifters',
+    href: '/programs/category/olympicweightlifting',
+    title: 'Olympic Weightlifting',
   },
   {
     href: '/programs/category/sport',
