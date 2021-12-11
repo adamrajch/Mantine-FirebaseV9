@@ -99,7 +99,7 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }: typeof params) => {
+export const getStaticProps: GetStaticProps = async ({ params }: any) => {
   const id = params.id;
 
   const docRef = doc(db, 'programs', id);

@@ -1,7 +1,8 @@
-import { Tabs, Title } from '@mantine/core';
-import { ChatBubbleIcon, ImageIcon, MixerVerticalIcon } from '@modulz/radix-icons';
+import { Tabs, TextInput, Title } from '@mantine/core';
+import { ImageIcon } from '@modulz/radix-icons';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import React, { ReactElement, useEffect, useState } from 'react';
+import { BiSearch } from 'react-icons/bi';
 import Layout from '../../components/dashboard/AppShell';
 import FeaturedPrograms from '../../components/programs/FilteredPages/FeaturedPrograms';
 import { db } from '../../firebase';
@@ -33,26 +34,10 @@ export default function ProgramFeed(): ReactElement {
       <Title order={1} align="center" mb={20}>
         Programs
       </Title>
+      <TextInput icon={<BiSearch />} placeholder="Search by title" />
       <Tabs position="center" variant="pills" color="cyan" tabPadding="xl">
         <Tabs.Tab label="Featured" icon={<ImageIcon />}>
           <FeaturedPrograms />
-        </Tabs.Tab>
-        <Tabs.Tab label="Hot" icon={<ImageIcon />}>
-          {/* <SimpleGrid
-            breakpoints={[
-              { minWidth: 'sm', cols: 1, spacing: 'sm' },
-              { minWidth: 'md', cols: 2, spacing: 'lg' },
-              { minWidth: 1200, cols: 3, spacing: 'lg' },
-            ]}
-          >
-            {programs.length > 0 && programs.map((p: any) => <ProgramCard program={p} />)}
-          </SimpleGrid> */}
-        </Tabs.Tab>
-        <Tabs.Tab label="Powerlifting" icon={<ChatBubbleIcon />}>
-          Messages tab content
-        </Tabs.Tab>
-        <Tabs.Tab label="Bodybuilding" icon={<MixerVerticalIcon />}>
-          Settings tab content
         </Tabs.Tab>
       </Tabs>
       {/* <SimpleGrid

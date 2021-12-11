@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { db } from '../../firebase';
+import { ErrorImage } from './ImageError';
 
 export default function ProgramList({ programsProps }): JSX.Element {
   const [programs, setPrograms] = useState<any>([]);
@@ -37,17 +38,21 @@ export default function ProgramList({ programsProps }): JSX.Element {
           })}
         >
           <Group position="apart">
-            <Group direction="column" position="left" spacing={0}>
-              <Anchor href={`/programs/${p.id}`} component={Link}>
-                <Text size="lg" style={{ cursor: 'pointer' }}>
-                  {p.template.title}
-                </Text>
-              </Anchor>
-              <Group position="left">
-                <Text size="sm">Created: {dayjs(p.created).format('MMMM DD YYYY')}</Text>
-                {p.updated !== p.created ? (
-                  <Text size="sm">Last Updated: {dayjs(p.updated).format('MMMM DD YYYY')}</Text>
-                ) : null}
+            <Group position="left">
+              {/* <ImageDefault src={p.photoUrl} height={75} width={75} /> */}
+              <ErrorImage src={p.photoUrl} height={75} width={75} />
+              <Group direction="column" position="left" spacing={0}>
+                <Anchor href={`/programs/${p.id}`} component={Link}>
+                  <Text size="lg" style={{ cursor: 'pointer' }}>
+                    {p.template.title}
+                  </Text>
+                </Anchor>
+                <Group position="left">
+                  <Text size="sm">Created: {dayjs(p.created).format('MMMM DD YYYY')}</Text>
+                  {p.updated !== p.created ? (
+                    <Text size="sm">Last Updated: {dayjs(p.updated).format('MMMM DD YYYY')}</Text>
+                  ) : null}
+                </Group>
               </Group>
             </Group>
 

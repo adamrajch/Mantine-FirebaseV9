@@ -6,13 +6,13 @@ import ProgramCard from '../ProgramCard';
 
 interface Props {
   field: string;
-  query: string;
+  search: string;
 }
 
 export default function ProgramResults({ field, search }: Props): JSX.Element {
   const [programs, setPrograms] = useState<any>([]);
   useEffect(() => {
-    const q = query(collection(db, 'programs'), where(field, '==', true));
+    const q = query(collection(db, 'programs'), where(field, 'array-contains', search));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setPrograms(
         querySnapshot.docs.map((d) => {
@@ -27,11 +27,6 @@ export default function ProgramResults({ field, search }: Props): JSX.Element {
     return unsub;
   }, []);
 
-  //   useEffect(() => {
-  //     if (programs.length) {
-  //       console.log('home programs', programs);
-  //     }
-  //   }, [programs]);
   return (
     <SimpleGrid
       breakpoints={[
@@ -40,7 +35,7 @@ export default function ProgramResults({ field, search }: Props): JSX.Element {
         { minWidth: 1200, cols: 3, spacing: 'lg' },
       ]}
     >
-      {programs.length > 0 && programs.map((p: any) => <ProgramCard program={p} />)}
+      {programs.length > 0 && programs.map((p: any) => <ProgramCard program={p} key={p.id} />)}
     </SimpleGrid>
   );
 }

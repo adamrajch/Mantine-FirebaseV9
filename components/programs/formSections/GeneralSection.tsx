@@ -91,7 +91,7 @@ export default function GeneralSection({ program }: any): ReactElement {
         onChange={(event) => setFieldValue('public', event.currentTarget.checked)}
       />
       {/*  stop sending request on autocomplete*/}
-      <Group grow position="left">
+      <Group grow position="left" style={{ alignItems: 'flex-start' }}>
         <TextInput
           autoComplete="false"
           label="Cover Photo URL"
@@ -104,8 +104,8 @@ export default function GeneralSection({ program }: any): ReactElement {
         {values.photoUrl?.length > 0 && (
           <ErrorImage
             src={values.photoUrl}
-            height={280}
-            width={280}
+            height={240}
+            width={240}
             alt="program picture"
             fallback={<div>No valid image </div>}
           />

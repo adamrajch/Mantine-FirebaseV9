@@ -180,7 +180,6 @@ export default function FullProgramForm({
                 experience: values.experience,
                 category: values.category,
                 periodization: values.periodization,
-
                 updatedDate: serverTimestamp(),
               };
               await updateDoc(docRef, updatedProgram);
