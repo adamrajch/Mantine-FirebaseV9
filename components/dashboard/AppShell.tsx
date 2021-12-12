@@ -26,14 +26,12 @@ type Props = {
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
   { href: '/basics', title: 'Learn Basics' },
-  { href: '/faq', title: 'FAQ' },
+
   { href: '/about', title: 'About' },
 ];
 const userLinks = [
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
-  { href: '/dashboard/schedule', title: 'Schedule' },
-  { href: '/dashboard/journal', title: 'Journal' },
 ];
 
 export default function Layout({ children }: Props) {

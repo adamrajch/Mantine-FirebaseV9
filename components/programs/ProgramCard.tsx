@@ -5,10 +5,11 @@ import { AiOutlineTrophy } from 'react-icons/ai';
 import { handleCatColor, handleExpColor, handlePColor } from '../../utils/ColorHelper';
 import { ErrorImage } from './ImageError';
 
-export default function ProgramCard({ program }: any): ReactElement {
+export default function ProgramCard({ program, id }: any): ReactElement {
   const theme = useMantineTheme();
-  const { data, id } = program;
+
   const p = program;
+  console.log('program card data ', program);
   //   const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7];
   return (
     <Box
@@ -39,7 +40,7 @@ export default function ProgramCard({ program }: any): ReactElement {
         })}
       >
         <Card.Section>
-          <ErrorImage src={p.photoUrl} height={200} />
+          <ErrorImage src={p.photoUrl} height={260} />
         </Card.Section>
         <Group direction="column" spacing={1} key={id} grow style={{ height: 200, marginTop: 10 }}>
           <Group position="apart">
@@ -54,8 +55,8 @@ export default function ProgramCard({ program }: any): ReactElement {
           </Group>
 
           <Link href={`/dashboard/users/${p.author?.uid}`}>
-            <Text size="sm" color="cyan" style={{ cursor: 'pointer' }}>
-              {p.author?.name}
+            <Text size="sm" color="cyan" style={{ cursor: 'pointer', margin: '5px 0' }}>
+              <Text component="span">Author:</Text> {p.author?.name}
             </Text>
           </Link>
 
@@ -85,10 +86,10 @@ export default function ProgramCard({ program }: any): ReactElement {
               </Badge>
             ))}
           </Group>
-          <Group position="left" style={{ flex: '1 0 auto' }}>
+          {/* <Group position="left" style={{ flex: '1 0 auto' }}>
             <Text size="xs">Likes</Text>
             <Text size="xs">Comments</Text>
-          </Group>
+          </Group> */}
         </Group>
       </Card>
     </Box>
