@@ -9,7 +9,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
   const theme = useMantineTheme();
 
   const p = program;
-  console.log('program card data ', program);
+  // console.log('program card data ', program);
   //   const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7];
   return (
     <Box
@@ -46,7 +46,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           <Group position="apart">
             <Link href={`/programs/${id}`}>
               <Title order={2} style={{ cursor: 'pointer' }}>
-                {p.template.title}
+                {p.title}
               </Title>
             </Link>
             <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>

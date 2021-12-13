@@ -37,7 +37,7 @@ function useProvideAuth() {
       const docSnap = await getDoc(docRef);
       //check if user exists, set the user or if it doesnt create one
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
+        // console.log('Document data:', docSnap.data());
         setUser(docSnap.data());
       } else {
         createUser(user.uid, userWithoutToken);
