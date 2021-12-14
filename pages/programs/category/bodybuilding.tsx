@@ -19,11 +19,6 @@ export default function CategorySearchPage({ programsProps, lastVisible }: any):
     setLast(JSON.parse(lastVisible));
   }, []);
 
-  //   useEffect(() => {
-  //     console.log('programs', programs);
-  //     setLast(programs[programs.length - 1]);
-  //   }, [programs]);
-
   function getProgramsQuery() {
     let q;
 
@@ -103,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
     );
 
     const querySnapshot = await getDocs(q);
-    let programs = [];
+    let programs: any = [];
     querySnapshot.forEach((doc) => {
       programs.push({
         ...doc.data(),

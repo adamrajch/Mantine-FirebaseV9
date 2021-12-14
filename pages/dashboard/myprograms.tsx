@@ -7,7 +7,7 @@ import Layout from '../../components/dashboard/AppShell';
 import ProgramList from '../../components/programs/ProgramList';
 import { db } from '../../firebase';
 import { verifyIdToken } from '../../firebaseAdmin';
-export default function MyPrograms({ programsProps }): JSX.Element {
+export default function MyPrograms({ programsProps }: any): JSX.Element {
   // const [programs, setPrograms] = useState<Array<any>>([]);
   // const [programLoading, setProgramLoading] = useState<boolean>(true);
   // const { user, loading } = useAuth();
@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const collectionRef = collection(db, 'programs');
     const q = query(collectionRef, where('author.uid', '==', uid), orderBy('createdDate', 'desc'));
     const querySnapshot = await getDocs(q);
-    let programs = [];
+    let programs: any = [];
     querySnapshot.forEach((doc) => {
       programs.push({
         ...doc.data(),

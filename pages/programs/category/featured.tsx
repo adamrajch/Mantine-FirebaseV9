@@ -97,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
     );
 
     const querySnapshot = await getDocs(q);
-    let programs = [];
+    let programs: any = [];
     querySnapshot.forEach((doc) => {
       programs.push({
         ...doc.data(),

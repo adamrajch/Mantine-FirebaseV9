@@ -141,7 +141,7 @@ function useProvideAuth() {
     signout,
   };
 }
-const formatUser = async (user) => {
+const formatUser = async (user: any) => {
   const token = await user.getIdToken();
   return {
     uid: user.uid,

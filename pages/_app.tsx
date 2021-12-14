@@ -8,7 +8,7 @@ import GlobalStyle from '../components/GlobalStyles';
 import { AuthProvider } from '../context/auth';
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
-  const [colorScheme, setColorScheme] = useState('light');
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   return (

@@ -7,7 +7,7 @@ import Layout from '../../components/dashboard/AppShell';
 import ProfileForm from '../../components/user/ProfileForm';
 import { db } from '../../firebase';
 import { verifyIdToken } from '../../firebaseAdmin';
-export default function profile({ user }): JSX.Element {
+export default function profile({ user }: any): JSX.Element {
   console.log('user', JSON.parse(user));
   return (
     <Layout>

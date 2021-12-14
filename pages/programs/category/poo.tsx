@@ -108,7 +108,7 @@ export default function CategorySearchPage({ programsProps, id }: any): JSX.Elem
         setPrograms((prev: any) => [...prev, docObj]);
       });
     } else {
-      let newPrograms = [];
+      let newPrograms: any = [];
       documentSnapshots.docs.forEach((d) => {
         console.log('doc data', d.data());
         console.log('in loop');
@@ -180,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
     }
 
     const querySnapshot = await getDocs(q);
-    let programs = [];
+    let programs: any = [];
     querySnapshot.forEach((doc) => {
       programs.push({
         ...doc.data(),

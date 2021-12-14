@@ -25,7 +25,7 @@ interface MyFormValues {
   sex: string;
 }
 
-export default function ProfileForm({ user }): JSX.Element {
+export default function ProfileForm({ user }: any): JSX.Element {
   const { name, email, photoUrl, bio } = user;
   const notifications = useNotifications();
   console.log('from profile', user);

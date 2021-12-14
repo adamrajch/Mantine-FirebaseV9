@@ -1,9 +1,10 @@
 import { doc, getDoc } from '@firebase/firestore';
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import Layout from '../../components/dashboard/AppShell';
-import { db } from '../../firebase';
-export default function profile({ user }): JSX.Element {
+import Layout from '../../../components/dashboard/AppShell';
+import { db } from '../../../firebase';
+
+export default function profile({ user }: any): JSX.Element {
   console.log(user);
   return (
     <Layout>
@@ -12,7 +13,7 @@ export default function profile({ user }): JSX.Element {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }: any) => {
   try {
     const id = params.id;
 
