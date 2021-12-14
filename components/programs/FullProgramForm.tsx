@@ -108,21 +108,152 @@ export default function FullProgramForm({
                       },
                     ],
                   },
+                  {
+                    name: 'Day 2',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    name: 'Day 3',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    name: 'Day 4',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    name: 'Day 5',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    name: 'Day 6',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    name: 'Day 7',
+                    summary: '',
+                    lifts: [
+                      {
+                        name: 'New Lift',
+                        type: 'single',
+                        note: '',
+                        records: [
+                          {
+                            type: 'working',
+                            load: null,
+                            sets: 5,
+                            reps: 5,
+                            unit: 'lbs',
+                            rpe: null,
+                            percent: null,
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
             ],
           },
         ],
       };
-  function calculateWeeks(values: Program) {
-    let blocks = values.blocks;
+  function calculateWeeks(values: any) {
     let sum = 0;
-    if (!blocks.length) {
+    if (!values.blocks.length) {
       return 0;
     }
 
-    for (var index in blocks) {
-      for (let i = 0; i < blocks[index].weeks.length; i++) {
+    for (var index in values.blocks) {
+      for (let i = 0; i < values.blocks[index].weeks?.length; i++) {
         sum++;
       }
     }
@@ -203,7 +334,7 @@ export default function FullProgramForm({
         validateOnBlur={false}
         validationSchema={ProgramSchema}
       >
-        {({ handleSubmit, setFieldValue, handleChange, handleBlur, values, errors }) => (
+        {({ handleSubmit, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <Title align="center">
               {program ? `${program.template.title}` : 'Create Your Program'}
@@ -211,7 +342,7 @@ export default function FullProgramForm({
             <Tabs style={{ marginTop: 24 }} variant="pills">
               {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="General">
-                  <GeneralSection program={program} />
+                  <GeneralSection program={program} errors={errors} />
                 </Tab>
               )}
 
@@ -241,16 +372,6 @@ export default function FullProgramForm({
               <Tab label="View As Text">
                 <TemplateText values={values} />
               </Tab>
-              {/* {program ? (
-                  <Tab label="Comments">
-                    <CommentSection
-                      programID={programID}
-                      user={user}
-                      programAuthor={programAuthor}
-                      preFetchedComments={comments}
-                    />
-                  </Tab>
-                ) : null} */}
             </Tabs>
             <Group position="right" my={42}>
               <Button variant="outline" type="submit" loading={submitLoading}>

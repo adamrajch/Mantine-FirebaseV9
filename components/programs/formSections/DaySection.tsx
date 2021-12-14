@@ -12,7 +12,7 @@ import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote } from 'react-icons/fa';
-import { Lift } from '../../../types/types';
+import { Lift, Program } from '../../../types/types';
 import LiftSection from './LiftSection';
 const newLift: Lift = {
   name: 'New Lift',
@@ -37,7 +37,8 @@ export default function DaySection({
   weekIndex,
   dayHelpers,
 }: any): ReactElement {
-  const { values, handleChange, setFieldValue } = useFormikContext();
+  const { handleChange } = useFormikContext();
+  const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
   return (
     <div style={{ marginTop: 20 }}>
@@ -96,7 +97,7 @@ export default function DaySection({
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts &&
                   values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts.length > 0 &&
                   values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts.map(
-                    (l, liftIndex: number) => (
+                    (l: any, liftIndex: number) => (
                       <LiftSection
                         blockIndex={blockIndex}
                         weekIndex={weekIndex}

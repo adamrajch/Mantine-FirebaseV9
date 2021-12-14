@@ -1,6 +1,7 @@
 import { Checkbox, Group, MultiSelect, SimpleGrid, Text, TextInput } from '@mantine/core';
 import { Field, useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
+import { Program } from '../../../types/types';
 import { ErrorImage } from '../ImageError';
 
 const multiSelectData = [
@@ -24,8 +25,9 @@ const periodizationCheckboxes = [
   { label: 'Reverse', value: 'reverse' },
 ];
 
-export default function GeneralSection({ program }: any): ReactElement {
-  const { values, errors, handleChange, setFieldValue } = useFormikContext();
+export default function GeneralSection({ program, errors }: any): ReactElement {
+  const { handleChange, setFieldValue } = useFormikContext();
+  const { values }: { values: Program } = useFormikContext();
   return (
     <Group direction="column" spacing="lg" grow>
       {program == undefined ? (
@@ -90,7 +92,7 @@ export default function GeneralSection({ program }: any): ReactElement {
         checked={values.public}
         onChange={(event) => setFieldValue('public', event.currentTarget.checked)}
       />
-      {/*  stop sending request on autocomplete*/}
+
       <Group grow position="left" style={{ alignItems: 'flex-start' }}>
         <TextInput
           autoComplete="false"

@@ -46,12 +46,12 @@ export default function TemplateText({ values }: any): ReactElement {
 
       <Group direction="column" grow>
         {values.blocks.length &&
-          values.blocks.map((block, blockIndex: number) => (
+          values.blocks.map((block: any, blockIndex: number) => (
             <Group direction="column" grow key={blockIndex}>
               <Title order={3}>{block.name}</Title>
               <Group direction="column" grow>
                 {values.blocks[blockIndex].weeks.length &&
-                  values.blocks[blockIndex].weeks.map((week, weekIndex: number) => (
+                  values.blocks[blockIndex].weeks.map((week: any, weekIndex: number) => (
                     <Group
                       direction="column"
                       grow
@@ -64,7 +64,7 @@ export default function TemplateText({ values }: any): ReactElement {
                       <Grid justify="space-around">
                         {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
-                            (day, dayIndex: number) => (
+                            (day: any, dayIndex: number) => (
                               <Col span={12} lg={12} key={dayIndex}>
                                 <Group
                                   direction="column"
@@ -84,7 +84,9 @@ export default function TemplateText({ values }: any): ReactElement {
                                   >
                                     {day.name}
                                   </Title>
-                                  <Text size="sm">Summary: {day.summary}</Text>
+                                  {day.summary != undefined && day.summary.length > 0 && (
+                                    <Text size="sm">Summary: {day.summary}</Text>
+                                  )}
 
                                   <Table highlightOnHover>
                                     <thead>
@@ -105,9 +107,9 @@ export default function TemplateText({ values }: any): ReactElement {
                                           .lifts !== undefined &&
                                         values.blocks[blockIndex].weeks[weekIndex].days[
                                           dayIndex
-                                        ].lifts.map((l, liftIndex: number) => (
+                                        ].lifts.map((l: any, liftIndex: number) => (
                                           <>
-                                            {l.records.map((t, tIndex) => (
+                                            {l.records.map((t: any, tIndex: number) => (
                                               <tr key={tIndex}>
                                                 <td>{tIndex == 0 && l.name}</td>
                                                 <td>{t.sets}</td>

@@ -1,35 +1,13 @@
 import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote } from 'react-icons/fa';
+import { Program } from '../../../types/types';
 import { FlexContainer } from '../../FlexContainer';
 import RecordModal from '../RecordModal';
 import RecordSection from './RecordSection';
 
-const emptyLift = {
-  name: 'New Lift',
-  records: [
-    {
-      type: 'working',
-      sets: 5,
-      reps: 5,
-      unit: 'lbs',
-      rpe: null,
-      percent: null,
-      load: null,
-    },
-  ],
-};
-const emptyRecord = {
-  type: 'working',
-  sets: 5,
-  reps: 5,
-  unit: 'lbs',
-  rpe: null,
-  percent: null,
-  load: null,
-};
 export default function LiftSection({
   blockIndex,
   weekIndex,
@@ -38,7 +16,8 @@ export default function LiftSection({
   liftHelpers,
   liftIndex,
 }: any): ReactElement {
-  const { values, handleChange, setFieldValue } = useFormikContext();
+  const { handleChange } = useFormikContext();
+  const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
   const emptyRecord = {
     sets: 5,
@@ -99,23 +78,6 @@ export default function LiftSection({
                   </Button>
 
                   <RecordModal />
-                  {/* <ActionIcon
-                    onClick={() => recordHelpers.push(emptyRecord)}
-                    size="lg"
-                    color="cyan"
-                  >
-                    <AiOutlinePlus style={{ height: 18, width: 18 }} />
-                  </ActionIcon> */}
-
-                  {values.type !== 'single' && (
-                    <ActionIcon
-                      onClick={() => liftHelpers.remove(liftIndex)}
-                      size="lg"
-                      color="cyan"
-                    >
-                      <AiOutlineClose style={{ height: 18, width: 18 }} />
-                    </ActionIcon>
-                  )}
                 </Group>
               </FlexContainer>
               <Collapse in={open} my={8}>

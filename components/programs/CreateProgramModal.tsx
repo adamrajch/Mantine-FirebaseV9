@@ -8,7 +8,6 @@ export default function CreateProgramModal() {
   return (
     <>
       <Modal opened={opened} onClose={() => setOpened(false)} title="Create A New Program">
-        {/* <CreateProgramForm /> */}
         <FormikCreateProgramForm />
       </Modal>
 

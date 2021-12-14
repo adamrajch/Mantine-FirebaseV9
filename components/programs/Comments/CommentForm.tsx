@@ -46,7 +46,7 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
       {user && (
         <Formik
           initialValues={initialValues}
-          // onSubmit={async (values) => handleSubmit(values)}
+          onSubmit={async (values) => console.log('submit')}
           enableReinitialize={false}
           validateOnChange={false}
           validateOnBlur={false}
@@ -74,7 +74,7 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
                   <Button color="dark">Cancel</Button>
                   <Button
                     variant="outline"
-                    onClick={(e) => handleSub(values, resetForm)}
+                    onClick={() => handleSub(values, resetForm)}
                     loading={submitting}
                   >
                     Post

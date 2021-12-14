@@ -20,9 +20,6 @@ export default function CommentsList({
 }: any): ReactElement {
   const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<Array<any>>([]);
-  const [opened, setOpened] = useState(false);
-
-  const collectionRef = collection(db, 'comments');
 
   useEffect(() => {
     if (!preFetchedComments) {
@@ -34,10 +31,6 @@ export default function CommentsList({
 
     return;
   }, []);
-
-  // useEffect(() => {
-  //   console.log('comments : ', comments);
-  // }, [comments]);
 
   async function getComments() {
     console.log('fetching');

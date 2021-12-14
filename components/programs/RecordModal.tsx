@@ -1,15 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Modal,
-  NumberInput,
-  SegmentedControl,
-  Slider,
-  Text,
-} from '@mantine/core';
-import { TimeInput } from '@mantine/dates';
-import { ClockIcon } from '@modulz/radix-icons';
+import { ActionIcon, Button, Group, Modal, NumberInput, Slider, Text } from '@mantine/core';
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
@@ -19,7 +8,7 @@ export default function RecordModal(props: any) {
   const [loading, setLoading] = useState(false);
   const [rpe, setRPE] = useState(8);
   const [percent, setPercent] = useState(75);
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: any) => {
     alert(values);
   };
   const MARKS = [
@@ -61,7 +50,7 @@ export default function RecordModal(props: any) {
           enableReinitialize={false}
           validateOnChange={false}
           validateOnBlur={true}
-          render={({ values, handleChange, setFieldValue, handleReset, errors }) => (
+          render={({ values, handleChange }) => (
             <Form>
               <Group direction="column" position="left" grow>
                 <Text>RPE</Text>
@@ -119,7 +108,7 @@ export default function RecordModal(props: any) {
                   styles={{ markLabel: { display: 'none' } }}
                 />
               </Group>
-              <Group direction="column" position="left" grow>
+              {/* <Group direction="column" position="left" grow>
                 <SegmentedControl
                   fullWidth
                   size="xs"
@@ -175,9 +164,9 @@ export default function RecordModal(props: any) {
                     value={values.load}
                     name="load"
                     onChange={(value) => {
-                      let result = parseInt(value, 10)
-                      isNaN(result)
-                      setFieldValue(`load`, value)
+                      let result = parseInt(value, 10);
+                      isNaN(result);
+                      setFieldValue(`load`, value);
                     }}
                     styles={{
                       icon: {
@@ -189,7 +178,7 @@ export default function RecordModal(props: any) {
                 )}
 
                 <TimeInput icon={<ClockIcon />} withSeconds />
-              </Group>
+              </Group> */}
               <Group position="right">
                 <Button type="submit" loading={loading} variant="outline" size="xs">
                   Add Record

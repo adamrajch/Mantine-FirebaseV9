@@ -68,7 +68,7 @@ const AuthContent = ({ form, type, onSubmit, ...rest }: any) => {
   );
 };
 
-const FullScreenAuth = ({ type, onSubmit }) => {
+const FullScreenAuth = ({ type, onSubmit }: any) => {
   const form = useForm({
     initialValues: {
       email: '',
@@ -93,7 +93,7 @@ const FullScreenAuth = ({ type, onSubmit }) => {
   );
 };
 
-const AuthModal = ({ isOpen, onClose, type, onSubmit }) => {
+const AuthModal = ({ isOpen, onClose, type, onSubmit }: any) => {
   const form = useForm({
     initialValues: {
       email: '',
@@ -114,7 +114,7 @@ const AuthModal = ({ isOpen, onClose, type, onSubmit }) => {
   );
 };
 
-export const withAuthModal = (Component) => (props) => {
+export const withAuthModal = (Component: any) => (props: any) => {
   const [opened, setOpened] = useState(false);
   const { signInWithEmail } = useAuth();
   const notifications = useNotifications();
@@ -154,8 +154,9 @@ export const withAuthModal = (Component) => (props) => {
   );
 };
 //route after login
-export const withSignInRedirect = (Component) => (props) => {
+export const withSignInRedirect = (Component: any) => (props: any) => {
   const notifications = useNotifications();
+  const [opened, setOpened] = useState(false);
   const auth = useAuth();
   type SignUpProps = {
     email: string;
@@ -179,8 +180,8 @@ export const withSignInRedirect = (Component) => (props) => {
 
   return (
     <>
-      <AuthModal isOpen={isOpen} onClose={onClose} type="Sign In" onSubmit={signIn} />
-      <Component onSignIn={onOpen} {...props} />
+      <AuthModal isOpen={opened} onClose={setOpened} type="Sign In" onSubmit={signIn} />
+      <Component onSignIn={setOpened(true)} {...props} />
     </>
   );
 };

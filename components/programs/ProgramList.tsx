@@ -9,20 +9,20 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { db } from '../../firebase';
 import { ErrorImage } from './ImageError';
 
-export default function ProgramList({ programsProps }): JSX.Element {
+export default function ProgramList({ programsProps }: any): JSX.Element {
   const [programs, setPrograms] = useState<any>([]);
   console.log(programsProps);
   useEffect(() => {
-    setPrograms(programsProps.sort((a, b) => b.updated - a.updated));
+    setPrograms(programsProps.sort((a: any, b: any) => b.updated - a.updated));
   }, []);
 
-  async function deleteProgram(id, e) {
+  async function deleteProgram(id: string, e: any) {
     e.stopPropagation();
     await deleteDoc(doc(db, 'programs', id));
   }
   return (
     <Group direction="column" position="apart" grow>
-      {programs.map((p) => (
+      {programs.map((p: any) => (
         <Box
           key={p.id}
           sx={(theme) => ({
@@ -39,7 +39,6 @@ export default function ProgramList({ programsProps }): JSX.Element {
         >
           <Group position="apart">
             <Group position="left">
-              {/* <ImageDefault src={p.photoUrl} height={75} width={75} /> */}
               <ErrorImage src={p.photoUrl} height={75} width={75} />
               <Group direction="column" position="left" spacing={0}>
                 <Anchor href={`/programs/${p.id}`} component={Link}>
@@ -75,7 +74,11 @@ export default function ProgramList({ programsProps }): JSX.Element {
                 <Divider />
                 <Menu.Label>Danger zone</Menu.Label>
                 <Menu.Item icon={<PinRightIcon />}>Archive</Menu.Item>,
-                <Menu.Item color="red" icon={<TrashIcon />} onClick={(e) => deleteProgram(p.id, e)}>
+                <Menu.Item
+                  color="red"
+                  icon={<TrashIcon />}
+                  onClick={(e: any) => deleteProgram(p.id, e)}
+                >
                   Delete Program
                 </Menu.Item>
               </Menu>

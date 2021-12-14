@@ -40,4 +40,38 @@ export type Block = {
   weeks: Week[];
 };
 
+export type Program = {
+  title: string;
+  public: boolean;
+  category: string[];
+  periodization: string[];
+  experience: string[];
+  photoUrl: string;
+  blocks: Array<{
+    name: string;
+    summary: string | null;
+    weeks: Array<{
+      name: string;
+      summary: string;
+      days: Array<{
+        name: string;
+        summary: string;
+        lifts: Array<{
+          name: string;
+          note: string;
+          type: string;
+          records: Array<{
+            type: string;
+            sets: number;
+            reps: number;
+            rpe: number | null;
+            load: number | null;
+            unit: string | null;
+            percent: number | null;
+          }>;
+        }>;
+      }>;
+    }>;
+  }>;
+};
 // export { Record, Lift, Day, Workout, Week, Block };

@@ -1,50 +1,27 @@
-import { ActionIcon, Button, Collapse, Group, Menu, Textarea, TextInput } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Collapse,
+  Group,
+  Menu,
+  Modal,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiFillSetting, AiOutlineClose, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiFillSetting, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { FaRegStickyNote } from 'react-icons/fa';
+import { Program } from '../../../types/types';
 import DaySection from './DaySection';
-type Template = {
-  blocks: Array<{
-    name: string;
-    summary: string | null;
-    weeks?: Array<{
-      name: string;
-      summary: string | null;
-      days: Array<{
-        name: string;
-        summary: string | null;
-        lifts?: Array<{
-          name: string;
-          note: string;
-          type: string;
-          records?: Array<{
-            type: string;
-            sets: number;
-            reps: number;
-            rpe: number | null;
-            load: number | null;
-            unit: string | null;
-            percent: number | null;
-          }>;
-        }>;
-      }>;
-    }>;
-  }>;
-};
+import GenerateForm from './GenerateForm';
 
-export default function WeekSection({
-  weekIndex,
-  blockIndex,
-  weekHelpers,
-  dayIndex,
-  setWeekIndex,
-  setDayIndex,
-}: any): ReactElement {
+export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any): ReactElement {
   const { handleChange, setFieldValue } = useFormikContext();
-  const { values }: { values: Template } = useFormikContext();
+  const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState<boolean>(false);
+  const [openGen, setOpenGen] = useState<boolean>(false);
   return (
     <div>
       <FieldArray
@@ -58,28 +35,33 @@ export default function WeekSection({
                 name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
                 value={values.blocks[blockIndex].weeks[weekIndex].name}
                 onChange={(e: any) => handleChange(e)}
-                rightSection={
-                  values.blocks[blockIndex].weeks[weekIndex].name.length ? (
-                    <ActionIcon
-                      onClick={() =>
-                        setFieldValue(`blocks[${blockIndex}].weeks[${weekIndex}].name`, '')
-                      }
-                      size="xs"
-                    >
-                      <AiOutlineClose color="cyan" />
-                    </ActionIcon>
-                  ) : null
-                }
                 styles={{
                   input: { borderLeft: '2px solid yellow' },
                 }}
               />
               <Group position="right">
+                <>
+                  <Modal opened={openGen} onClose={() => setOpenGen(false)} size="xl">
+                    <GenerateForm
+                      blockIndex={blockIndex}
+                      weekIndex={weekIndex}
+                      weekHelpers={weekHelpers}
+                      currentWeek={values.blocks[blockIndex].weeks[weekIndex]}
+                      onClose={setOpenGen}
+                    />
+                  </Modal>
+
+                  <Group position="center">
+                    <Button size="xs" variant="outline" onClick={() => setOpenGen(true)}>
+                      Generate
+                    </Button>
+                  </Group>
+                </>
                 <Button
                   variant="outline"
                   onClick={() =>
                     dayHelpers.push({
-                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
+                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1}`,
                       summary: '',
                       lifts: [
                         {
@@ -106,16 +88,7 @@ export default function WeekSection({
                 >
                   Day
                 </Button>
-                {/* <ActionIcon
-                  onClick={() =>
-                    dayHelpers.push({
-                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
-                      lifts: [],
-                    })
-                  }
-                >
-                  <AiOutlineFileAdd />
-                </ActionIcon> */}
+
                 <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                   <FaRegStickyNote />
                 </ActionIcon>
@@ -142,15 +115,6 @@ export default function WeekSection({
                     icon={<AiOutlineDelete />}
                     onClick={() => {
                       console.log(values);
-
-                      if (values.blocks[blockIndex].weeks.length <= 1) {
-                        setWeekIndex(null);
-                        setDayIndex(null);
-                      } else {
-                        console.log('resetting week');
-                        setWeekIndex(0);
-                        setDayIndex(null);
-                      }
                       weekHelpers.remove(weekIndex);
                     }}
                   >
@@ -167,19 +131,19 @@ export default function WeekSection({
                 onChange={handleChange}
               />
             </Collapse>
-            <Group direction="column" grow>
-              {weekIndex !== null &&
-              dayIndex !== null &&
-              values.blocks[blockIndex].weeks[weekIndex].days.length > 0 ? (
-                <DaySection
-                  blockIndex={blockIndex}
-                  weekIndex={weekIndex}
-                  dayIndex={dayIndex}
-                  dayHelpers={dayHelpers}
-                />
-              ) : (
-                <div>Add Day</div>
-              )}
+
+            <Group direction="column" mt="md" grow>
+              {values.blocks[blockIndex].weeks[weekIndex].days != undefined &&
+                values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
+                values.blocks[blockIndex].weeks[weekIndex].days.map((d, dayIndex: number) => (
+                  <DaySection
+                    blockIndex={blockIndex}
+                    weekIndex={weekIndex}
+                    dayIndex={dayIndex}
+                    dayHelpers={dayHelpers}
+                    key={dayIndex}
+                  />
+                ))}
             </Group>
           </div>
         )}

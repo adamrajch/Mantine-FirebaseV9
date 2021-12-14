@@ -12,7 +12,8 @@ export default function RecordSection({
   dayIndex,
   recordHelpers,
 }: any): ReactElement {
-  const { values, setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
+  const { values }: { values: any } = useFormikContext();
   return (
     <FlexContainer justify="flex-start">
       <NumberInput
@@ -47,7 +48,7 @@ export default function RecordSection({
         step={1}
         max={9999}
         value={
-          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
+          values.blocks[blockIndex]?.weeks[weekIndex]?.days[dayIndex].lifts[liftIndex].records[
             recordIndex
           ].reps
         }
