@@ -26,16 +26,16 @@ interface MyFormValues {
 }
 
 export default function ProfileForm({ user }: any): JSX.Element {
-  const { name, email, photoUrl, bio } = user;
+  const { name, email, photoUrl, bio, height, weight, sex } = user;
   const notifications = useNotifications();
   console.log('from profile', user);
   const initialValues: MyFormValues = {
     name: name,
     email: email,
     bio: user.bio ? bio : '',
-    height: 72,
-    weight: 200,
-    sex: 'male',
+    height: height ? height : 72,
+    weight: weight ? weight : 200,
+    sex: sex ? sex : 'male',
   };
   return (
     <Container size="md">
@@ -90,6 +90,7 @@ export default function ProfileForm({ user }: any): JSX.Element {
                 error={errors.name}
                 onChange={handleChange}
               /> */}
+
               <Col span={12} md={6}>
                 <TextInput
                   label="Username"
@@ -99,15 +100,13 @@ export default function ProfileForm({ user }: any): JSX.Element {
                   onChange={handleChange}
                 />
               </Col>
-
               <Col span={12} md={6}>
                 <TextInput
                   label="Email"
                   type="email"
                   value={values.email}
-                  name="email"
                   error={errors.email}
-                  onChange={handleChange}
+                  disabled
                 />
               </Col>
               <Col span={12} md={6}>
@@ -115,7 +114,7 @@ export default function ProfileForm({ user }: any): JSX.Element {
                   label="Height"
                   autoComplete="false"
                   min={1}
-                  step={5}
+                  step={1}
                   max={999}
                   value={values.height}
                   onChange={(value) => setFieldValue('height', value)}
@@ -128,7 +127,6 @@ export default function ProfileForm({ user }: any): JSX.Element {
                   icon={<span>cm</span>}
                 />
               </Col>
-
               <Col span={12} md={6}>
                 <NumberInput
                   label="weight"
@@ -147,16 +145,15 @@ export default function ProfileForm({ user }: any): JSX.Element {
                   icon={<span>kg</span>}
                 />
               </Col>
-
               <Col span={12}>
                 <Group position="center" grow>
                   <SegmentedControl
                     value={values.sex}
                     onChange={(value) => setFieldValue('sex', value)}
                     data={[
-                      { label: 'Male', value: 'm' },
-                      { label: 'Female', value: 'f' },
-                      { label: 'Other', value: 'o' },
+                      { label: 'Male', value: 'male' },
+                      { label: 'Female', value: 'female' },
+                      { label: 'Other', value: 'other' },
                     ]}
                   />
                 </Group>

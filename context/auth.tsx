@@ -44,7 +44,7 @@ function useProvideAuth() {
         setUser(user);
       }
 
-      nookies.set(undefined, 'token', user.token, {});
+      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60 });
       setLoading(false);
       return user;
     } else {
