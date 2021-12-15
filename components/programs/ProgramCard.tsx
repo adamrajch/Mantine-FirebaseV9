@@ -14,8 +14,6 @@ export default function ProgramCard({ program, id }: any): ReactElement {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[0],
-        // width: 320,
         border: '3px solid transparent',
         borderRadius: theme.radius.md,
         // cursor: 'pointer',
@@ -33,19 +31,19 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[0],
           borderRadius: theme.radius.md,
 
-          // '&:hover': {
-          //   backgroundColor:
-          //     theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-          // },
+          '&:hover': {
+            backgroundColor:
+              theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
+          },
         })}
       >
         <Card.Section>
-          <ErrorImage src={p.photoUrl} height={260} />
+          <ErrorImage src={p.photoUrl} />
         </Card.Section>
-        <Group direction="column" spacing={1} key={id} grow style={{ height: 200, marginTop: 10 }}>
-          <Group position="apart">
+        <Group direction="column" spacing={0} key={id} grow style={{ height: 220, marginTop: 5 }}>
+          <Group position="apart" noWrap style={{ padding: 0 }}>
             <Link href={`/programs/${id}`}>
-              <Title order={2} style={{ cursor: 'pointer' }}>
+              <Title order={2} style={{ cursor: 'pointer' }} my={0}>
                 {p.title}
               </Title>
             </Link>

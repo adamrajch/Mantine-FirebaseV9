@@ -1,7 +1,6 @@
 import Head from 'next/head';
-import AuthButton from '../components/AuthButton';
-import ColorModeSwitch from '../components/ColorModeSwitch';
-import Layout from '../components/dashboard/AppShell';
+import BasicShell from '../components/dashboard/BasicShell';
+import HomePage from '../components/HomePage';
 import { useAuth } from '../context/auth';
 
 export default function Home() {
@@ -14,11 +13,9 @@ export default function Home() {
         <title>Periodize</title>
         <meta name="description" content="PReriodize Mantine w/ Firebase" />
       </Head>
-      <Layout>
-        <ColorModeSwitch />
-
-        <AuthButton />
-      </Layout>
+      <BasicShell>
+        <HomePage />
+      </BasicShell>
     </>
   );
 }

@@ -1,7 +1,6 @@
-import { TextInput, Title } from '@mantine/core';
+import { Title } from '@mantine/core';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { BiSearch } from 'react-icons/bi';
 import Layout from '../../components/dashboard/AppShell';
 import ProgramsNav from '../../components/programs/ProgramsNav';
 import { db } from '../../firebase';
@@ -34,7 +33,7 @@ export default function ProgramFeed(): ReactElement {
         Programs
       </Title>
       <ProgramsNav />
-      <TextInput icon={<BiSearch />} placeholder="Search by title" />
+      {/* <TextInput icon={<BiSearch />} placeholder="Search by title" /> */}
 
       {/* <SimpleGrid
         breakpoints={[

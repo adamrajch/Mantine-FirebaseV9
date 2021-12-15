@@ -20,7 +20,7 @@ export default function NavBarLink({ href, title, Component }: Props): ReactElem
         borderColor: theme.colors.gray[8],
         '&:hover': {
           backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+            theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[3],
         },
       })}
     >

@@ -3,14 +3,24 @@ import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useState } from 'react';
+import Router from 'next/router';
+import React, { useState } from 'react';
 import GlobalStyle from '../components/GlobalStyles';
+import Loader from '../components/Loader';
 import { AuthProvider } from '../context/auth';
 export default function App(props: AppProps) {
+  const [loading, setLoading] = useState(false);
   const { Component, pageProps } = props;
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('dark');
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+
+  Router.events.on('routeChangeStart', (url) => {
+    setLoading(true);
+  });
+  Router.events.on('routeChangeComplete', (url) => {
+    setLoading(false);
+  });
   return (
     <>
       <Head>
@@ -21,11 +31,11 @@ export default function App(props: AppProps) {
         <MantineProvider
           emotionOptions={{ key: 'mantine', prepend: false }}
           theme={{
-            colorScheme: 'dark',
+            colorScheme: colorScheme,
             primaryColor: 'cyan',
             fontFamily: 'Verdana, sans-serif',
             fontFamilyMonospace: 'Monaco, Courier, monospace',
-            headings: { fontFamily: 'monospace' },
+            headings: { fontFamily: 'Greycliff CF, sans-serif' },
           }}
           styles={{
             Box: {
@@ -41,7 +51,7 @@ export default function App(props: AppProps) {
             },
             Title: {
               root: {
-                color: 'white',
+                color: colorScheme === 'dark' ? 'white' : 'black',
               },
             },
           }}
@@ -50,9 +60,7 @@ export default function App(props: AppProps) {
           <ModalsProvider>
             <GlobalStyle />
             <NotificationsProvider>
-              <AuthProvider>
-                <Component {...pageProps} />
-              </AuthProvider>
+              <AuthProvider>{loading ? <Loader /> : <Component {...pageProps} />}</AuthProvider>
             </NotificationsProvider>
           </ModalsProvider>
         </MantineProvider>

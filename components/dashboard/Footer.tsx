@@ -1,31 +1,18 @@
-import {
-  Box,
-  Button,
-  Col,
-  Container,
-  createStyles,
-  Divider,
-  Grid,
-  Group,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Box, Button, Col, Container, Divider, Grid, Group, Text, Title } from '@mantine/core';
 import React from 'react';
 
-const useStyles = createStyles((theme) => ({
-  foot: {
-    // position: 'fixed',
-    borderTop: '1px solid gray',
-    flexShrink: 0,
-    width: '100%',
-    padding: `${theme.spacing.xl}px 0px`,
-    backgroundColor: theme.colors.dark[8],
-  },
-}));
 export default function Footer(): JSX.Element {
-  const { classes } = useStyles();
   return (
-    <Box className={classes.foot}>
+    <Box
+      sx={(theme) => ({
+        borderTop: '1px solid  ',
+        borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
+        flexShrink: 0,
+        width: '100%',
+        padding: `${theme.spacing.xl}px 0px`,
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+      })}
+    >
       <Group position="center">
         <Container size="md">
           <Group direction="column" align="apart" grow>

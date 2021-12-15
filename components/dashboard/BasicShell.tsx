@@ -24,6 +24,11 @@ import Footer from './Footer';
 type Props = {
   children: React.ReactNode;
 };
+const headerLinks = [
+  { href: '/dashboard', title: 'Dashboard' },
+
+  { href: '/about', title: 'About' },
+];
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
   { href: '/basics', title: 'Learn Basics' },
@@ -40,26 +45,36 @@ export default function Layout({ children }: Props) {
   const theme = useMantineTheme();
   const { user, signout } = useAuth();
   const { height, width } = useViewportSize();
-  const headerHeight = 60;
-  const mainHeight = height - headerHeight;
+  const mainHeight = height - 60;
   return (
     <AppShell
       padding={0}
-      navbarOffsetBreakpoint="sm"
+      navbarOffsetBreakpoint={10000}
       fixed
       navbar={
         <Navbar
           padding="md"
-          hiddenBreakpoint="sm"
+          hiddenBreakpoint={10000000}
           hidden={!opened}
-          width={{ sm: 200, lg: 240 }}
+          width={{ sm: 200, lg: 230 }}
           sx={(theme) => ({
-            borderRight: '1px solid',
-            borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[5],
             backgroundColor:
               theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
           })}
         >
+          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+            <Navbar.Section>
+              <Group position="left" direction="column" spacing={0}>
+                {headerLinks.map((g) => (
+                  <NavBarLink key={g.href} href={g.href} title={g.title} />
+                ))}
+              </Group>
+            </Navbar.Section>
+          </MediaQuery>
+
+          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+            <Divider my="sm" />
+          </MediaQuery>
           <Navbar.Section>
             <Group position="left" direction="column" spacing={0}>
               {generalLinks.map((g) => (
@@ -113,13 +128,11 @@ export default function Layout({ children }: Props) {
       }
       header={
         <Header
-          height={headerHeight}
+          height={60}
           padding="md"
           sx={(theme) => ({
-            borderBottom: '1px solid',
             backgroundColor:
               theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
-            borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[5],
           })}
         >
           <Group position="center" style={{ height: '100%' }} my={0} noWrap>
@@ -150,11 +163,14 @@ export default function Layout({ children }: Props) {
               >
                 Periodize
               </Text>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {/* {headerLinks.map((g) => (
-                  <NavBarLink key={g.href} href={g.href} title={g.title} />
-                ))} */}
-
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+                  <Group noWrap>
+                    {headerLinks.map((g) => (
+                      <NavBarLink key={g.href} href={g.href} title={g.title} />
+                    ))}
+                  </Group>
+                </MediaQuery>
                 <ColorModeSwitch />
               </div>
             </Box>
@@ -169,10 +185,12 @@ export default function Layout({ children }: Props) {
         <Box
           sx={(theme) => ({
             backgroundColor:
-              theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-            minHeight: mainHeight,
-            padding: '20px 10px 200px 10px',
+              theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[1],
+            borderTop: '1px solid  ',
+            borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4],
+            padding: '5px 10px 50px 10px',
             flex: '1 0 auto',
+            minHeight: mainHeight,
           })}
         >
           {children}

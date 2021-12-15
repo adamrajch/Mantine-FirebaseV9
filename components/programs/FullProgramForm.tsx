@@ -346,12 +346,6 @@ export default function FullProgramForm({
                 </Tab>
               )}
 
-              <Tab label="Summary">
-                <div>
-                  <RichText value={value} onChange={onChange} />
-                </div>
-              </Tab>
-
               {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="Template">
                   <Group position="left" direction="column" grow>
@@ -371,6 +365,11 @@ export default function FullProgramForm({
 
               <Tab label="View As Text">
                 <TemplateText values={values} />
+              </Tab>
+              <Tab label="Summary">
+                <div>
+                  <RichText value={value} onChange={onChange} />
+                </div>
               </Tab>
             </Tabs>
             <Group position="right" my={42}>

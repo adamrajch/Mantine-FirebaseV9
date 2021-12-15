@@ -1,4 +1,5 @@
 import { Image } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import React, { useState } from 'react';
 
 export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any) => {
@@ -8,6 +9,7 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
     setError(true);
   };
 
+  const matches = useMediaQuery('(min-width:800px)');
   return error ? (
     <>
       {fallback ? (
@@ -15,24 +17,34 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
       ) : (
         <Image
           src="https://sound.peal.io/soundboards/covers/000/000/001/large/Arnold-schwarzenegger-smile-photos.jpg?1469743363"
-          height={height}
+          height={matches ? height : 260}
           width={width}
           fit="contain"
           alt="invalid pic"
           {...props}
-          // onError={onError}
+          styles={{
+            root: {
+              height: matches ? height : 260,
+            },
+          }}
         />
       )}
     </>
   ) : (
     <Image
       src={src}
-      height={height}
+      height={matches ? height : 175}
       width={width}
       alt={alt}
       onError={onError}
       {...props}
-      style={{ objectPosition: 'center' }}
+      fit="contain"
+      styles={{
+        root: {
+          height: matches ? height : 200,
+        },
+      }}
+      // style={{ objectPosition: 'center' }}
     />
   );
 };
