@@ -89,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (
   try {
     const cookies = nookies.get(context);
     const token = await verifyIdToken(cookies.token);
-    // const token = handleTokenCookie(context);
+
     const { uid } = token;
 
     const collectionRef = collection(db, 'programs');

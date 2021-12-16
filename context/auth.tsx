@@ -137,6 +137,11 @@ function useProvideAuth() {
     const handle = setInterval(async () => {
       const user = auth.currentUser;
       if (user) await user.getIdToken(true);
+
+      //   .then(function (idToken) {
+      //   console.log('refreshed');
+      //   nookies.set(undefined, 'token', idToken, { maxAge: 30 * 24 * 60 * 60, path: '/' });
+      // });
     }, 10 * 60 * 1000);
 
     // clean up setInterval
@@ -153,7 +158,7 @@ function useProvideAuth() {
   };
 }
 const formatUser = async (user: any) => {
-  const token = await user.getIdToken();
+  const token = await user.getIdToken(true);
   return {
     uid: user.uid,
     email: user.email,

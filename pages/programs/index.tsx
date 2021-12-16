@@ -83,7 +83,7 @@ export default function ProgramFeed(): ReactElement {
         >
           {pages.map((page) => {
             return (
-              <Link href={page.href}>
+              <Link href={page.href} key={page.href}>
                 <Paper
                   key={page.href}
                   padding="md"
