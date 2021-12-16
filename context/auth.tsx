@@ -2,7 +2,7 @@ import { doc } from '@firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -13,6 +13,7 @@ import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { createUser } from '../hooks/createUser';
+
 type Props = {
   children?: React.ReactNode;
 };
@@ -44,12 +45,12 @@ function useProvideAuth() {
         setUser(user);
       }
 
-      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60 });
+      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
       setLoading(false);
       return user;
     } else {
       setUser(false);
-      nookies.set(undefined, 'token', '', {});
+      nookies.set(undefined, 'token', '', { path: '/' });
 
       setLoading(false);
       return false;
@@ -125,11 +126,21 @@ function useProvideAuth() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
       handleUser(user);
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
   }, []);
 
   return {

@@ -372,7 +372,7 @@ export default function FullProgramForm({
                 </div>
               </Tab>
             </Tabs>
-            <Group position="right" my={42}>
+            <Group position="right">
               <Button variant="outline" type="submit" loading={submitLoading}>
                 {program ? 'Save' : 'Create'}
               </Button>

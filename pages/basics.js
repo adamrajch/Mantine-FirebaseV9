@@ -1,5 +1,7 @@
+import { Container, Group, List, Text, ThemeIcon, Title } from '@mantine/core';
 import { useScrollIntoView } from '@mantine/hooks';
 import React from 'react';
+import { AiOutlineUnorderedList } from 'react-icons/ai';
 import Layout from '../components/dashboard/AppShell';
 
 const definitions = [
@@ -38,8 +40,10 @@ const definitions = [
     d: 'Rate of percieved exertion. A scale from 1-10 dictating how "intense" an exercise is. A "10" is a true max effort, with 0 reps left in the tank. Where as a "6" would be 4 reps witheld from failure    ',
   },
 ];
-export default function Basics(): JSX.Element {
+
+export default function Basics() {
   const navH = 60;
+
   const { scrollIntoView, targetRef: keyDefRef } = useScrollIntoView({ offset: navH });
   const { scrollIntoView: scrollIntoPR, targetRef: fpRef } = useScrollIntoView({
     offset: navH,
@@ -49,7 +53,7 @@ export default function Basics(): JSX.Element {
   });
   return (
     <Layout>
-      {/* <Title order={1} align="center" my={24}>
+      <Title order={1} align="center" my={24}>
         Training Basics
       </Title>
       <div style={{ display: 'flex', alignContent: 'flex-start' }}>
@@ -327,10 +331,10 @@ export default function Basics(): JSX.Element {
             <List.Item onClick={() => scrollIntoView()}>Key Definitions</List.Item>
             <List.Item onClick={() => scrollIntoPR()}>Foundational Principles</List.Item>
             <List.Item onClick={() => scrollIntoPeriodization()}>Periodization</List.Item>
-            <List.Item onClick={() => scrollIntoView()}>Program Design</List.Item>
+            {/* <List.Item onClick={() => scrollIntoView()}>Program Design</List.Item> */}
           </List>
         </Group>
-      </div> */}
+      </div>
     </Layout>
   );
 }

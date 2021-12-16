@@ -1,6 +1,7 @@
 import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
-import { Container, Group, Title } from '@mantine/core';
+import { Button, Center, Container, Group, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import nookies from 'nookies';
 import React from 'react';
 import Layout from '../../components/dashboard/AppShell';
@@ -46,23 +47,37 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
   //   return unsubscribe;
   // }
 
-  console.log('serverside props: ', JSON.parse(programsProps));
+  // console.log('serverside props: ', JSON.parse(programsProps));
   const programs = JSON.parse(programsProps);
 
   return (
     <Layout>
-      <Container size="md">
-        <Title order={2} align="center">
+      <Container size="md" style={{ padding: 0 }}>
+        <Title order={2} align="center" my={22}>
           My Programs
         </Title>
         <Group position="center" direction="column" grow>
-          {/* {programLoading && (
-            <Group position="center">
-              <Loader />
-            </Group>
-          )} */}
           {programs.length > 0 ? <ProgramList programsProps={programs} /> : null}
-          {programs.length < 1 ? <div>nothing here</div> : null}
+          {programs.length < 1 ? (
+            <Center style={{ height: '60vh', width: '100%' }}>
+              <Group direction="column" grow>
+                <Title order={3} align="center" my={20}>
+                  You haven't made any programs yet!
+                </Title>
+                <Link href="/basics">
+                  <Button variant="outline" fullWidth>
+                    Learn
+                  </Button>
+                </Link>
+
+                <Link href="/dashboard/create">
+                  <Button variant="filled" fullWidth color="cyan">
+                    Create A Program
+                  </Button>
+                </Link>
+              </Group>
+            </Center>
+          ) : null}
         </Group>
       </Container>
     </Layout>
@@ -94,7 +109,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    console.log(error);
+    context.res.writeHead(302, { Location: '/login' });
+    context.res.end();
+
     return { props: {} };
   }
 };

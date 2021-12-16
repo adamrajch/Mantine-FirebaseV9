@@ -27,8 +27,6 @@ type Props = {
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
   { href: '/basics', title: 'Learn Basics' },
-
-  { href: '/about', title: 'About' },
 ];
 const userLinks = [
   { href: '/dashboard/create', title: 'Create Program' },

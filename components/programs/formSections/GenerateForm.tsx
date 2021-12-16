@@ -20,6 +20,7 @@ export default function GenerateForm({
   onClose,
 }: Props): ReactElement {
   const [weeks, setWeeks] = useState<number>(4);
+  const [error, setError] = useState<boolean>(false);
   const notifications = useNotifications();
 
   const { values }: { values: Program } = useFormikContext();
@@ -42,12 +43,14 @@ export default function GenerateForm({
           days: currentWeek.days,
         });
       }
+      notifications.showNotification({
+        title: `Complete`,
+        message: `Successfully Generated ${weeks} weeks`,
+      });
+      onClose(false);
+    } else {
+      setError(true);
     }
-    notifications.showNotification({
-      title: `Complete`,
-      message: `Successfully Generated ${weeks} weeks`,
-    });
-    onClose(false);
   }
   return (
     <Group direction="column" grow>
@@ -64,6 +67,7 @@ export default function GenerateForm({
         autoComplete="false"
         value={weeks}
         onChange={(e) => handleChange(e)}
+        error={error && 'Invalid number'}
       />
       <Text>You can clone 1-20 weeks at a time</Text>
       <Button variant="outline" onClick={handleSubmit}>

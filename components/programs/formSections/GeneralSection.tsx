@@ -6,7 +6,7 @@ import { ErrorImage } from '../ImageError';
 
 const multiSelectData = [
   { value: 'bodybuilding', label: 'bodybuilding' },
-  { value: 'olympic weightlifting', label: 'olympic weightlifting' },
+  { value: 'weightlifting', label: 'weightlifting' },
   { value: 'powerlifting', label: 'powerlifting' },
   { value: 'mobility', label: 'mobility' },
   { value: 'sport', label: 'sport' },

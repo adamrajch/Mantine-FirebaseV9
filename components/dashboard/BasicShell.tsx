@@ -32,15 +32,13 @@ const headerLinks = [
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
   { href: '/basics', title: 'Learn Basics' },
-
-  { href: '/about', title: 'About' },
 ];
 const userLinks = [
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
 ];
 
-export default function Layout({ children }: Props) {
+export default function BasicShell({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
   const { user, signout } = useAuth();

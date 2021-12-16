@@ -1,6 +1,7 @@
-import { Group, Text } from '@mantine/core';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import Link from 'next/link';
 import React from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
 const links = [
   {
     href: '/programs/category/featured',
@@ -15,8 +16,8 @@ const links = [
     title: 'Bodybuilding',
   },
   {
-    href: '/programs/category/olympicweightlifting',
-    title: 'Olympic Weightlifting',
+    href: '/programs/category/weightlifting',
+    title: 'Weightlifting',
   },
   {
     href: '/programs/category/sport',
@@ -30,7 +31,7 @@ const links = [
 
 export default function ProgramsNav(): JSX.Element {
   return (
-    <Group position="center" my={20}>
+    <Group position="center" my={20} spacing={2}>
       {links.map((link) => (
         <Link href={link.href} key={link.href}>
           <Text
@@ -49,6 +50,9 @@ export default function ProgramsNav(): JSX.Element {
           </Text>
         </Link>
       ))}
+      <ActionIcon>
+        <AiOutlineSearch />
+      </ActionIcon>
     </Group>
   );
 }

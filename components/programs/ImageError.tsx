@@ -17,14 +17,14 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
       ) : (
         <Image
           src="https://sound.peal.io/soundboards/covers/000/000/001/large/Arnold-schwarzenegger-smile-photos.jpg?1469743363"
-          height={matches ? height : 260}
+          height={matches ? height : 80}
           width={width}
           fit="contain"
           alt="invalid pic"
           {...props}
           styles={{
             root: {
-              height: matches ? height : 260,
+              height: matches ? height : 80,
             },
           }}
         />
@@ -33,7 +33,7 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
   ) : (
     <Image
       src={src}
-      height={matches ? height : 175}
+      height={matches ? height : 80}
       width={width}
       alt={alt}
       onError={onError}
@@ -41,7 +41,7 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
       fit="contain"
       styles={{
         root: {
-          height: matches ? height : 200,
+          height: matches ? height : 80,
         },
       }}
       // style={{ objectPosition: 'center' }}

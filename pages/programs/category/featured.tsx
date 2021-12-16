@@ -1,8 +1,7 @@
-import { Button, Container, Group, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { Button, Container, Group, SimpleGrid, Title } from '@mantine/core';
 import { collection, getDocs, limit, orderBy, query, startAfter, where } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { BiSearch } from 'react-icons/bi';
 import Layout from '../../../components/dashboard/AppShell';
 import ProgramCard from '../../../components/programs/ProgramCard';
 import ProgramsNav from '../../../components/programs/ProgramsNav';
@@ -13,16 +12,11 @@ export default function CategorySearchPage({ programsProps, lastVisible }: any):
   const [empty, setEmpty] = useState<boolean>(false);
 
   const [last, setLast] = useState<any>(null);
-  //   console.log('cat programs', JSON.parse(programsProps));
+
   useEffect(() => {
     setPrograms(JSON.parse(programsProps));
     setLast(JSON.parse(lastVisible));
   }, []);
-
-  //   useEffect(() => {
-  //     console.log('programs', programs);
-  //     setLast(programs[programs.length - 1]);
-  //   }, [programs]);
 
   function getProgramsQuery() {
     return query(
@@ -55,21 +49,18 @@ export default function CategorySearchPage({ programsProps, lastVisible }: any):
   };
   return (
     <Layout>
-      <Container size="xl">
+      <Container size="lg">
         <Title order={1} align="center" mb={20}>
           Featured Programs
         </Title>
 
-        <Group position="apart">
-          <ProgramsNav />
-          <TextInput icon={<BiSearch />} placeholder="Search by title" />
-        </Group>
+        <ProgramsNav />
 
         <SimpleGrid
           breakpoints={[
             { minWidth: 'sm', cols: 1, spacing: 'sm' },
             { minWidth: 'md', cols: 2, spacing: 'lg' },
-            { minWidth: 1200, cols: 2, spacing: 'lg' },
+            { minWidth: 1200, cols: 1, spacing: 'lg' },
           ]}
         >
           {programs.length > 0 &&
@@ -77,7 +68,7 @@ export default function CategorySearchPage({ programsProps, lastVisible }: any):
         </SimpleGrid>
         {!empty && (
           <Group position="center">
-            <Button loading={loading} onClick={() => getPrograms()}>
+            <Button loading={loading} onClick={() => getPrograms()} variant="outline" my={20}>
               Load More
             </Button>
           </Group>
@@ -98,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
 
     const querySnapshot = await getDocs(q);
     let programs: any = [];
+    let empty;
     querySnapshot.forEach((doc) => {
       programs.push({
         ...doc.data(),
@@ -107,10 +99,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
       });
     });
     const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+    if (querySnapshot.empty || programs.length < 10) {
+      empty = true;
+    } else {
+      empty = false;
+    }
     return {
       props: {
         programsProps: JSON.stringify(programs) || [],
-        lastVisible: JSON.stringify(lastVisible),
+        lastVisible: lastVisible == undefined ? null : JSON.stringify(lastVisible),
+        isEmpty: empty,
       },
     };
   } catch (error) {

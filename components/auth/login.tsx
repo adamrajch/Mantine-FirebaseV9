@@ -59,7 +59,7 @@ export default function Login(): JSX.Element {
             <div
               style={{
                 border: '1px solid white',
-                width: '30vw',
+
                 padding: 25,
                 borderRadius: 10,
                 minHeight: '40vh',

@@ -1,10 +1,11 @@
 import React from 'react';
 import SignUp from '../components/auth/signup';
+import BasicShell from '../components/dashboard/BasicShell';
 
 export default function SignUpPage(): JSX.Element {
   return (
-    <div className="full">
+    <BasicShell>
       <SignUp />
-    </div>
+    </BasicShell>
   );
 }
