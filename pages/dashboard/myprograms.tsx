@@ -89,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (
   try {
     const cookies = nookies.get(context);
     const token = await verifyIdToken(cookies.token);
-
+    // const token = handleTokenCookie(context);
     const { uid } = token;
 
     const collectionRef = collection(db, 'programs');
@@ -112,15 +112,18 @@ export const getServerSideProps: GetServerSideProps = async (
     };
   } catch (error) {
     console.log(error);
+    context.res.writeHead(302, {
+      Location: `/refresh`,
+    });
+    context.res.end();
     return {
-      props: {
-        message: `The error ${error}`,
-      },
-
-      // redirect: {
-      //   destination: '/login',
-      //   permanent: false,
-      // },
+      props: {} as never,
     };
+    // return {
+    //   redirect: {
+    //     destination: '/login',
+    //     permanent: false,
+    //   },
+    // };
   }
 };
