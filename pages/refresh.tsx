@@ -20,7 +20,7 @@ const Refresh = () => {
             // setUserCookie(currentUser);
             nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
             // Redirect back to where it was
-            ('refreshed token');
+            console.log('refreshed token');
             Router.back();
           })
           .catch(() => {
