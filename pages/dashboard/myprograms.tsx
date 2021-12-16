@@ -1,6 +1,6 @@
 import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
 import { Button, Center, Container, Group, Title } from '@mantine/core';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import nookies from 'nookies';
 import React from 'react';
@@ -83,7 +83,9 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
     </Layout>
   );
 }
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   try {
     const cookies = nookies.get(context);
     const token = await verifyIdToken(cookies.token);
@@ -111,7 +113,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      message: `elo there ${error}`,
+      props: {
+        message: `The error ${error}`,
+      },
+
       // redirect: {
       //   destination: '/login',
       //   permanent: false,
