@@ -111,10 +111,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
+      message: `elo there ${error}`,
+      // redirect: {
+      //   destination: '/login',
+      //   permanent: false,
+      // },
     };
   }
 };
