@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineCopy, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote } from 'react-icons/fa';
 import { Lift, Program } from '../../../types/types';
 import LiftSection from './LiftSection';
@@ -40,6 +40,16 @@ export default function DaySection({
   const { handleChange } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
+
+  function copyLift(dayHelpers: any) {
+    if (dayIndex < 6) {
+      const newDay = {
+        ...values.blocks[blockIndex].weeks[weekIndex].days[dayIndex],
+        name: `Day ${values.blocks[blockIndex].weeks[weekIndex].days.length + 1}`,
+      };
+      dayHelpers.push(newDay);
+    }
+  }
   return (
     <div style={{ marginTop: 20 }}>
       <FieldArray name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts`}>
@@ -72,6 +82,10 @@ export default function DaySection({
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     <FaRegStickyNote />
                   </ActionIcon>
+                  <ActionIcon size="lg" color="cyan" onClick={() => copyLift(dayHelpers)}>
+                    <AiOutlineCopy />
+                  </ActionIcon>
+
                   <Button
                     variant="outline"
                     onClick={() => liftHelpers.push(newLift)}
@@ -80,7 +94,13 @@ export default function DaySection({
                   >
                     Lift
                   </Button>
-                  <ActionIcon size="lg" color="cyan" onClick={() => dayHelpers.remove(dayIndex)}>
+                  <ActionIcon
+                    size="lg"
+                    color="cyan"
+                    onClick={() => {
+                      dayHelpers.remove(dayIndex);
+                    }}
+                  >
                     <AiOutlineDelete />
                   </ActionIcon>
                 </Group>

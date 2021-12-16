@@ -22,6 +22,8 @@ export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any)
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState<boolean>(false);
   const [openGen, setOpenGen] = useState<boolean>(false);
+  console.log('block Index', blockIndex);
+  console.log('week Index', weekIndex);
   return (
     <div>
       <FieldArray
@@ -59,30 +61,32 @@ export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any)
                 </>
                 <Button
                   variant="outline"
-                  onClick={() =>
-                    dayHelpers.push({
-                      name: `Day ${values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1}`,
-                      summary: '',
-                      lifts: [
-                        {
-                          name: 'New Lift',
-                          type: 'single',
-                          note: '',
-                          records: [
-                            {
-                              type: 'working',
-                              load: null,
-                              sets: 5,
-                              reps: 5,
-                              unit: 'lbs',
-                              rpe: null,
-                              percent: null,
-                            },
-                          ],
-                        },
-                      ],
-                    })
-                  }
+                  onClick={() => {
+                    if (values.blocks[blockIndex].weeks[weekIndex].days.length < 7) {
+                      dayHelpers.push({
+                        name: `Day ${values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1}`,
+                        summary: '',
+                        lifts: [
+                          {
+                            name: 'New Lift',
+                            type: 'single',
+                            note: '',
+                            records: [
+                              {
+                                type: 'working',
+                                load: null,
+                                sets: 5,
+                                reps: 5,
+                                unit: 'lbs',
+                                rpe: null,
+                                percent: null,
+                              },
+                            ],
+                          },
+                        ],
+                      });
+                    }
+                  }}
                   leftIcon={<AiOutlinePlus />}
                   size="xs"
                 >

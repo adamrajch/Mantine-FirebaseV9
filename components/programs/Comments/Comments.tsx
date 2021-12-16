@@ -77,15 +77,15 @@ export default function CommentsList({
                   </Group>
                   <Group position="left">
                     <Text size="xs">
-                      {dayjs(c.data.createdDate?.toDate().getTime()).format('MMMM DD YYYY')}
+                      {dayjs(c.data.createdDate?.toDate().getTime()).format('MM/DD/YYYY')}
                     </Text>
-                    <Text size="xs" color="gray">
+                    {/* <Text size="xs" color="gray">
                       Pinned
-                    </Text>
+                    </Text> */}
                     <Text size="xs" color="gray">
                       166 likes
                     </Text>
-                    {c.data.user === user.email && (
+                    {c.data.user === user.name && (
                       <Text
                         onClick={() => deleteComment(c.id)}
                         size="xs"
@@ -95,6 +95,16 @@ export default function CommentsList({
                         Delete
                       </Text>
                     )}
+                    {/* {c.data.user === user.name && (
+                      <Text
+                        onClick={() => deleteComment(c.id)}
+                        size="xs"
+                        color="gray"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {c.data.pinned ? 'Unpin' : 'Pin'}
+                      </Text>
+                    )} */}
                   </Group>
                 </Group>
 

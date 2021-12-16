@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Button, Divider, Group, Tab, Tabs, Title } from '@mantine/core';
+import { Button, Divider, Group, Tab, Tabs, Text, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { doc, updateDoc } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
@@ -28,16 +28,16 @@ type Program = {
   photoUrl: string;
   blocks: Array<{
     name: string;
-    summary: string | null;
+    summary: string;
     weeks?: Array<{
       name: string;
-      summary?: string;
+      summary: string;
       days: Array<{
         name: string;
-        summary?: string;
+        summary: string;
         lifts?: Array<{
           name: string;
-          note?: string;
+          note: string;
           type: string;
           records?: Array<{
             type: string;
@@ -64,8 +64,8 @@ export default function FullProgramForm({
   const [submitLoading, setSubmitLoading] = useState(false);
   const notifications = useNotifications();
   const router = useRouter();
-  console.log('programAuthor ', programAuthor);
-  console.log('user ', user);
+  // console.log('programAuthor ', programAuthor);
+  // console.log('user ', user);
 
   const initialValues: Program = program
     ? program.template
@@ -312,6 +312,7 @@ export default function FullProgramForm({
                 category: values.category,
                 periodization: values.periodization,
                 updatedDate: serverTimestamp(),
+                photoUrl: values.photoUrl,
               };
               await updateDoc(docRef, updatedProgram);
               setSubmitLoading(false);
@@ -336,9 +337,14 @@ export default function FullProgramForm({
       >
         {({ handleSubmit, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <Title align="center">
+            <Text
+              align="center"
+              sx={{
+                fontSize: 30,
+              }}
+            >
               {program ? `${program.template.title}` : 'Create Your Program'}
-            </Title>
+            </Text>
             <Tabs style={{ marginTop: 24 }} variant="pills">
               {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="General">
@@ -372,7 +378,7 @@ export default function FullProgramForm({
                 </div>
               </Tab>
             </Tabs>
-            <Group position="right">
+            <Group position="right" my={40}>
               <Button variant="outline" type="submit" loading={submitLoading}>
                 {program ? 'Save' : 'Create'}
               </Button>

@@ -5,8 +5,10 @@ import { FaRegStickyNote } from 'react-icons/fa';
 export default function TemplateText({ values }: any): ReactElement {
   const theme = useMantineTheme();
   return (
-    <Group direction="column" position="left" grow>
-      <Title align="left">{values.title ? values.title : 'Program Title'}</Title>
+    <Group direction="column" position="left" grow my={20}>
+      {/* <Text style={{ color: 'white', fontSize: 20 }} my={0}>
+        {values.title ? values.title : 'Program Title'}
+      </Text> */}
       <Group direction="column" position="left" spacing={0} grow>
         {values.category.length > 0 && (
           <Text mx={0}>
@@ -48,7 +50,8 @@ export default function TemplateText({ values }: any): ReactElement {
         {values.blocks.length &&
           values.blocks.map((block: any, blockIndex: number) => (
             <Group direction="column" grow key={blockIndex}>
-              <Title order={3}>{block.name}</Title>
+              {values.blocks.length > 1 ? <Title order={3}>{block.name}</Title> : null}
+              <Text>{block.summary}</Text>
               <Group direction="column" grow>
                 {values.blocks[blockIndex].weeks.length &&
                   values.blocks[blockIndex].weeks.map((week: any, weekIndex: number) => (
@@ -58,9 +61,12 @@ export default function TemplateText({ values }: any): ReactElement {
                       style={{ paddingLeft: 10, marginTop: 12, width: '100%' }}
                       key={weekIndex}
                     >
-                      <Title order={2} align="left">
-                        {week.name}
-                      </Title>
+                      {values.blocks[blockIndex].weeks.length < 1 ? (
+                        <Title order={2} align="left">
+                          {week.name}
+                        </Title>
+                      ) : null}
+
                       <Grid justify="space-around">
                         {values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
                           values.blocks[blockIndex].weeks[weekIndex].days.map(
@@ -108,7 +114,7 @@ export default function TemplateText({ values }: any): ReactElement {
                                         values.blocks[blockIndex].weeks[weekIndex].days[
                                           dayIndex
                                         ].lifts.map((l: any, liftIndex: number) => (
-                                          <>
+                                          <React.Fragment key={liftIndex}>
                                             {l.records.map((t: any, tIndex: number) => (
                                               <tr key={tIndex}>
                                                 <td>{tIndex == 0 && l.name}</td>
@@ -124,7 +130,7 @@ export default function TemplateText({ values }: any): ReactElement {
                                                 </td>
                                               </tr>
                                             ))}
-                                          </>
+                                          </React.Fragment>
                                         ))}
                                     </tbody>
                                   </Table>

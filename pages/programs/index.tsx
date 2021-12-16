@@ -91,7 +91,7 @@ export default function ProgramFeed(): ReactElement {
                   withBorder
                   component="a"
                   sx={(theme) => ({
-                    border: '3px solid',
+                    border: '2px solid',
                     borderRadius: theme.radius.sm,
                     cursor: 'pointer',
                     width: '100%',

@@ -5,7 +5,6 @@ import {
   Group,
   Text,
   ThemeIcon,
-  Title,
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
@@ -51,8 +50,8 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           background: 'rgba( 3, 3, 3, 0.9 )',
           boxShadow: '0 3px 14px 0 rgba( 31, 38, 135, 0.37 )',
           backdropFilter: ' blur( 8px )',
-          // -webkit-backdrop-filter: "blur( 4px )",
-
+          '-webkit-backdrop-filter': 'blur( 4px )',
+          height: '100%',
           border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
           '&:hover': {
             backgroundColor:
@@ -66,13 +65,15 @@ export default function ProgramCard({ program, id }: any): ReactElement {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginTop: 5 }}>
           <Group position="apart" noWrap spacing={0} style={{ padding: 0 }}>
             <Link href={`/programs/${id}`}>
-              <Title order={2} style={{ cursor: 'pointer', color: 'white' }} my={0}>
+              <Text style={{ cursor: 'pointer', color: 'white', fontSize: 20 }} my={0}>
                 {p.title}
-              </Title>
+              </Text>
             </Link>
-            <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
-              <AiOutlineTrophy />
-            </ThemeIcon>
+            {p.featured ? (
+              <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
+                <AiOutlineTrophy />
+              </ThemeIcon>
+            ) : null}
           </Group>
 
           <Link href={`/dashboard/users/${p.author?.uid}`}>

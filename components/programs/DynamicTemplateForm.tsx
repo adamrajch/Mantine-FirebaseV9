@@ -8,7 +8,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { FieldArray, useFormikContext } from 'formik';
+import { FastField, FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiFillSetting, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
@@ -38,28 +38,165 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       },
     ],
   };
-
-  const newWeek = {
-    name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
+  const freshBlock = {
+    name: `Block 1`,
     summary: '',
-    days: [
+    weeks: [
       {
-        name: 'Day 1',
+        name: 'Week 1',
         summary: '',
-        lifts: [
+        days: [
           {
-            name: 'Lift',
-            type: 'single',
-            note: '',
-            records: [
+            name: 'Day 1',
+            summary: '',
+            lifts: [
               {
-                type: 'working',
-                load: null,
-                sets: 5,
-                reps: 5,
-                unit: 'lbs',
-                rpe: null,
-                percent: null,
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 2',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 3',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 4',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 5',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 6',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 7',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
               },
             ],
           },
@@ -67,11 +204,201 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       },
     ],
   };
+  function getNewWeek(wI: any) {
+    return {
+      name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
+      summary: '',
+      days: [
+        {
+          name: 'Day 1',
+          summary: '',
+          lifts: [
+            {
+              name: 'Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+  }
+
   function handleAddBlock() {
     blockHelpers.push(newBlock);
   }
   function handleAddWeek(weekHelpers: any) {
-    weekHelpers.push(newWeek);
+    weekHelpers.push({
+      name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
+      summary: '',
+      days: [
+        {
+          name: 'Day 1',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 2',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 3',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 4',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 5',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 6',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 7',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
   }
   return (
     <Group position="left" direction="column" grow>
@@ -113,11 +440,6 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
           </Button>
         </div>
       </Group>
-
-      {/* <Group>
-        <div>{blockIndex == null && <div>No blocks </div>}</div>
-        <div>{weekIndex == null && <div>No week </div>}</div>
-      </Group> */}
 
       {values.blocks[blockIndex] && (
         <div>
@@ -161,7 +483,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                         </div>
                       </Group>
                       <Group position="apart" mt="md" mb="md">
-                        <TextInput
+                        {/* <TextInput
                           label="Block Name"
                           placeholder="Block Name"
                           name={`blocks[${blockIndex}].name`}
@@ -170,8 +492,22 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           styles={{
                             input: { borderLeft: '2px solid blue' },
                           }}
-                        />
-
+                        /> */}
+                        <FastField name={`blocks[${blockIndex}].name`}>
+                          {({ field }: any) => (
+                            <TextInput
+                              label="Block Name"
+                              placeholder="Block Name"
+                              // name={`blocks[${blockIndex}].name`}
+                              value={values.blocks[blockIndex].name}
+                              // onChange={(e: any) => handleChange(e)}
+                              styles={{
+                                input: { borderLeft: '2px solid blue' },
+                              }}
+                              {...field}
+                            />
+                          )}
+                        </FastField>
                         <Group position="right">
                           <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                             <FaRegStickyNote />
@@ -203,11 +539,15 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                             <Menu.Item
                               icon={<AiOutlineDelete />}
                               onClick={() => {
-                                blockHelpers.remove(blockIndex);
+                                setWeekIndex(0);
+                                blockIndex === 0
+                                  ? blockHelpers.replace(blockIndex, freshBlock)
+                                  : blockHelpers.remove(blockIndex);
+                                setBlockIndex(0);
                               }}
                               color="red"
                             >
-                              Delete
+                              {blockIndex === 0 ? 'Reset' : 'Delete'}
                             </Menu.Item>
                           </Menu>
                         </Group>
@@ -220,16 +560,19 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           onChange={handleChange}
                         />
                       </Collapse>
-                      {weekIndex !== null &&
-                        values.blocks[blockIndex].weeks &&
-                        values.blocks[blockIndex].weeks.length > 0 && (
-                          <WeekSection
-                            weekHelpers={weekHelpers}
-                            blockIndex={blockIndex}
-                            weekIndex={weekIndex}
-                            setWeekIndex={setWeekIndex}
-                          />
-                        )}
+                      {values.blocks.length > 0 &&
+                      values.blocks[blockIndex].weeks &&
+                      values.blocks[blockIndex].weeks[weekIndex] &&
+                      values.blocks[blockIndex].weeks.length > 0 ? (
+                        <WeekSection
+                          weekHelpers={weekHelpers}
+                          blockIndex={blockIndex}
+                          weekIndex={weekIndex}
+                          setWeekIndex={setWeekIndex}
+                        />
+                      ) : (
+                        <div>Add A Week</div>
+                      )}
                     </div>
                   )}
                 />

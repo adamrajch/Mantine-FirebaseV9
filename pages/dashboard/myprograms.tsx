@@ -109,9 +109,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    context.res.writeHead(302, { Location: '/login' });
-    context.res.end();
-
-    return { props: {} };
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
   }
 };

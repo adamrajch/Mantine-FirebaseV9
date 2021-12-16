@@ -92,7 +92,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
     let q = query(
       collection(db, 'programs'),
       where('category', 'array-contains', 'powerlifting'),
-      orderBy('featured', 'desc'),
+      // orderBy('featured', 'desc'),
       orderBy('heartCount', 'desc'),
       limit(10)
     );
