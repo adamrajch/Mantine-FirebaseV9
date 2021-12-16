@@ -4,12 +4,12 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   async redirects() {
-    return [
-      {
-        source: '/login',
-        destination: '/',
-        permanent: true,
-      },
-    ];
+    // return [
+    //   {
+    //     source: '/login',
+    //     destination: '/',
+    //     permanent: true,
+    //   },
+    // ];
   },
 };
