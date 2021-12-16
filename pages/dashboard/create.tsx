@@ -1,13 +1,16 @@
 import { Container } from '@mantine/core';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import nookies from 'nookies';
-import React, { ReactElement } from 'react';
+import router from 'next/router';
+import React, { ReactElement, useEffect } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
-import { verifyIdToken } from '../../firebaseAdmin';
 export default function Create(): ReactElement {
   const { user, loading } = useAuth();
+  useEffect(() => {
+    if (!(user || loading)) {
+      router.push('/login');
+    }
+  }, [user, loading]);
   return (
     <Layout>
       {user && !loading ? (
@@ -18,21 +21,21 @@ export default function Create(): ReactElement {
     </Layout>
   );
 }
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  try {
-    const cookies = nookies.get(context);
-    const token = await verifyIdToken(cookies.token);
-    return {
-      props: { user: 'nani' },
-    };
-  } catch (err) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-};
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   try {
+//     const cookies = nookies.get(context);
+//     const token = await verifyIdToken(cookies.token);
+//     return {
+//       props: { user: 'nani' },
+//     };
+//   } catch (err) {
+//     return {
+//       redirect: {
+//         destination: '/login',
+//         permanent: false,
+//       },
+//     };
+//   }
+// };

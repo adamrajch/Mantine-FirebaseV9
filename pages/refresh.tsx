@@ -20,11 +20,12 @@ const Refresh = () => {
             // setUserCookie(currentUser);
             nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
             // Redirect back to where it was
-
+            ('refreshed token');
             Router.back();
           })
           .catch(() => {
             // If any error happens on refresh, redirect to home
+            console.log('no refresh');
             Router.replace('/');
           });
       } else {

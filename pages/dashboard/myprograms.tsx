@@ -90,10 +90,14 @@ export const getServerSideProps: GetServerSideProps = async (
     const cookies = nookies.get(context);
     const token = await verifyIdToken(cookies.token);
 
-    const { uid } = token;
+    const { user_id } = token;
 
     const collectionRef = collection(db, 'programs');
-    const q = query(collectionRef, where('author.uid', '==', uid), orderBy('createdDate', 'desc'));
+    const q = query(
+      collectionRef,
+      where('author.uid', '==', user_id),
+      orderBy('createdDate', 'desc')
+    );
     const querySnapshot = await getDocs(q);
     let programs: any = [];
     querySnapshot.forEach((doc) => {
