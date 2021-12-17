@@ -10,12 +10,13 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GearIcon, TrashIcon } from '@modulz/radix-icons';
+import { TrashIcon } from '@modulz/radix-icons';
 import dayjs from 'dayjs';
 import { deleteDoc, doc } from 'firebase/firestore';
 import Link from 'next/link';
-import Router from 'next/router';
+import { default as router, default as Router } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { AiOutlineEdit } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { db } from '../../firebase';
 import { ErrorImage } from './ImageError';
@@ -37,6 +38,7 @@ export default function ProgramList({ programsProps }: any): JSX.Element {
         <Group direction="column" position="apart" spacing={12}>
           {programs.map((p: any) => (
             <Box
+              onClick={() => router.push(`/programs/${p.id}`)}
               key={p.id}
               sx={(theme) => ({
                 display: 'flex',
@@ -48,6 +50,8 @@ export default function ProgramList({ programsProps }: any): JSX.Element {
                 padding: 6,
                 borderRadius: 8,
                 borderColor: theme.colors.gray[8],
+                cursor: 'pointer',
+                zIndex: 10,
                 '&:hover': {
                   backgroundColor:
                     theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
@@ -79,14 +83,19 @@ export default function ProgramList({ programsProps }: any): JSX.Element {
               </div>
 
               <Menu
+                zIndex={10000}
                 control={
                   <ActionIcon>
                     <BsThreeDotsVertical />
                   </ActionIcon>
                 }
               >
-                <Menu.Label>Application</Menu.Label>
-                <Menu.Item icon={<GearIcon />}>Settings</Menu.Item>
+                <Menu.Item
+                  icon={<AiOutlineEdit />}
+                  onClick={() => router.push(`/programs/${p.id}`)}
+                >
+                  Edit
+                </Menu.Item>
                 <Divider />
 
                 <Menu.Item

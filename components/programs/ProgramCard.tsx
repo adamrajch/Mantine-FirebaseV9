@@ -96,7 +96,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           </Group>
 
           <Group position="left" spacing={4}>
-            {p.template.category.map((e: string, i: number) => {
+            {p.template.category.sort().map((e: string, i: number) => {
               return (
                 <Badge variant="filled" color={handleCatColor(e)} size="md" radius={2} key={e}>
                   {e}
@@ -105,7 +105,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             })}
           </Group>
           <Group position="left" noWrap spacing={4}>
-            {p.template.periodization.map((e: string, i: number) => (
+            {p.template.periodization.sort().map((e: string, i: number) => (
               <Badge variant="outline" color={handlePColor(e)} size="md" radius={2} key={e}>
                 {e}
               </Badge>

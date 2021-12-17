@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Button, Divider, Group, Tab, Tabs, Text, Title } from '@mantine/core';
+import { Button, Group, Tab, Tabs, Text } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { doc, updateDoc } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import GeneralSection from './formSections/GeneralSection';
-import TemplateText from './formSections/TemplateText';
+import TemplateTabs from './formSections/TemplateTabs';
 import RichText from './RichText';
 
 const ProgramSchema = Yup.object().shape({
@@ -21,7 +21,6 @@ const ProgramSchema = Yup.object().shape({
 type Program = {
   title: string;
   public: boolean;
-  // type: string;
   category: string[];
   periodization: string[];
   experience: string[];
@@ -345,7 +344,7 @@ export default function FullProgramForm({
             >
               {program ? `${program.template.title}` : 'Create Your Program'}
             </Text>
-            <Tabs style={{ marginTop: 24 }} variant="pills">
+            <Tabs style={{ marginTop: 24 }}>
               {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="General">
                   <GeneralSection program={program} errors={errors} />
@@ -353,10 +352,9 @@ export default function FullProgramForm({
               )}
 
               {(!program || programAuthor?.uid === user?.uid) && (
-                <Tab label="Template">
+                <Tab label="Editor">
                   <Group position="left" direction="column" grow>
-                    <Title>Program Template</Title>
-                    <Divider />
+                    {/* <Divider /> */}
                     <FieldArray
                       name="blocks"
                       render={(blockHelpers) => (
@@ -369,8 +367,11 @@ export default function FullProgramForm({
                 </Tab>
               )}
 
-              <Tab label="View As Text">
+              {/* <Tab label="View As Text">
                 <TemplateText values={values} />
+              </Tab> */}
+              <Tab label="Program">
+                <TemplateTabs values={values} />
               </Tab>
               <Tab label="Summary">
                 <div>

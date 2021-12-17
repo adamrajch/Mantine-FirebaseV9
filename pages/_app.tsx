@@ -54,6 +54,12 @@ export default function App(props: AppProps) {
                 color: colorScheme === 'dark' ? 'white' : 'black',
               },
             },
+            Button: {
+              // root: { color: colorScheme === 'dark' ? 'white' : 'black' },
+              oultine: {
+                color: colorScheme === 'dark' ? 'cyan' : 'black',
+              },
+            },
           }}
           withNormalizeCSS
         >

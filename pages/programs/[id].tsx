@@ -1,15 +1,6 @@
 import { Container } from '@mantine/core';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
-import { GetStaticProps } from 'next';
+import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { GetServerSideProps } from 'next';
 import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import CommentSection from '../../components/programs/Comments/CommentSection';
@@ -85,26 +76,10 @@ export default function Program({ programProps, programID }: any): ReactElement 
   );
 }
 
-export const getStaticPaths = async () => {
-  const snapshot = await getDocs(collection(db, 'programs'));
-  const paths = snapshot.docs.map((doc) => {
-    return {
-      params: { id: doc.id.toString() },
-    };
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }: any) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }: any) => {
   const id = params.id;
-
   const docRef = doc(db, 'programs', id);
   const docSnap = await getDoc(docRef);
-
   return {
     props: {
       programProps: JSON.stringify(docSnap.data()) || null,
