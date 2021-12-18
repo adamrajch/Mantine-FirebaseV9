@@ -1,5 +1,6 @@
-import { ActionIcon, Group, Text } from '@mantine/core';
+import { ActionIcon, Group, Menu, Text } from '@mantine/core';
 import Link from 'next/link';
+import router from 'next/router';
 import React from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 const links = [
@@ -28,7 +29,20 @@ const links = [
     title: 'Mobility',
   },
 ];
-
+const expLinks = [
+  {
+    href: '/programs/exp/beginner',
+    title: 'Beginner',
+  },
+  {
+    href: '/programs/exp/intermediate',
+    title: 'Intermediate',
+  },
+  {
+    href: '/programs/exp/advanced',
+    title: 'Advanced',
+  },
+];
 export default function ProgramsNav(): JSX.Element {
   return (
     <Group position="center" my={20} spacing={2}>
@@ -36,13 +50,13 @@ export default function ProgramsNav(): JSX.Element {
         <Link href={link.href} key={link.href}>
           <Text
             component="a"
-            style={{ cursor: 'pointer' }}
             sx={(theme) => ({
               borderBottom: '1px solid transparent',
               padding: '4px 8px',
-
+              cursor: 'pointer',
               '&:hover': {
                 borderColor: theme.colors.gray[6],
+                color: theme.colors.cyan[6],
               },
             })}
           >
@@ -50,6 +64,39 @@ export default function ProgramsNav(): JSX.Element {
           </Text>
         </Link>
       ))}
+      <Menu
+        control={
+          <Text
+            sx={(theme) => ({
+              borderBottom: '1px solid transparent',
+              padding: '4px 8px',
+              cursor: 'pointer',
+              '&:hover': {
+                borderColor: theme.colors.gray[6],
+                color: theme.colors.cyan[6],
+              },
+            })}
+          >
+            Experience{' '}
+          </Text>
+        }
+      >
+        {expLinks.map((exp) => (
+          <Menu.Item
+            key={exp.href}
+            onClick={() => router.push(exp.href)}
+            sx={(theme) => ({
+              cursor: 'pointer',
+              '&:hover': {
+                borderColor: theme.colors.gray[6],
+                color: theme.colors.cyan[6],
+              },
+            })}
+          >
+            {exp.title}
+          </Menu.Item>
+        ))}
+      </Menu>
       <ActionIcon>
         <AiOutlineSearch />
       </ActionIcon>

@@ -76,14 +76,14 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             ) : null}
           </Group>
 
-          <Link href={`/dashboard/users/${p.author?.uid}`}>
-            <Text size="sm" color="cyan" style={{ cursor: 'pointer' }}>
-              <Text component="span" style={{ color: 'white' }}>
-                Author:{' '}
-              </Text>
-              {p.author?.name}
+          {/* <Link href={`/dashboard/users/${p.author?.uid}`}> */}
+          <Text size="sm" color="cyan" style={{ cursor: 'pointer' }}>
+            <Text component="span" style={{ color: 'white' }}>
+              Author:{' '}
             </Text>
-          </Link>
+            {p.author?.name}
+          </Text>
+          {/* </Link> */}
 
           <Group position="left" noWrap spacing={4}>
             {p.template.experience.map((e: string, i: number) => {

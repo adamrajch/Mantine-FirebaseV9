@@ -9,17 +9,18 @@ import {
   Tabs,
   Text,
   Title,
+  Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { BiNote } from 'react-icons/bi';
 import { FaRegStickyNote } from 'react-icons/fa';
 import { handleCatColor, handleExpColor, handlePColor } from '../../../utils/ColorHelper';
 
 export default function TemplateTabs({ values }: any): ReactElement {
   const theme = useMantineTheme();
-  const [blockIndex, setBlockIndex] = useState(0);
+
   const modals = useModals();
 
   const summaryModal = (title: string, summary: string) => {
@@ -120,9 +121,9 @@ export default function TemplateTabs({ values }: any): ReactElement {
         {values.blocks.map((block: any, i: number) => (
           <Tabs.Tab key={i} label={block.name}>
             <Tabs variant="pills">
-              {values.blocks[blockIndex].weeks &&
-                values.blocks[blockIndex].weeks.length > 0 &&
-                values.blocks[blockIndex].weeks.map((week: any, w: number) => (
+              {values.blocks[i].weeks &&
+                values.blocks[i].weeks.length > 0 &&
+                values.blocks[i].weeks.map((week: any, w: number) => (
                   <Tabs.Tab key={w} label={week.name}>
                     <Group position="right">
                       {week.summary.length > 0 && (
@@ -146,100 +147,107 @@ export default function TemplateTabs({ values }: any): ReactElement {
                     </Group>
                     <Group direction="column" grow style={{ marginTop: 12, width: '100%' }}>
                       <Grid justify="space-around">
-                        {values.blocks[blockIndex].weeks[w].days.length > 0 &&
-                          values.blocks[blockIndex].weeks[w].days.map(
-                            (day: any, dayIndex: number) => (
-                              <Col span={12} lg={12} key={dayIndex}>
-                                <Group
-                                  direction="column"
-                                  grow
-                                  key={dayIndex}
+                        {values.blocks[i].weeks[w].days.length > 0 &&
+                          values.blocks[i].weeks[w].days.map((day: any, dayIndex: number) => (
+                            <Col span={12} lg={12} key={dayIndex}>
+                              <Group
+                                direction="column"
+                                grow
+                                key={dayIndex}
+                                style={{
+                                  border: '2px solid  ',
+                                  borderRadius: 5,
+                                  padding: '12px 24px',
+                                  borderColor: theme.colors.dark[3],
+                                }}
+                              >
+                                <div
                                   style={{
-                                    border: '2px solid  ',
-                                    borderRadius: 5,
-                                    padding: '12px 24px',
-                                    borderColor: theme.colors.dark[3],
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: 8,
                                   }}
                                 >
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      alignItems: 'center',
-                                      marginBottom: 8,
-                                    }}
+                                  <Text size="sm">{`W${w + 1}D${dayIndex + 1}`}</Text>
+                                  <Title
+                                    order={3}
+                                    align="center"
+                                    style={{ color: theme.colors.dark[2] }}
                                   >
-                                    <Text size="sm">{`W${w + 1}D${dayIndex + 1}`}</Text>
-                                    <Title
-                                      order={3}
-                                      align="center"
-                                      style={{ color: theme.colors.dark[2] }}
-                                    >
-                                      {day.name}
-                                    </Title>
-                                    <div>
-                                      {day.summary.length > 0 && (
-                                        <ActionIcon
-                                          onClick={() => summaryModal('Day', day.summary)}
-                                        >
-                                          <BiNote />
-                                        </ActionIcon>
-                                      )}
-                                    </div>
+                                    {day.name}
+                                  </Title>
+                                  <div>
+                                    {day.summary.length > 0 && (
+                                      <ActionIcon onClick={() => summaryModal('Day', day.summary)}>
+                                        <BiNote />
+                                      </ActionIcon>
+                                    )}
                                   </div>
+                                </div>
 
-                                  {day.summary != undefined && day.summary.length > 0 && (
-                                    <Text size="sm">Summary: {day.summary}</Text>
+                                {day.summary != undefined && day.summary.length > 0 && (
+                                  <Text size="sm">Summary: {day.summary}</Text>
+                                )}
+
+                                <Table highlightOnHover>
+                                  <thead>
+                                    <tr>
+                                      <th>Movement</th>
+                                      <th>Sets</th>
+                                      <th>Reps</th>
+                                      <th>RPE</th>
+                                      <th>%</th>
+                                      <th>Load</th>
+                                      <th>Note</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {values.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 &&
+                                      values.blocks[i].weeks[w].days[dayIndex].lifts !==
+                                        undefined &&
+                                      values.blocks[i].weeks[w].days[dayIndex].lifts.map(
+                                        (l: any, liftIndex: number) => (
+                                          <React.Fragment key={liftIndex}>
+                                            {l.records.map((t: any, tIndex: number) => (
+                                              <tr key={tIndex}>
+                                                <td>{tIndex == 0 && l.name}</td>
+                                                <td>{t.sets}</td>
+                                                <td>{t.reps}</td>
+                                                <td>{t.rpe}</td>
+                                                <td>{t.percent}</td>
+                                                <td>{t.load}</td>
+                                                <td>
+                                                  {tIndex == 0 && l.note && (
+                                                    <Tooltip
+                                                      wrapLines
+                                                      withArrow
+                                                      transition="fade"
+                                                      transitionDuration={200}
+                                                      label={l.note}
+                                                    >
+                                                      <FaRegStickyNote color="cyan" />
+                                                    </Tooltip>
+                                                  )}
+                                                </td>
+                                              </tr>
+                                            ))}
+                                          </React.Fragment>
+                                        )
+                                      )}
+                                  </tbody>
+                                </Table>
+                                {values.blocks[i].weeks[w].days[dayIndex].lifts &&
+                                  values.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
+                                  values.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
+                                    <Group>
+                                      <div>Total Sets: {calcTotalSets(i, w, dayIndex)}</div>
+                                      <div>Total Reps: {calcTotalReps(i, w, dayIndex)}</div>
+                                    </Group>
                                   )}
-
-                                  <Table highlightOnHover>
-                                    <thead>
-                                      <tr>
-                                        <th>Movement</th>
-                                        <th>Sets</th>
-                                        <th>Reps</th>
-                                        <th>RPE</th>
-                                        <th>%</th>
-                                        <th>Load</th>
-                                        <th>Note</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {values.blocks[blockIndex].weeks[w].days[dayIndex].lifts
-                                        .length > 0 &&
-                                        values.blocks[blockIndex].weeks[w].days[dayIndex].lifts !==
-                                          undefined &&
-                                        values.blocks[blockIndex].weeks[w].days[dayIndex].lifts.map(
-                                          (l: any, liftIndex: number) => (
-                                            <React.Fragment key={liftIndex}>
-                                              {l.records.map((t: any, tIndex: number) => (
-                                                <tr key={tIndex}>
-                                                  <td>{tIndex == 0 && l.name}</td>
-                                                  <td>{t.sets}</td>
-                                                  <td>{t.reps}</td>
-                                                  <td>{t.rpe}</td>
-                                                  <td>{t.percent}</td>
-                                                  <td>{t.load}</td>
-                                                  <td>
-                                                    {tIndex == 0 && l.note && (
-                                                      <FaRegStickyNote color="yellow" />
-                                                    )}
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                            </React.Fragment>
-                                          )
-                                        )}
-                                    </tbody>
-                                  </Table>
-                                  <Group>
-                                    <div>Total Sets: {calcTotalSets(i, w, dayIndex)}</div>
-                                    <div>Total Reps: {calcTotalReps(i, w, dayIndex)}</div>
-                                  </Group>
-                                </Group>
-                              </Col>
-                            )
-                          )}
+                              </Group>
+                            </Col>
+                          ))}
                       </Grid>
                     </Group>
                   </Tabs.Tab>

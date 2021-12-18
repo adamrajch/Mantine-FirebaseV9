@@ -2,7 +2,7 @@ import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { FaRegStickyNote } from 'react-icons/fa';
+import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
 import { FlexContainer } from '../../FlexContainer';
 import RecordModal from '../RecordModal';
@@ -46,6 +46,7 @@ export default function LiftSection({
                 '&:hover': {
                   border: '2px solid',
                   borderColor: theme.colors.gray[7],
+                  backgroundColor: theme.colors.dark[7],
                 },
               })}
             >
@@ -66,7 +67,12 @@ export default function LiftSection({
 
                 <Group position="right">
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                    <FaRegStickyNote />
+                    {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note
+                      .length ? (
+                      <FaStickyNote />
+                    ) : (
+                      <FaRegStickyNote />
+                    )}
                   </ActionIcon>
                   <Button
                     size="xs"

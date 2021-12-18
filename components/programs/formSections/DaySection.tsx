@@ -1,17 +1,8 @@
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Collapse,
-  Group,
-  SimpleGrid,
-  Textarea,
-  TextInput,
-} from '@mantine/core';
+import { ActionIcon, Box, Button, Collapse, Group, Text, Textarea, TextInput } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineCopy, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
-import { FaRegStickyNote } from 'react-icons/fa';
+import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Lift, Program } from '../../../types/types';
 import LiftSection from './LiftSection';
 const newLift: Lift = {
@@ -58,9 +49,7 @@ export default function DaySection({
             <Box
               sx={(theme) => ({
                 width: '100%',
-                paddingTop: 12,
-                paddingLeft: 8,
-                paddingBottom: 4,
+                padding: '12px',
                 borderRadius: 8,
                 border: '2px solid',
                 borderColor: theme.colors.gray[7],
@@ -68,10 +57,18 @@ export default function DaySection({
                   theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
               })}
             >
-              <SimpleGrid cols={3}>
-                <div></div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+              >
+                <Text size="sm">{`W${weekIndex + 1}D${dayIndex + 1}`}</Text>
+
                 <TextInput
-                  size="lg"
+                  size="md"
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`}
                   variant="default"
@@ -80,7 +77,11 @@ export default function DaySection({
 
                 <Group position="right">
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                    <FaRegStickyNote />
+                    {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].summary.length ? (
+                      <FaStickyNote />
+                    ) : (
+                      <FaRegStickyNote />
+                    )}
                   </ActionIcon>
                   <ActionIcon size="lg" color="cyan" onClick={() => copyLift(dayHelpers)}>
                     <AiOutlineCopy />
@@ -104,7 +105,7 @@ export default function DaySection({
                     <AiOutlineDelete />
                   </ActionIcon>
                 </Group>
-              </SimpleGrid>
+              </div>
               <Collapse in={open} my={8}>
                 <Textarea
                   placeholder="Add a summary, any tips or important queues"

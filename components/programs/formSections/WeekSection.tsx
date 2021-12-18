@@ -8,28 +8,447 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { useModals } from '@mantine/modals';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiFillSetting, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
+import { AiFillSetting, AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
-import { FaRegStickyNote } from 'react-icons/fa';
+import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
 import DaySection from './DaySection';
 import GenerateForm from './GenerateForm';
 
-export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any): ReactElement {
+export default function WeekSection({
+  weekIndex,
+  blockIndex,
+  weekHelpers,
+  blockHelpers,
+}: any): ReactElement {
   const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState<boolean>(false);
   const [openGen, setOpenGen] = useState<boolean>(false);
-  console.log('block Index', blockIndex);
-  console.log('week Index', weekIndex);
+  const modals = useModals();
+  const newBlock = {
+    name: `Block ${values.blocks.length + 1}`,
+    summary: '',
+    weeks: [
+      {
+        name: 'Week 1',
+        summary: '',
+        days: [
+          {
+            name: 'Day 1',
+            summary: '',
+            lifts: [],
+          },
+        ],
+      },
+    ],
+  };
+  const freshBlock = {
+    name: `Block 1`,
+    summary: '',
+    weeks: [
+      {
+        name: 'Week 1',
+        summary: '',
+        days: [
+          {
+            name: 'Day 1',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 2',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 3',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 4',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 5',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 6',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 7',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  function getNewWeek(wI: any) {
+    return {
+      name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
+      summary: '',
+      days: [
+        {
+          name: 'Day 1',
+          summary: '',
+          lifts: [
+            {
+              name: 'Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  function handleAddBlock(blockHelpers: any) {
+    blockHelpers.push(newBlock);
+  }
+
+  function handleAddWeek(weekHelpers: any, blockIndex: number) {
+    weekHelpers.push({
+      name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
+      summary: '',
+      days: [
+        {
+          name: 'Day 1',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 2',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 3',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 4',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 5',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 6',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 7',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  }
+  const openEditBlockModal = () => {
+    const id = modals.openModal({
+      title: 'Edit Block',
+      children: (
+        <Group direction="column" grow>
+          <TextInput
+            label="Block Name"
+            name={`blocks[${blockIndex}].name`}
+            value={values.blocks[blockIndex].name}
+            onChange={handleChange}
+          />
+          <Textarea
+            label="Summary"
+            name={`blocks[${blockIndex}].summary`}
+            // value={values.blocks[blockIndex].summary}
+            onChange={(e) => setFieldValue(blockIndex, e.target.value)}
+          />
+          <Button fullWidth onClick={() => modals.closeModal(id)}>
+            Save
+          </Button>
+        </Group>
+      ),
+    });
+  };
   return (
     <div>
       <FieldArray
         name={`blocks[${blockIndex}].weeks[${weekIndex}].days`}
         render={(dayHelpers) => (
           <div>
+            <>
+              <Modal opened={openGen} onClose={() => setOpenGen(false)} size="lg">
+                <GenerateForm
+                  blockIndex={blockIndex}
+                  weekHelpers={weekHelpers}
+                  currentWeek={weekIndex}
+                  onClose={() => setOpenGen(false)}
+                />
+              </Modal>
+            </>
             <Group position="apart">
               <TextInput
                 label="Week Name"
@@ -38,91 +457,124 @@ export default function WeekSection({ weekIndex, blockIndex, weekHelpers }: any)
                 value={values.blocks[blockIndex].weeks[weekIndex].name}
                 onChange={(e: any) => handleChange(e)}
                 styles={{
-                  input: { borderLeft: '2px solid yellow' },
+                  input: { borderLeft: '2px solid cyan' },
                 }}
               />
               <Group position="right">
-                <>
-                  <Modal opened={openGen} onClose={() => setOpenGen(false)} size="xl">
-                    <GenerateForm
-                      blockIndex={blockIndex}
-                      weekIndex={weekIndex}
-                      weekHelpers={weekHelpers}
-                      currentWeek={values.blocks[blockIndex].weeks[weekIndex]}
-                      onClose={setOpenGen}
-                    />
-                  </Modal>
-
-                  <Group position="center">
-                    <Button size="xs" variant="outline" onClick={() => setOpenGen(true)}>
-                      Generate
-                    </Button>
-                  </Group>
-                </>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (values.blocks[blockIndex].weeks[weekIndex].days.length < 7) {
-                      dayHelpers.push({
-                        name: `Day ${values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1}`,
-                        summary: '',
-                        lifts: [
-                          {
-                            name: 'New Lift',
-                            type: 'single',
-                            note: '',
-                            records: [
-                              {
-                                type: 'working',
-                                load: null,
-                                sets: 5,
-                                reps: 5,
-                                unit: 'lbs',
-                                rpe: null,
-                                percent: null,
-                              },
-                            ],
-                          },
-                        ],
-                      });
-                    }
-                  }}
-                  leftIcon={<AiOutlinePlus />}
-                  size="xs"
-                >
-                  Day
-                </Button>
-
                 <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                  <FaRegStickyNote />
+                  {values.blocks[blockIndex].weeks[weekIndex].summary.length ? (
+                    <FaStickyNote />
+                  ) : (
+                    <FaRegStickyNote />
+                  )}
                 </ActionIcon>
                 <Menu
                   control={
-                    <ActionIcon size="lg" color="cyan">
-                      <AiFillSetting />
-                    </ActionIcon>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleAddWeek(weekHelpers, blockIndex)}
+                      leftIcon={<AiFillSetting />}
+                      size="xs"
+                    >
+                      Week
+                    </Button>
                   }
                   zIndex={1200}
                 >
                   <Menu.Item
-                    icon={<BiDuplicate color="cyan" />}
-                    onClick={() =>
-                      weekHelpers.insert(
-                        values.blocks[blockIndex].weeks.length,
-                        values.blocks[blockIndex].weeks[weekIndex]
-                      )
-                    }
+                    icon={<AiOutlinePlus color="cyan" />}
+                    onClick={() => {
+                      if (values.blocks[blockIndex].weeks[weekIndex].days.length < 7) {
+                        dayHelpers.push({
+                          name: `Day ${
+                            values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1
+                          }`,
+                          summary: '',
+                          lifts: [
+                            {
+                              name: 'New Lift',
+                              type: 'single',
+                              note: '',
+                              records: [
+                                {
+                                  type: 'working',
+                                  load: null,
+                                  sets: 5,
+                                  reps: 5,
+                                  unit: 'lbs',
+                                  rpe: null,
+                                  percent: null,
+                                },
+                              ],
+                            },
+                          ],
+                        });
+                      }
+                    }}
                   >
-                    Duplicate Week
+                    Add Day
                   </Menu.Item>
+
+                  <Menu.Item icon={<BiDuplicate color="cyan" />} onClick={() => setOpenGen(true)}>
+                    Duplicate Weeks
+                  </Menu.Item>
+
                   <Menu.Item
+                    color="red"
                     icon={<AiOutlineDelete />}
                     onClick={() => {
-                      console.log(values);
                       weekHelpers.remove(weekIndex);
                     }}
                   >
-                    Delete
+                    Delete Week
+                  </Menu.Item>
+                </Menu>
+                <Menu
+                  control={
+                    <Button variant="outline" leftIcon={<AiFillSetting />} size="xs">
+                      Block
+                    </Button>
+                  }
+                  zIndex={1200}
+                >
+                  <Menu.Item
+                    icon={<AiOutlinePlus color="cyan" />}
+                    onClick={() => handleAddWeek(weekHelpers, blockIndex)}
+                  >
+                    Add Week
+                  </Menu.Item>
+                  <Menu.Item
+                    icon={<AiOutlinePlus color="cyan" />}
+                    onClick={() => handleAddBlock(blockHelpers)}
+                  >
+                    Add Block
+                  </Menu.Item>
+                  <Menu.Item
+                    icon={<BiDuplicate color="cyan" />}
+                    onClick={() =>
+                      blockHelpers.insert(values.blocks.length, values.blocks[blockIndex])
+                    }
+                  >
+                    Duplicate Block
+                  </Menu.Item>
+
+                  <Menu.Item
+                    icon={<AiOutlineEdit color="cyan" />}
+                    onClick={() => openEditBlockModal()}
+                  >
+                    Edit Block
+                  </Menu.Item>
+
+                  <Menu.Item
+                    icon={<AiOutlineDelete />}
+                    onClick={() => {
+                      blockIndex === 0
+                        ? blockHelpers.replace(blockIndex, freshBlock)
+                        : blockHelpers.remove(blockIndex);
+                    }}
+                    color="red"
+                  >
+                    {blockIndex === 0 ? 'Reset Block' : 'Delete Block'}
                   </Menu.Item>
                 </Menu>
               </Group>

@@ -60,7 +60,7 @@ export default function CategorySearchPage({ programsProps, lastVisible }: any):
           breakpoints={[
             { minWidth: 'sm', cols: 1, spacing: 'sm' },
             { minWidth: 'md', cols: 2, spacing: 'lg' },
-            { minWidth: 1200, cols: 1, spacing: 'lg' },
+            { minWidth: 1200, cols: 2, spacing: 'lg' },
           ]}
         >
           {programs.length > 0 &&

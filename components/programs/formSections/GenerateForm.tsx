@@ -6,7 +6,6 @@ import { Program } from '../../../types/types';
 
 interface Props {
   blockIndex: number;
-  weekIndex: number;
   weekHelpers: any;
   currentWeek: any;
   onClose: any;
@@ -14,7 +13,6 @@ interface Props {
 
 export default function GenerateForm({
   blockIndex,
-  weekIndex,
   weekHelpers,
   currentWeek,
   onClose,
@@ -55,7 +53,7 @@ export default function GenerateForm({
   return (
     <Group direction="column" grow>
       <Title order={2} align="center">
-        Generate Block
+        Duplicate Weeks
       </Title>
       <Text>
         Many programs run the same movements over the course of blocks. Select how many weeks you
