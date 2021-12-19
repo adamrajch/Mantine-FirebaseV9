@@ -1,8 +1,7 @@
-import { Container, Paper, SimpleGrid, Text, ThemeIcon, Title } from '@mantine/core';
-import Link from 'next/link';
+import { Container, Group, SimpleGrid, Title } from '@mantine/core';
 import React, { ReactElement } from 'react';
-import { AiOutlineTrophy } from 'react-icons/ai';
 import Layout from '../../components/dashboard/AppShell';
+import ProgramListCard from '../../components/programs/ProgramListCard';
 export default function ProgramFeed(): ReactElement {
   // const [programs, setPrograms] = useState<any>([]);
   // useEffect(() => {
@@ -62,9 +61,30 @@ export default function ProgramFeed(): ReactElement {
       title: 'Mobility',
       href: '/programs/category/mobility',
       text: ' Emphasis on strength and ability to move through a given range of motion. Mobility has huge benefit and carryover to performance in various activities',
-      color: '#6741D9',
+      color: '#4b3097',
     },
   ];
+  const expPages = [
+    {
+      title: 'Beginner',
+      href: '/programs/exp/beginner',
+      text: '< 1 year experience, a noob',
+      color: '#3a6972',
+    },
+    {
+      title: 'Intermediate',
+      href: '/programs/exp/intermediate',
+      text: 'Ready for more intensity and volume and has a decent foundation',
+      color: '#2c7988',
+    },
+    {
+      title: 'Advanced',
+      href: '/programs/exp/advanced',
+      text: '5+ years training, not as easy to progress linearly',
+      color: '#058ca7',
+    },
+  ];
+
   return (
     <Layout>
       <Container size="lg" padding={0}>
@@ -72,59 +92,34 @@ export default function ProgramFeed(): ReactElement {
           Find Programs
         </Title>
         {/* <ProgramsNav /> */}
-        {/* <TextInput icon={<BiSearch />} placeholder="Search by title" /> */}
+        <Group direction="column">
+          <Title order={2}>Category</Title>
+          <SimpleGrid
+            spacing="lg"
+            breakpoints={[
+              { minWidth: 'sm', cols: 1, spacing: 'sm' },
+              { minWidth: 'md', cols: 2, spacing: 'lg' },
+              { minWidth: 1200, cols: 3, spacing: 'lg' },
+            ]}
+          >
+            {pages.map((page) => {
+              return <ProgramListCard page={page} key={page.href} />;
+            })}
+          </SimpleGrid>
 
-        <SimpleGrid
-          breakpoints={[
-            { minWidth: 'sm', cols: 1, spacing: 'sm' },
-            { minWidth: 'md', cols: 2, spacing: 'lg' },
-            { minWidth: 1200, cols: 2, spacing: 'lg' },
-          ]}
-        >
-          {pages.map((page) => {
-            return (
-              <Link href={page.href} key={page.href}>
-                <Paper
-                  key={page.href}
-                  padding="md"
-                  shadow="md"
-                  withBorder
-                  component="a"
-                  sx={(theme) => ({
-                    border: '2px solid',
-                    borderRadius: theme.radius.sm,
-                    cursor: 'pointer',
-                    width: '100%',
-                    borderColor: page.color,
-                    backgroundColor: theme.colors.dark[9],
-                    '&:hover': {
-                      borderColor: '#F08C00',
-                      shadow: 'lg',
-                    },
-                  })}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Title order={2}>{page.title}</Title>
-                    {page.title === 'Featured' ? (
-                      <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
-                        <AiOutlineTrophy />
-                      </ThemeIcon>
-                    ) : null}
-                  </div>
-                  <Text size="sm" my={8}>
-                    {page.text}
-                  </Text>
-                </Paper>
-              </Link>
-            );
-          })}
-        </SimpleGrid>
+          <Title order={2}>Experience</Title>
+          <SimpleGrid
+            breakpoints={[
+              { minWidth: 'sm', cols: 1, spacing: 'sm' },
+              { minWidth: 'md', cols: 2, spacing: 'lg' },
+              { minWidth: 1200, cols: 3, spacing: 'lg' },
+            ]}
+          >
+            {expPages.map((page) => {
+              return <ProgramListCard page={page} key={page.href} />;
+            })}
+          </SimpleGrid>
+        </Group>
       </Container>
     </Layout>
   );

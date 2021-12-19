@@ -92,13 +92,14 @@ export default function ExperienceSearchPage({
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
   let id = context.params.id;
 
-  //   if (id !== 'beginner' || id !== 'intermediate' || id !== 'advanced') {
-  //     context.res.writeHead(302, {
-  //       Location: `/
-  //       `,
-  //     });
-  //     context.res.end();
-  //   }
+  if (id !== 'beginner' || id !== 'intermediate' || id !== 'advanced') {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/404',
+      },
+    };
+  }
   try {
     let q = query(
       collection(db, 'programs'),

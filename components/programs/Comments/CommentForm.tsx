@@ -23,7 +23,8 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
     try {
       setSubmitting(true);
       await addDoc(collection(db, 'comments'), {
-        user: user.name,
+        user: user.uid,
+        name: user.name,
         programID: programID,
         comment: values.comment,
         createdDate: serverTimestamp(),

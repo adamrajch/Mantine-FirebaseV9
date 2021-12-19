@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Box,
   Card,
@@ -8,34 +9,44 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core';
+import { doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
-import { AiOutlineTrophy } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineTrophy } from 'react-icons/ai';
+import { useAuth } from '../../context/auth';
+import { db } from '../../firebase';
 import { handleCatColor, handleExpColor, handlePColor } from '../../utils/ColorHelper';
 
 export default function ProgramCard({ program, id }: any): ReactElement {
   const theme = useMantineTheme();
   const colorScheme = useMantineColorScheme();
   const p = program;
-
+  const { user, loading } = useAuth();
   const colors = colorScheme.colorScheme;
   const isDark = colors === 'dark';
+  console.log(user);
   // console.log('program card data ', program);
   //   const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7];
+  async function likeProgram(programID: string) {
+    await setDoc(doc(db, 'programHearts', `${user.uid}_${programID}`), {
+      userID: user.uid,
+      programID: programID,
+    });
+  }
   return (
     <Box
       sx={(theme) => ({
-        border: '1px solid cyan',
+        // border: '1px solid cyan',
         borderRadius: theme.radius.md,
         backgroundImage: `url(${p.photoUrl})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'cover',
 
-        shadow: 'sm',
         '&:hover': {
           backgroundColor:
             theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.cyan[1],
+          boxShadow: '12px 12px 24px  #0f0f0f, -4px -4px 8px #2c4c5a ',
         },
       })}
     >
@@ -48,15 +59,15 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           borderRadius: theme.radius.md,
           opacity: 0.95,
           background: 'rgba( 3, 3, 3, 0.9 )',
-          boxShadow: '0 3px 14px 0 rgba( 31, 38, 135, 0.37 )',
+
           backdropFilter: ' blur( 8px )',
           '-webkit-backdrop-filter': 'blur( 4px )',
           height: '100%',
           border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
-          '&:hover': {
-            backgroundColor:
-              theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-          },
+          // '&:hover': {
+          //   backgroundColor:
+          //     theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
+          // },
         })}
       >
         {/* <Card.Section>
@@ -88,7 +99,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           <Group position="left" noWrap spacing={4}>
             {p.template.experience.map((e: string, i: number) => {
               return (
-                <Badge color={handleExpColor(e)} size="sm" key={e}>
+                <Badge color={handleExpColor(e)} size="xs" key={e}>
                   {e}
                 </Badge>
               );
@@ -98,7 +109,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           <Group position="left" spacing={4}>
             {p.template.category.sort().map((e: string, i: number) => {
               return (
-                <Badge variant="filled" color={handleCatColor(e)} size="md" radius={2} key={e}>
+                <Badge variant="filled" color={handleCatColor(e)} size="xs" radius={2} key={e}>
                   {e}
                 </Badge>
               );
@@ -106,15 +117,19 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           </Group>
           <Group position="left" noWrap spacing={4}>
             {p.template.periodization.sort().map((e: string, i: number) => (
-              <Badge variant="outline" color={handlePColor(e)} size="md" radius={2} key={e}>
+              <Badge variant="outline" color={handlePColor(e)} size="xs" radius={2} key={e}>
                 {e}
               </Badge>
             ))}
           </Group>
-          {/* <Group position="left" style={{ flex: '1 0 auto' }}>
+          <Group position="left" style={{ flex: '1 0 auto' }}>
             <Text size="xs">Likes</Text>
             <Text size="xs">Comments</Text>
-          </Group> */}
+
+            <ActionIcon onClick={() => likeComment(id)}>
+              <AiOutlineHeart />
+            </ActionIcon>
+          </Group>
         </div>
       </Card>
     </Box>

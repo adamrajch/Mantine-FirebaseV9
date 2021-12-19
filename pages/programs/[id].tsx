@@ -80,10 +80,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   const id = params.id;
   const docRef = doc(db, 'programs', id);
   const docSnap = await getDoc(docRef);
-  return {
-    props: {
-      programProps: JSON.stringify(docSnap.data()) || null,
-      programID: id,
-    },
-  };
+
+  if (docSnap.exists()) {
+    return {
+      props: {
+        programProps: JSON.stringify(docSnap.data()) || null,
+        programID: id,
+      },
+    };
+  } else {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/404',
+      },
+    };
+  }
 };

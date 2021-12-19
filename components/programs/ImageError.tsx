@@ -38,7 +38,7 @@ export const ErrorImage = ({ src, alt, fallback, height, width, ...props }: any)
       alt={alt}
       onError={onError}
       {...props}
-      fit="contain"
+      fit="cover"
       styles={{
         root: {
           height: matches ? height : 80,

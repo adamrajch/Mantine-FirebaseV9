@@ -3,6 +3,7 @@ import { Container, Group, Title } from '@mantine/core';
 import { onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
+import Loader from '../../components/Loader';
 import ProgramList from '../../components/programs/ProgramList';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
@@ -56,7 +57,7 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
           My Programs
         </Title>
         <Group position="center" direction="column" grow>
-          {programs.length > 0 && !loading ? <ProgramList programsProps={programs} /> : null}
+          {programs.length > 0 && !loading ? <ProgramList programsProps={programs} /> : <Loader />}
         </Group>
       </Container>
     </Layout>

@@ -1,8 +1,16 @@
-import { ActionIcon, Group, Loader, Text } from '@mantine/core';
+import { Group, Loader, Text } from '@mantine/core';
 import dayjs from 'dayjs';
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { AiOutlineHeart } from 'react-icons/ai';
 import { db } from '../../../firebase';
 interface Props {
   programID: string;
@@ -58,7 +66,13 @@ export default function CommentsList({
   async function deleteComment(id: string) {
     await deleteDoc(doc(db, 'comments', id));
   }
-  async function likeComment() {}
+  async function likeComment(commentId: string) {
+    await setDoc(doc(db, 'commentHearts', `${user.uid}_${commentId}`), {
+      name: 'Los Angeles',
+      state: 'CA',
+      country: 'USA',
+    });
+  }
   return (
     <div>
       {loading && !preFetchedComments && <Loader />}
@@ -71,7 +85,7 @@ export default function CommentsList({
                 <Group position="left" direction="column" spacing={0}>
                   <Group position="left">
                     <Text size="sm" weight={700} color="cyan">
-                      {c.data.user}
+                      {c.data.name}
                     </Text>
                     <Text key={c.id}>{c.data.comment}</Text>
                   </Group>
@@ -82,10 +96,10 @@ export default function CommentsList({
                     {/* <Text size="xs" color="gray">
                       Pinned
                     </Text> */}
-                    <Text size="xs" color="gray">
+                    {/* <Text size="xs" color="gray">
                       166 likes
-                    </Text>
-                    {c.data.user === user.name && (
+                    </Text> */}
+                    {c.data.user === user.uid && (
                       <Text
                         onClick={() => deleteComment(c.id)}
                         size="xs"
@@ -108,9 +122,9 @@ export default function CommentsList({
                   </Group>
                 </Group>
 
-                <ActionIcon onClick={() => likeComment()}>
+                {/* <ActionIcon onClick={() => likeComment(c.id)}>
                   <AiOutlineHeart />
-                </ActionIcon>
+                </ActionIcon> */}
               </Group>
             ))}
           </Group>

@@ -25,7 +25,12 @@ type Props = {
   children: React.ReactNode;
 };
 const generalLinks = [
+  { href: '/dashboard', title: 'Dashboard' },
   { href: '/programs', title: 'Programs' },
+  {
+    href: '/library',
+    title: 'Library',
+  },
   { href: '/basics', title: 'Learn Basics' },
 ];
 const userLinks = [
