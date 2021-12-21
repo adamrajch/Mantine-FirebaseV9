@@ -126,7 +126,11 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             <Text size="xs">Likes</Text>
             <Text size="xs">Comments</Text>
 
-            <ActionIcon onClick={() => likeComment(id)}>
+            <ActionIcon
+              onClick={() => {
+                console.log(hello);
+              }}
+            >
               <AiOutlineHeart />
             </ActionIcon>
           </Group>
