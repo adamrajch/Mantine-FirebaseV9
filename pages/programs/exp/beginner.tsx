@@ -10,7 +10,6 @@ export default function ExperienceSearchPage({
   programsProps,
   lastVisible,
   isEmpty,
-  id,
 }: any): JSX.Element {
   const [programs, setPrograms] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +28,7 @@ export default function ExperienceSearchPage({
 
     q = query(
       collection(db, 'programs'),
-      where('exp', 'array-contains', id),
+      where('exp', 'array-contains', 'beginner'),
       orderBy('featured', 'desc'),
       orderBy('heartCount', 'desc'),
       startAfter(last),
@@ -62,7 +61,7 @@ export default function ExperienceSearchPage({
     <Layout>
       <Container size="xl">
         <Title order={1} align="center" mb={20} style={{ textTransform: 'capitalize' }}>
-          {id} Programs
+          Beginner Programs
         </Title>
 
         <ProgramsNav />
@@ -90,20 +89,20 @@ export default function ExperienceSearchPage({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
-  let id = context.params.id;
-
-  if (id !== 'beginner' || id !== 'intermediate' || id !== 'advanced') {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/404',
-      },
-    };
-  }
+  //   let id = context.params.id;
+  //   console.log('id', id, typeof id);
+  //   if (id !== 'beginner' || id !== 'intermediate' || id !== 'advanced') {
+  //     return {
+  //       redirect: {
+  //         permanent: false,
+  //         destination: '/404',
+  //       },
+  //     };
+  //   }
   try {
     let q = query(
       collection(db, 'programs'),
-      where('experience', 'array-contains', id),
+      where('experience', 'array-contains', 'beginner'),
       // orderBy('featured', 'desc'),
       orderBy('heartCount', 'desc'),
       limit(10)
@@ -131,19 +130,16 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         programsProps: JSON.stringify(programs) || [],
         lastVisible: lastVisible == undefined ? null : JSON.stringify(lastVisible),
         isEmpty: empty,
-        id: id,
       },
     };
   } catch (error) {
     console.log(error);
+
     return {
-      props: {},
+      redirect: {
+        destination: '/programs',
+        permanent: false,
+      },
     };
-    // return {
-    //   redirect: {
-    //     destination: '/programs',
-    //     permanent: false,
-    //   },
-    // };
   }
 };
