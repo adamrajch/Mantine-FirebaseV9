@@ -128,7 +128,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
 
             <ActionIcon
               onClick={() => {
-                console.log(hello);
+                console.log('hello');
               }}
             >
               <AiOutlineHeart />
