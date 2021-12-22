@@ -7,11 +7,12 @@ import {
   Modal,
   Textarea,
   TextInput,
+  Tooltip,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiFillSetting, AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai';
+import { AiFillFileAdd, AiFillSetting, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
@@ -29,23 +30,7 @@ export default function WeekSection({
   const [open, setOpen] = useState<boolean>(false);
   const [openGen, setOpenGen] = useState<boolean>(false);
   const modals = useModals();
-  const newBlock = {
-    name: `Block ${values.blocks.length + 1}`,
-    summary: '',
-    weeks: [
-      {
-        name: 'Week 1',
-        summary: '',
-        days: [
-          {
-            name: 'Day 1',
-            summary: '',
-            lifts: [],
-          },
-        ],
-      },
-    ],
-  };
+
   const freshBlock = {
     name: `Block 1`,
     summary: '',
@@ -212,40 +197,6 @@ export default function WeekSection({
       },
     ],
   };
-  function getNewWeek(wI: any) {
-    return {
-      name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
-      summary: '',
-      days: [
-        {
-          name: 'Day 1',
-          summary: '',
-          lifts: [
-            {
-              name: 'Lift',
-              type: 'single',
-              note: '',
-              records: [
-                {
-                  type: 'working',
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-  }
-
-  function handleAddBlock(blockHelpers: any) {
-    blockHelpers.push(newBlock);
-  }
 
   function handleAddWeek(weekHelpers: any, blockIndex: number) {
     weekHelpers.push({
@@ -461,28 +412,18 @@ export default function WeekSection({
                 }}
               />
               <Group position="right">
-                <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                  {values.blocks[blockIndex].weeks[weekIndex].summary.length ? (
-                    <FaStickyNote />
-                  ) : (
-                    <FaRegStickyNote />
-                  )}
-                </ActionIcon>
-                <Menu
-                  control={
-                    <Button
-                      variant="outline"
-                      onClick={() => handleAddWeek(weekHelpers, blockIndex)}
-                      leftIcon={<AiFillSetting />}
-                      size="xs"
-                    >
-                      Week
-                    </Button>
-                  }
-                  zIndex={1200}
-                >
-                  <Menu.Item
-                    icon={<AiOutlinePlus color="cyan" />}
+                <Tooltip label="Edit Summary" color="cyan" withArrow>
+                  <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                    {values.blocks[blockIndex].weeks[weekIndex].summary.length ? (
+                      <FaStickyNote />
+                    ) : (
+                      <FaRegStickyNote />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+                {values.blocks[blockIndex].weeks[weekIndex].days.length < 7 && (
+                  <Button
+                    variant="outline"
                     onClick={() => {
                       if (values.blocks[blockIndex].weeks[weekIndex].days.length < 7) {
                         dayHelpers.push({
@@ -511,10 +452,26 @@ export default function WeekSection({
                         });
                       }
                     }}
+                    leftIcon={<AiFillFileAdd />}
+                    size="xs"
                   >
-                    Add Day
-                  </Menu.Item>
+                    Day
+                  </Button>
+                )}
 
+                <Menu
+                  control={
+                    <Button
+                      variant="outline"
+                      onClick={() => handleAddWeek(weekHelpers, blockIndex)}
+                      leftIcon={<AiFillSetting />}
+                      size="xs"
+                    >
+                      Week
+                    </Button>
+                  }
+                  zIndex={1200}
+                >
                   <Menu.Item icon={<BiDuplicate color="cyan" />} onClick={() => setOpenGen(true)}>
                     Duplicate Weeks
                   </Menu.Item>
@@ -537,18 +494,6 @@ export default function WeekSection({
                   }
                   zIndex={1200}
                 >
-                  <Menu.Item
-                    icon={<AiOutlinePlus color="cyan" />}
-                    onClick={() => handleAddWeek(weekHelpers, blockIndex)}
-                  >
-                    Add Week
-                  </Menu.Item>
-                  <Menu.Item
-                    icon={<AiOutlinePlus color="cyan" />}
-                    onClick={() => handleAddBlock(blockHelpers)}
-                  >
-                    Add Block
-                  </Menu.Item>
                   <Menu.Item
                     icon={<BiDuplicate color="cyan" />}
                     onClick={() =>

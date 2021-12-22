@@ -27,6 +27,7 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
         name: user.name,
         programID: programID,
         comment: values.comment,
+        parentID: null,
         createdDate: serverTimestamp(),
       });
       notifications.showNotification({
@@ -70,6 +71,7 @@ export default function CommentForm({ programID, user }: any): JSX.Element {
                   name="comment"
                   value={values.comment}
                   onChange={handleChange}
+                  placeholder="Write a comment"
                 />
 
                 <Group position="right">

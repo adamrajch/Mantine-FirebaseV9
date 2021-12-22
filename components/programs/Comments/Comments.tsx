@@ -1,17 +1,10 @@
-import { Group, Loader, Text } from '@mantine/core';
-import dayjs from 'dayjs';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc,
-  where,
-} from 'firebase/firestore';
-import React, { ReactElement, useEffect, useState } from 'react';
+import { Group } from '@mantine/core';
+import { useForm } from '@mantine/hooks';
+import { useNotifications } from '@mantine/notifications';
+import { addDoc, collection, deleteDoc, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import React, { ReactElement, useState } from 'react';
 import { db } from '../../../firebase';
+import Comment from './Comment';
 interface Props {
   programID: string;
 }
@@ -24,45 +17,22 @@ export default function CommentsList({
   programID,
   user,
   programAuthor,
-  preFetchedComments,
+  comments,
 }: any): ReactElement {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [comments, setComments] = useState<Array<any>>([]);
+  // const [comments, setComments] = useState<Array<any>>([]);
+  const [open, setOpen] = useState(false);
+  const [replyLoading, setReplyLoading] = useState(false);
+  const notifications = useNotifications();
+  const form = useForm({
+    initialValues: {
+      comment: '',
+    },
 
-  useEffect(() => {
-    if (!preFetchedComments) {
-      getComments();
-    } else {
-      setComments(preFetchedComments);
-      setLoading(false);
-    }
+    validationRules: {
+      comment: (value) => value.trim().length < 500,
+    },
+  });
 
-    return;
-  }, []);
-
-  async function getComments() {
-    console.log('fetching');
-    const q = query(
-      collection(db, 'comments'),
-      where('programID', '==', programID),
-      orderBy('createdDate', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setComments(
-        querySnapshot.docs.map((d) => {
-          const docObj = {
-            id: d.id,
-            data: d.data(),
-          };
-          return docObj;
-        })
-      );
-    });
-
-    setLoading(false);
-    return unsubscribe;
-  }
   async function deleteComment(id: string) {
     await deleteDoc(doc(db, 'comments', id));
   }
@@ -73,59 +43,42 @@ export default function CommentsList({
       country: 'USA',
     });
   }
+
+  async function handleSubmit(comment: any, commentId: string) {
+    console.log(user.uid, user.name, programID, commentId, comment);
+    try {
+      setReplyLoading(true);
+      await addDoc(collection(db, 'comments'), {
+        user: user.uid,
+        name: user.name ? user.name : user.email,
+        programID: programID,
+        comment: comment,
+        parent: commentId,
+        createdDate: serverTimestamp(),
+      });
+      notifications.showNotification({
+        title: 'Reply posted',
+        message: `Successfully replied!`,
+      });
+      form.reset();
+      setReplyLoading(false);
+    } catch (error) {
+      setReplyLoading(false);
+      console.log('from comment : ', error);
+    }
+
+    setOpen(false);
+  }
+
   return (
     <div>
-      {loading && !preFetchedComments && <Loader />}
+      {/* {!comments && <Loader />} */}
       {!comments.length && <div>No comments</div>}
       <div>
-        {!!(comments.length > 0) && !loading && (
+        {!!(comments.length > 0) && (
           <Group position="left" direction="column" grow>
-            {comments.map((c) => (
-              <Group position="apart" key={c.id}>
-                <Group position="left" direction="column" spacing={0}>
-                  <Group position="left">
-                    <Text size="sm" weight={700} color="cyan">
-                      {c.data.name}
-                    </Text>
-                    <Text key={c.id}>{c.data.comment}</Text>
-                  </Group>
-                  <Group position="left">
-                    <Text size="xs">
-                      {dayjs(c.data.createdDate?.toDate().getTime()).format('MM/DD/YYYY')}
-                    </Text>
-                    {/* <Text size="xs" color="gray">
-                      Pinned
-                    </Text> */}
-                    {/* <Text size="xs" color="gray">
-                      166 likes
-                    </Text> */}
-                    {c.data.user === user.uid && (
-                      <Text
-                        onClick={() => deleteComment(c.id)}
-                        size="xs"
-                        color="gray"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        Delete
-                      </Text>
-                    )}
-                    {/* {c.data.user === user.name && (
-                      <Text
-                        onClick={() => deleteComment(c.id)}
-                        size="xs"
-                        color="gray"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        {c.data.pinned ? 'Unpin' : 'Pin'}
-                      </Text>
-                    )} */}
-                  </Group>
-                </Group>
-
-                {/* <ActionIcon onClick={() => likeComment(c.id)}>
-                  <AiOutlineHeart />
-                </ActionIcon> */}
-              </Group>
+            {comments.map((c: any) => (
+              <Comment comment={c} user={user} programID={programID} />
             ))}
           </Group>
         )}

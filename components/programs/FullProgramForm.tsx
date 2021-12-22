@@ -25,6 +25,7 @@ type Program = {
   periodization: string[];
   experience: string[];
   photoUrl: string;
+
   blocks: Array<{
     name: string;
     summary: string;
@@ -277,6 +278,7 @@ export default function FullProgramForm({
                 author: user,
                 numberOfWeeks: calculateWeeks(values),
                 heartCount: 0,
+                commentCount: 0,
                 summary: value,
                 createdDate: serverTimestamp(),
                 updatedDate: serverTimestamp(),

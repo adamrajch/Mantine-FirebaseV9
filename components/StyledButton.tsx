@@ -1,4 +1,4 @@
-import { Button, useMantineColorScheme } from '@mantine/core';
+import { Button, useMantineColorScheme, ButtonProps } from '@mantine/core';
 import React, { FC } from 'react';
 
 interface Props<> {

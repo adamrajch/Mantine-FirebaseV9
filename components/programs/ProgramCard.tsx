@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
+import router from 'next/router';
 import React, { ReactElement } from 'react';
 import { AiOutlineHeart, AiOutlineTrophy } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
@@ -35,6 +36,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
   }
   return (
     <Box
+      onClick={() => router.push(`/programs/${id}`)}
       sx={(theme) => ({
         // border: '1px solid cyan',
         borderRadius: theme.radius.md,
@@ -42,6 +44,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'cover',
+        cursor: 'pointer',
 
         '&:hover': {
           backgroundColor:
@@ -92,7 +95,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             <Text component="span" style={{ color: 'white' }}>
               Author:{' '}
             </Text>
-            {p.author?.name}
+            {p.author?.name ? p.author.name : p.author.email}
           </Text>
           {/* </Link> */}
 
@@ -124,7 +127,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           </Group>
           <Group position="left" style={{ flex: '1 0 auto' }}>
             <Text size="xs">Likes</Text>
-            <Text size="xs">Comments</Text>
+            <Text size="xs">{p.commentCount} Comments</Text>
 
             <ActionIcon
               onClick={() => {

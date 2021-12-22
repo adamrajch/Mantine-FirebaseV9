@@ -1,4 +1,14 @@
-import { ActionIcon, Box, Button, Collapse, Group, Text, Textarea, TextInput } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Collapse,
+  Group,
+  Text,
+  Textarea,
+  TextInput,
+  Tooltip,
+} from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineCopy, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -76,17 +86,22 @@ export default function DaySection({
                 />
 
                 <Group position="right">
-                  <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                    {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].summary.length ? (
-                      <FaStickyNote />
-                    ) : (
-                      <FaRegStickyNote />
-                    )}
-                  </ActionIcon>
-                  <ActionIcon size="lg" color="cyan" onClick={() => copyLift(dayHelpers)}>
-                    <AiOutlineCopy />
-                  </ActionIcon>
-
+                  <Tooltip label="Edit Summary" color="cyan" withArrow>
+                    <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
+                      {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].summary.length ? (
+                        <FaStickyNote />
+                      ) : (
+                        <FaRegStickyNote />
+                      )}
+                    </ActionIcon>
+                  </Tooltip>
+                  {values.blocks[blockIndex].weeks[weekIndex].days.length < 7 && (
+                    <Tooltip label="Duplicate Day" color="cyan" withArrow>
+                      <ActionIcon size="lg" color="cyan" onClick={() => copyLift(dayHelpers)}>
+                        <AiOutlineCopy />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
                   <Button
                     variant="outline"
                     onClick={() => liftHelpers.push(newLift)}

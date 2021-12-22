@@ -8,19 +8,48 @@ admin.initializeApp();
 //   functions.logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-exports.editHeartCount = functions.firestore
-  .document('/programs/{documentId}')
-  .onCreate((snap, context) => {
-    // Grab the current value of what was written to Firestore.
-    const original = snap.data().original;
+const db = admin.firestore();
+// exports.editHeartCount = functions.firestore
+//   .document('/programs/{documentId}')
+//   .onCreate((snap, context) => {
+//     // Grab the current value of what was written to Firestore.
+//     const original = snap.data().original;
 
-    // Access the parameter `{documentId}` with `context.params`
-    functions.logger.log('Uppercasing', context.params.documentId, original);
+//     // Access the parameter `{documentId}` with `context.params`
+//     functions.logger.log('Uppercasing', context.params.documentId, original);
+//     //change the  b
+//     const uppercase = original.toUpperCase();
 
-    const uppercase = original.toUpperCase();
+//     // You must return a Promise when performing asynchronous tasks inside a Functions such as
+//     // writing to Firestore.
+//     // Setting an 'uppercase' field in Firestore document returns a Promise.
+//     return snap.ref.set({ uppercase }, { merge: true });
+//   });
 
-    // You must return a Promise when performing asynchronous tasks inside a Functions such as
-    // writing to Firestore.
-    // Setting an 'uppercase' field in Firestore document returns a Promise.
-    return snap.ref.set({ uppercase }, { merge: true });
+exports.addComment = functions.firestore
+  .document('comments/{commentId}')
+  .onCreate(async (change, context) => {
+    const programID = change.data().programID;
+    const program = await db.doc(`programs/${programID}`).get();
+
+    console.log('program', program);
+    return db.doc(`programs/${programID}`).set(
+      {
+        commentCount: program.data().commentCount + 1,
+      },
+      { merge: true }
+    );
+  });
+exports.deleteComment = functions.firestore
+  .document('comments/{commentId}')
+  .onDelete(async (change, context) => {
+    const programID = change.data().programID;
+    const program = await db.doc(`programs/${programID}`).get();
+    console.log('program', program);
+    return db.doc(`programs/${programID}`).set(
+      {
+        commentCount: program.data().commentCount - 1,
+      },
+      { merge: true }
+    );
   });

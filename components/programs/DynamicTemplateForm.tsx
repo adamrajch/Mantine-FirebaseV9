@@ -1,20 +1,346 @@
 import { Group, Tabs } from '@mantine/core';
 import { FieldArray, useFormikContext } from 'formik';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import WeekSection from './formSections/WeekSection';
 export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement {
   const { handleChange, values }: any = useFormikContext();
-
-  const [open, setOpen] = useState<boolean>(false);
+  const newBlock = {
+    name: `Block ${values.blocks.length + 1}`,
+    summary: '',
+    weeks: [
+      {
+        name: 'Week 1',
+        summary: '',
+        days: [
+          {
+            name: 'Day 1',
+            summary: '',
+            lifts: [
+              {
+                name: 'Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 2',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 3',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 4',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 5',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 6',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Day 7',
+            summary: '',
+            lifts: [
+              {
+                name: 'New Lift',
+                type: 'single',
+                note: '',
+                records: [
+                  {
+                    type: 'working',
+                    load: null,
+                    sets: 5,
+                    reps: 5,
+                    unit: 'lbs',
+                    rpe: null,
+                    percent: null,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  function getNewWeek(bI: number) {
+    return {
+      name: `Week ${values.blocks[bI].weeks?.length + 1}`,
+      summary: '',
+      days: [
+        {
+          name: 'Day 1',
+          summary: '',
+          lifts: [
+            {
+              name: 'Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 2',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 3',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 4',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 5',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 6',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Day 7',
+          summary: '',
+          lifts: [
+            {
+              name: 'New Lift',
+              type: 'single',
+              note: '',
+              records: [
+                {
+                  type: 'working',
+                  load: null,
+                  sets: 5,
+                  reps: 5,
+                  unit: 'lbs',
+                  rpe: null,
+                  percent: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+  }
 
   return (
     <Group position="left" direction="column" grow>
-      <Tabs variant="outline">
-        {values.blocks.map((block: any, i: number) => (
-          <Tabs.Tab key={i} label={block.name}>
-            <FieldArray
-              name="blocks"
-              render={(blockHelpers) => (
+      <FieldArray
+        name="blocks"
+        render={(blockHelpers) => (
+          <Tabs variant="outline">
+            {values.blocks.map((block: any, i: number) => (
+              <Tabs.Tab key={i} label={block.name}>
                 <div>
                   <FieldArray
                     name={`blocks[${i}].weeks`}
@@ -32,19 +358,20 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                               />
                             </Tabs.Tab>
                           ))}
+                        <Tabs.Tab
+                          label="+"
+                          onClick={() => weekHelpers.push(getNewWeek(i))}
+                        ></Tabs.Tab>
                       </Tabs>
                     )}
                   />
                 </div>
-              )}
-            />
-          </Tabs.Tab>
-        ))}
-      </Tabs>
-
-      {/* <div>
-        Block:{blockIndex} week:{weekIndex} day:{dayIndex}
-      </div> */}
+              </Tabs.Tab>
+            ))}
+            <Tabs.Tab label="+" onClick={() => blockHelpers.push(newBlock)}></Tabs.Tab>
+          </Tabs>
+        )}
+      />
     </Group>
   );
 }

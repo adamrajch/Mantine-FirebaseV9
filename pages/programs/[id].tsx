@@ -1,7 +1,7 @@
 import { Container } from '@mantine/core';
-import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
@@ -11,38 +11,7 @@ export default function Program({ programProps, programID }: any): ReactElement 
   const p = JSON.parse(programProps);
   console.log('individual program: ', p);
   const { user, loading } = useAuth();
-  const [comments, setComments] = useState<any>([]);
 
-  useEffect(() => {
-    getComments();
-    return;
-  }, []);
-
-  useEffect(() => {
-    console.log('comments : ', comments);
-  }, [comments]);
-
-  async function getComments() {
-    const q = query(
-      collection(db, 'comments'),
-      where('programID', '==', programID),
-      orderBy('createdDate', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setComments(
-        querySnapshot.docs.map((d) => {
-          const docObj = {
-            id: d.id,
-            data: d.data(),
-          };
-          return docObj;
-        })
-      );
-    });
-
-    return unsubscribe;
-  }
   return (
     <Layout>
       <Container
@@ -54,13 +23,7 @@ export default function Program({ programProps, programID }: any): ReactElement 
         })}
       >
         {!loading && (
-          <FullProgramForm
-            program={JSON.parse(programProps)}
-            programID={programID}
-            user={user}
-            programAuthor={p.author}
-            comments={comments}
-          />
+          <FullProgramForm program={p} programID={programID} user={user} programAuthor={p.author} />
         )}
 
         {!loading && user && (
@@ -68,7 +31,7 @@ export default function Program({ programProps, programID }: any): ReactElement 
             programID={programID}
             user={user}
             programAuthor={p.email}
-            comments={comments}
+            commentCount={p.commentCount}
           />
         )}
       </Container>
