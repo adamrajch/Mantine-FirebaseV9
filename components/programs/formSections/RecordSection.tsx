@@ -1,7 +1,8 @@
 import { ActionIcon, NumberInput, Select } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { MdOutlineCancel } from 'react-icons/md';
 import { FlexContainer } from '../../FlexContainer';
 
 export default function RecordSection({
@@ -14,6 +15,7 @@ export default function RecordSection({
 }: any): ReactElement {
   const { setFieldValue } = useFormikContext();
   const { values }: { values: any } = useFormikContext();
+  const matches = useMediaQuery('(min-width: 900px)');
   return (
     <FlexContainer justify="flex-start">
       <NumberInput
@@ -39,7 +41,8 @@ export default function RecordSection({
             fontSize: 12,
           },
         }}
-        icon={<span>s</span>}
+        icon={matches && <span>s</span>}
+        hideControls={!matches}
       />
       <NumberInput
         autoComplete="false"
@@ -64,7 +67,8 @@ export default function RecordSection({
             fontSize: 12,
           },
         }}
-        icon={<span>r</span>}
+        icon={matches && <span>r</span>}
+        hideControls={!matches}
       />
 
       <NumberInput
@@ -89,7 +93,8 @@ export default function RecordSection({
             fontSize: 12,
           },
         }}
-        icon={<span>rpe</span>}
+        icon={matches && <span>rpe</span>}
+        hideControls={!matches}
       />
       <NumberInput
         autoComplete="false"
@@ -113,9 +118,10 @@ export default function RecordSection({
             fontSize: 12,
           },
         }}
-        icon={<span>%</span>}
+        icon={matches && <span>%</span>}
+        hideControls={!matches}
       />
-      <NumberInput
+      {/* <NumberInput
         autoComplete="false"
         min={0}
         step={45}
@@ -137,8 +143,9 @@ export default function RecordSection({
             fontSize: 12,
           },
         }}
-        icon={<span>load</span>}
-      />
+        icon={matches && <span>load</span>}
+        hideControls={!matches}
+      /> */}
       <Select
         value={
           values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
@@ -156,9 +163,11 @@ export default function RecordSection({
           { label: 'kilo', value: 'kilo' },
           { label: 'time', value: 'seconds' },
         ]}
+        // rightSectionProps={}
+        // rightSectionWidth={matches ? 0 : 0}
       />
       <ActionIcon onClick={() => recordHelpers.remove(recordIndex)}>
-        <AiOutlineDelete />
+        <MdOutlineCancel color="#ba261c" />
       </ActionIcon>
     </FlexContainer>
   );

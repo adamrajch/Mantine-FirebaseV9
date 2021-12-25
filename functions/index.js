@@ -53,3 +53,31 @@ exports.deleteComment = functions.firestore
       { merge: true }
     );
   });
+
+//update proram Heart if user likes/ decrement if not
+exports.incrementProgramHeart = functions.firestore
+  .document('users/{userId}')
+  .onUpdate(async (change, context) => {
+    const newArr = change.after.data().likedPrograms;
+    const prevArr = change.before.data().likedPrograms;
+
+    const programID = change.data().programID;
+    const program = await db.doc(`programs/${programID}`).get();
+    if (newArr.length > prevArr.length) {
+      return db.doc(`programs/${programID}`).set(
+        {
+          heartCount: program.data().heartCount + 1,
+        },
+        { merge: true }
+      );
+    } else if (newArr.length < prevArr.length) {
+      return db.doc(`programs/${programID}`).set(
+        {
+          heartCount: program.data().heartCount - 1,
+        },
+        { merge: true }
+      );
+    } else {
+      return;
+    }
+  });

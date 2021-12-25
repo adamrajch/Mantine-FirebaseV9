@@ -359,7 +359,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                             </Tabs.Tab>
                           ))}
                         <Tabs.Tab
-                          label="+"
+                          label={values.blocks[i].weeks.length < 1 ? '+ Add Week' : '+'}
                           onClick={() => weekHelpers.push(getNewWeek(i))}
                         ></Tabs.Tab>
                       </Tabs>
@@ -368,7 +368,10 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                 </div>
               </Tabs.Tab>
             ))}
-            <Tabs.Tab label="+" onClick={() => blockHelpers.push(newBlock)}></Tabs.Tab>
+            <Tabs.Tab
+              label={values.blocks.length < 1 ? 'Add Block' : '+'}
+              onClick={() => blockHelpers.push(newBlock)}
+            ></Tabs.Tab>
           </Tabs>
         )}
       />

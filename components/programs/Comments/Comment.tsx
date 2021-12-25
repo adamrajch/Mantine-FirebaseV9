@@ -102,7 +102,7 @@ export default function Comment({ comment, user, programID }: any): ReactElement
     console.log('replies : ', replies);
   }, [replies]);
   return (
-    <Group position="apart" key={c.id} grow>
+    <Group direction="column" key={c.id} grow>
       <Group direction="column" spacing={0} grow>
         <Group position="left">
           <Text size="sm" weight={700} color="cyan">
@@ -134,7 +134,7 @@ export default function Comment({ comment, user, programID }: any): ReactElement
             <Group position="left" direction="column" grow>
               <Textarea
                 name="comment"
-                placeholder="Write reply"
+                placeholder={`Reply to ${c.data.name}`}
                 value={form.values.comment}
                 onChange={(value) => form.setFieldValue('comment', value.currentTarget.value)}
                 error={form.errors.comment}
@@ -152,8 +152,41 @@ export default function Comment({ comment, user, programID }: any): ReactElement
           </Collapse>
         </form>
         <div>
-          {replies.map((reply) => (
-            <div>{reply.data.comment}</div>
+          {replies.map((reply: any) => (
+            <div>
+              <Group direction="column" spacing={0} grow ml={32}>
+                <Group position="left">
+                  <Text size="sm" weight={700} color="cyan">
+                    {reply.data.name}
+                  </Text>
+                  <Text key={reply.id}>{reply.data.comment}</Text>
+                </Group>
+                <Group position="left">
+                  <Text size="xs">
+                    {dayjs(reply.data.createdDate?.toDate().getTime()).format('MM/DD/YYYY')}
+                  </Text>
+
+                  {/* <Text
+                    size="xs"
+                    color="gray"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setOpen(!open)}
+                  >
+                    Reply
+                  </Text> */}
+                  {reply.data.user === user.uid && (
+                    <Text
+                      onClick={() => deleteComment(reply.id)}
+                      size="xs"
+                      color="gray"
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Delete
+                    </Text>
+                  )}
+                </Group>
+              </Group>
+            </div>
           ))}
         </div>
       </Group>

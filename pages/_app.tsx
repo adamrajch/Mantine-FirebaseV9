@@ -1,4 +1,5 @@
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AppProps } from 'next/app';
@@ -21,6 +22,7 @@ export default function App(props: AppProps) {
   Router.events.on('routeChangeComplete', (url) => {
     setLoading(false);
   });
+  const matches = useMediaQuery('(min-width: 900px)');
   return (
     <>
       <Head>
@@ -58,6 +60,12 @@ export default function App(props: AppProps) {
               // root: { color: colorScheme === 'dark' ? 'white' : 'black' },
               oultine: {
                 color: colorScheme === 'dark' ? 'cyan' : 'black',
+              },
+            },
+            Container: {
+              root: {
+                paddingRight: matches ? 'md' : 0,
+                paddingLeft: matches ? 'md' : 0,
               },
             },
           }}

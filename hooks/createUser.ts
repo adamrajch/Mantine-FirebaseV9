@@ -6,6 +6,8 @@ export async function createUser(uid: string, data: any) {
     doc(db, 'users', uid),
     {
       uid,
+      likedPrograms: [],
+      savedPrograms: [],
       ...data,
     },
     { merge: true }

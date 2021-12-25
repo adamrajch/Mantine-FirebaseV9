@@ -1,11 +1,10 @@
-import { ActionIcon, Box, Button, Collapse, Group, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Collapse, Group, Textarea, TextInput } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
-import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
-import { FlexContainer } from '../../FlexContainer';
-import RecordModal from '../RecordModal';
 import RecordSection from './RecordSection';
 
 export default function LiftSection({
@@ -19,6 +18,7 @@ export default function LiftSection({
   const { handleChange } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
+  const matches = useMediaQuery('(min-width: 900px)');
   const emptyRecord = {
     sets: 5,
     reps: 5,
@@ -37,20 +37,20 @@ export default function LiftSection({
             <Box
               sx={(theme) => ({
                 width: '100%',
-                padding: 8,
+
                 marginTop: 2,
                 marginBottom: 2,
                 borderRadius: 8,
-                borderColor: theme.colors.gray[9],
-                border: '2px solid transparent',
-                '&:hover': {
-                  border: '2px solid',
-                  borderColor: theme.colors.gray[7],
-                  backgroundColor: theme.colors.dark[7],
-                },
+                // borderColor: theme.colors.gray[9],
+                // border: '2px solid transparent',
+                // '&:hover': {
+                //   border: '2px solid',
+                //   borderColor: theme.colors.gray[7],
+                //   backgroundColor: theme.colors.dark[7],
+                // },
               })}
             >
-              <FlexContainer justify="space-between" align="center">
+              <Group position="apart" noWrap>
                 <TextInput
                   autoComplete="false"
                   required
@@ -62,10 +62,12 @@ export default function LiftSection({
                   style={{
                     marginTop: 'auto',
                     marginBottom: 'auto',
+                    minWidth: 0,
                   }}
+                  size={matches ? 'sm' : 'xs'}
                 />
 
-                <Group position="right">
+                <Group position="right" spacing={matches ? 6 : 0} noWrap>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note
                       .length ? (
@@ -74,18 +76,24 @@ export default function LiftSection({
                       <FaRegStickyNote />
                     )}
                   </ActionIcon>
-                  <Button
-                    size="xs"
-                    variant="outline"
-                    onClick={() => recordHelpers.push(emptyRecord)}
-                    leftIcon={<AiOutlinePlus style={{ height: 18, width: 18 }} />}
-                  >
-                    Record
-                  </Button>
 
-                  <RecordModal />
+                  <ActionIcon color="cyan" onClick={() => recordHelpers.push(emptyRecord)}>
+                    <AiOutlinePlusCircle />
+                  </ActionIcon>
+
+                  {/* {!matches && <RecordModal />} */}
+
+                  <ActionIcon
+                    size="lg"
+                    color="cyan"
+                    onClick={() => {
+                      liftHelpers.remove(liftIndex);
+                    }}
+                  >
+                    <AiOutlineDelete />
+                  </ActionIcon>
                 </Group>
-              </FlexContainer>
+              </Group>
               <Collapse in={open} my={8}>
                 <Textarea
                   placeholder="Add description for lift"
@@ -96,6 +104,34 @@ export default function LiftSection({
                   onChange={handleChange}
                 />
               </Collapse>
+              {/* {!matches && (
+                <Grid columns={21}>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs">sets</Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs" style={{ paddingBottom: 0 }}>
+                      reps
+                    </Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs">rpe</Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs">%</Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs">load</Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <Text size="xs">unit</Text>
+                  </Col>
+                  <Col span={3} style={{ paddingBottom: 0 }}>
+                    <></>
+                  </Col>
+                </Grid>
+              )} */}
+
               <Group direction="column" mt="md">
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]
                   .records &&
@@ -107,7 +143,7 @@ export default function LiftSection({
                     <div
                       key={recordIndex}
                       style={{
-                        paddingLeft: 10,
+                        paddingLeft: matches ? 8 : 0,
                       }}
                     >
                       <RecordSection

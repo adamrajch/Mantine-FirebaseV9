@@ -9,6 +9,7 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
@@ -30,7 +31,8 @@ export default function WeekSection({
   const [open, setOpen] = useState<boolean>(false);
   const [openGen, setOpenGen] = useState<boolean>(false);
   const modals = useModals();
-
+  const matches = useMediaQuery('(min-width: 900px)');
+  const smol = useMediaQuery('(min-width: 500px)');
   const freshBlock = {
     name: `Block 1`,
     summary: '',
@@ -400,18 +402,18 @@ export default function WeekSection({
                 />
               </Modal>
             </>
-            <Group position="apart">
+            <Group position="apart" noWrap>
               <TextInput
-                label="Week Name"
+                // label="Week Name"
                 placeholder="week name"
                 name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
                 value={values.blocks[blockIndex].weeks[weekIndex].name}
                 onChange={(e: any) => handleChange(e)}
                 styles={{
-                  input: { borderLeft: '2px solid cyan' },
+                  input: { borderLeft: '2px solid cyan', minWidth: 0 },
                 }}
               />
-              <Group position="right">
+              <Group position="right" spacing={matches ? 12 : 4} noWrap>
                 <Tooltip label="Edit Summary" color="cyan" withArrow>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].summary.length ? (
@@ -467,7 +469,7 @@ export default function WeekSection({
                       leftIcon={<AiFillSetting />}
                       size="xs"
                     >
-                      Week
+                      {smol ? 'Week' : 'W'}
                     </Button>
                   }
                   zIndex={1200}
@@ -489,7 +491,7 @@ export default function WeekSection({
                 <Menu
                   control={
                     <Button variant="outline" leftIcon={<AiFillSetting />} size="xs">
-                      Block
+                      {smol ? 'Block' : 'B'}
                     </Button>
                   }
                   zIndex={1200}

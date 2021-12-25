@@ -9,6 +9,7 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineCopy, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
@@ -41,7 +42,7 @@ export default function DaySection({
   const { handleChange } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
-
+  const matches = useMediaQuery('(min-width: 900px)');
   function copyLift(dayHelpers: any) {
     if (dayIndex < 6) {
       const newDay = {
@@ -59,7 +60,7 @@ export default function DaySection({
             <Box
               sx={(theme) => ({
                 width: '100%',
-                padding: '12px',
+                padding: matches ? '12px' : '6px',
                 borderRadius: 8,
                 border: '2px solid',
                 borderColor: theme.colors.gray[7],
@@ -75,17 +76,17 @@ export default function DaySection({
                   marginBottom: 8,
                 }}
               >
-                <Text size="sm">{`W${weekIndex + 1}D${dayIndex + 1}`}</Text>
+                {matches && <Text size="xs">{`W${weekIndex + 1}D${dayIndex + 1}`}</Text>}
 
                 <TextInput
-                  size="md"
+                  size="sm"
                   value={values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].name}
                   name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].name`}
                   variant="default"
                   onChange={handleChange}
                 />
 
-                <Group position="right">
+                <Group position="right" noWrap spacing={0}>
                   <Tooltip label="Edit Summary" color="cyan" withArrow>
                     <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                       {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].summary.length ? (
@@ -107,6 +108,7 @@ export default function DaySection({
                     onClick={() => liftHelpers.push(newLift)}
                     leftIcon={<AiOutlinePlus />}
                     size="xs"
+                    compact
                   >
                     Lift
                   </Button>

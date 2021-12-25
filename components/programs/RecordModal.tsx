@@ -53,6 +53,56 @@ export default function RecordModal(props: any) {
           render={({ values, handleChange }) => (
             <Form>
               <Group direction="column" position="left" grow>
+                {/* <NumberInput
+                  autoComplete="false"
+                  required
+                  min={1}
+                  step={1}
+                  max={999}
+                  value={
+                    values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]
+                      .records[recordIndex].sets
+                  }
+                  name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].sets`}
+                  onChange={(value) =>
+                    setFieldValue(
+                      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].sets`,
+                      value
+                    )
+                  }
+                  styles={{
+                    icon: {
+                      fontSize: 12,
+                    },
+                  }}
+                  icon={matches && <span>s</span>}
+                  hideControls={!matches}
+                />
+                <NumberInput
+                  autoComplete="false"
+                  required
+                  min={1}
+                  step={1}
+                  max={9999}
+                  value={
+                    values.blocks[blockIndex]?.weeks[weekIndex]?.days[dayIndex].lifts[liftIndex]
+                      .records[recordIndex].reps
+                  }
+                  name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].reps`}
+                  onChange={(value) =>
+                    setFieldValue(
+                      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].reps`,
+                      value
+                    )
+                  }
+                  styles={{
+                    icon: {
+                      fontSize: 12,
+                    },
+                  }}
+                  icon={matches && <span>r</span>}
+                  hideControls={!matches}
+                /> */}
                 <Text>RPE</Text>
                 <NumberInput
                   autoComplete="false"
@@ -191,7 +241,7 @@ export default function RecordModal(props: any) {
 
       <Group position="center">
         <ActionIcon onClick={() => setOpened(true)}>
-          <AiOutlinePlusCircle />
+          <AiOutlinePlusCircle color="cyan" />
         </ActionIcon>
       </Group>
     </>

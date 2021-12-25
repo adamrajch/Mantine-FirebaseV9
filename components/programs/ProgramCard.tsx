@@ -7,32 +7,48 @@ import {
   Text,
   ThemeIcon,
   useMantineColorScheme,
-  useMantineTheme,
 } from '@mantine/core';
-import { doc, setDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import router from 'next/router';
 import React, { ReactElement } from 'react';
-import { AiOutlineHeart, AiOutlineTrophy } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart, AiOutlineTrophy } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 import { handleCatColor, handleExpColor, handlePColor } from '../../utils/ColorHelper';
 
 export default function ProgramCard({ program, id }: any): ReactElement {
-  const theme = useMantineTheme();
   const colorScheme = useMantineColorScheme();
   const p = program;
   const { user, loading } = useAuth();
   const colors = colorScheme.colorScheme;
-  const isDark = colors === 'dark';
-  console.log(user);
-  // console.log('program card data ', program);
-  //   const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7];
-  async function likeProgram(programID: string) {
-    await setDoc(doc(db, 'programHearts', `${user.uid}_${programID}`), {
-      userID: user.uid,
-      programID: programID,
-    });
+
+  async function likeProgram() {
+    if (user.likedPrograms.includes(p.id)) {
+      try {
+        await setDoc(
+          doc(db, 'users', user.uid),
+          {
+            likedPrograms: arrayRemove(p.id),
+          },
+          { merge: true }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await setDoc(
+          doc(db, 'users', user.uid),
+          {
+            likedPrograms: arrayUnion(p.id),
+          },
+          { merge: true }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }
   return (
     <Box
@@ -49,7 +65,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
         '&:hover': {
           backgroundColor:
             theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.cyan[1],
-          boxShadow: '12px 12px 24px  #0f0f0f, -4px -4px 8px #2c4c5a ',
+          boxShadow: '16px 16px 24px  #0f0f0f, -4px -4px 8px #1b3742',
         },
       })}
     >
@@ -61,7 +77,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[0],
           borderRadius: theme.radius.md,
           opacity: 0.95,
-          background: 'rgba( 3, 3, 3, 0.9 )',
+          background: p.photoUrl ? 'rgba( 3, 3, 3, 0.9 )' : '',
 
           backdropFilter: ' blur( 8px )',
           '-webkit-backdrop-filter': 'blur( 4px )',
@@ -127,15 +143,24 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           </Group>
           <Group position="left" style={{ flex: '1 0 auto' }}>
             <Text size="xs">Likes</Text>
-            <Text size="xs">{p.commentCount} Comments</Text>
-
-            <ActionIcon
-              onClick={() => {
-                console.log('hello');
-              }}
-            >
-              <AiOutlineHeart />
-            </ActionIcon>
+            <Text size="xs">
+              {p.commentCount} {p.commentCount === 1 ? 'Comment' : 'Comments'}
+            </Text>
+            {user && (
+              <ActionIcon
+                style={{ zIndex: 1000 }}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  likeProgram();
+                }}
+              >
+                {user.likedPrograms.includes(p.id) ? (
+                  <AiFillHeart color="red" />
+                ) : (
+                  <AiOutlineHeart />
+                )}
+              </ActionIcon>
+            )}
           </Group>
         </div>
       </Card>
