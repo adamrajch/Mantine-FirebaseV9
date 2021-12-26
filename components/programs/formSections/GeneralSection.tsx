@@ -48,7 +48,7 @@ export default function GeneralSection({ program, errors }: any): ReactElement {
         onChange={handleChange}
       />
 
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={1} breakpoints={[{ minWidth: 'md', cols: 2 }]}>
         <div>
           <MultiSelect
             name="category"
@@ -87,13 +87,13 @@ export default function GeneralSection({ program, errors }: any): ReactElement {
           </div>
         ))}
       </Group>
-      <Checkbox
+      {/* <Checkbox
         label="Private"
         checked={values.public}
         onChange={(event) => setFieldValue('public', event.currentTarget.checked)}
-      />
+      /> */}
 
-      <Group grow position="left" style={{ alignItems: 'flex-start' }}>
+      <SimpleGrid cols={1} breakpoints={[{ minWidth: 'lg', cols: 2 }]} my={12}>
         <TextInput
           autoComplete="false"
           label="Cover Photo URL"
@@ -112,7 +112,7 @@ export default function GeneralSection({ program, errors }: any): ReactElement {
             fallback={<div>No valid image </div>}
           />
         )}
-      </Group>
+      </SimpleGrid>
     </Group>
   );
 }

@@ -45,6 +45,11 @@ export default function App(props: AppProps) {
                 width: '100%',
               },
             },
+            Text: {
+              root: {
+                fontSize: matches ? 18 : 13,
+              },
+            },
             Group: {
               root: {
                 padding: 0,

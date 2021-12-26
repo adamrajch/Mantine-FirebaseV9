@@ -72,13 +72,11 @@ export default function Layout({ children }: Props) {
           </Navbar.Section>
           <Divider my="sm" />
           <Navbar.Section grow>
-            {user ? (
-              <Group position="left" direction="column" spacing={0}>
-                {userLinks.map((g) => (
-                  <NavBarLink key={g.href} href={g.href} title={g.title} />
-                ))}
-              </Group>
-            ) : null}
+            <Group position="left" direction="column" spacing={0}>
+              {userLinks.map((g) => (
+                <NavBarLink key={g.href} href={g.href} title={g.title} />
+              ))}
+            </Group>
           </Navbar.Section>
           <Navbar.Section>
             {user ? (

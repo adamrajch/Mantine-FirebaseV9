@@ -338,14 +338,28 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
       <FieldArray
         name="blocks"
         render={(blockHelpers) => (
-          <Tabs variant="outline">
+          <Tabs
+            variant="outline"
+            onTabChange={(ti) => {
+              if (ti === values.blocks.length) {
+                blockHelpers.push(newBlock);
+              }
+            }}
+          >
             {values.blocks.map((block: any, i: number) => (
               <Tabs.Tab key={i} label={block.name}>
                 <div>
                   <FieldArray
                     name={`blocks[${i}].weeks`}
                     render={(weekHelpers) => (
-                      <Tabs variant="pills">
+                      <Tabs
+                        variant="pills"
+                        onTabChange={(ti) => {
+                          if (ti === values.blocks[i].weeks.length) {
+                            weekHelpers.push(getNewWeek(i));
+                          }
+                        }}
+                      >
                         {values.blocks[i].weeks &&
                           values.blocks[i].weeks.length > 0 &&
                           values.blocks[i].weeks.map((week: any, w: number) => (
@@ -360,7 +374,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
                           ))}
                         <Tabs.Tab
                           label={values.blocks[i].weeks.length < 1 ? '+ Add Week' : '+'}
-                          onClick={() => weekHelpers.push(getNewWeek(i))}
+                          // onClick={() => weekHelpers.push(getNewWeek(i))}
                         ></Tabs.Tab>
                       </Tabs>
                     )}
@@ -370,7 +384,7 @@ export default function DynamicTemplateForm({ blockHelpers }: any): ReactElement
             ))}
             <Tabs.Tab
               label={values.blocks.length < 1 ? 'Add Block' : '+'}
-              onClick={() => blockHelpers.push(newBlock)}
+              // onClick={() => blockHelpers.push(newBlock)}
             ></Tabs.Tab>
           </Tabs>
         )}

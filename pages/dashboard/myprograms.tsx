@@ -57,7 +57,9 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
           My Programs
         </Title>
         <Group position="center" direction="column" grow>
-          {programs.length > 0 && !loading ? <ProgramList programsProps={programs} /> : <Loader />}
+          {loading && <Loader />}
+          {!loading && programs.length > 0 && <ProgramList programsProps={programs} />}
+          {!loading && !programs.length && <div>No programs! </div>}
         </Group>
       </Container>
     </Layout>

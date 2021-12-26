@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import React, { ReactElement } from 'react';
-import { withAuthModal } from '../components/auth/Auth';
 import { useAuth } from '../context/auth';
+import { WithAuthModal } from './auth/Auth';
 
 function AuthButton({ openAuthModal }: any): ReactElement {
   const { user } = useAuth();
@@ -16,4 +16,4 @@ function AuthButton({ openAuthModal }: any): ReactElement {
   return <Button onClick={() => handleClick()}>Auth Button</Button>;
 }
 
-export default withAuthModal(AuthButton);
+export default WithAuthModal(AuthButton);

@@ -114,7 +114,7 @@ const AuthModal = ({ isOpen, onClose, type, onSubmit }: any) => {
   );
 };
 
-export const withAuthModal = (Component: any) => (props: any) => {
+export const WithAuthModal = (Component: any) => (props: any) => {
   const [opened, setOpened] = useState(false);
   const { signInWithEmail } = useAuth();
   const notifications = useNotifications();

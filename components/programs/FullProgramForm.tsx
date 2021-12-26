@@ -10,7 +10,6 @@ import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import GeneralSection from './formSections/GeneralSection';
 import TemplateTabs from './formSections/TemplateTabs';
-import RichText from './RichText';
 
 const ProgramSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
@@ -64,8 +63,6 @@ export default function FullProgramForm({
   const [submitLoading, setSubmitLoading] = useState(false);
   const notifications = useNotifications();
   const router = useRouter();
-  // console.log('programAuthor ', programAuthor);
-  // console.log('user ', user);
 
   const initialValues: Program = program
     ? program.template
@@ -369,17 +366,14 @@ export default function FullProgramForm({
                 </Tab>
               )}
 
-              {/* <Tab label="View As Text">
-                <TemplateText values={values} />
-              </Tab> */}
               <Tab label="Program">
                 <TemplateTabs values={values} />
               </Tab>
-              <Tab label="Summary">
+              {/* <Tab label="Summary">
                 <div>
                   <RichText value={value} onChange={onChange} />
                 </div>
-              </Tab>
+              </Tab> */}
             </Tabs>
             <Group position="right" my={40}>
               <Button variant="outline" type="submit" loading={submitLoading}>

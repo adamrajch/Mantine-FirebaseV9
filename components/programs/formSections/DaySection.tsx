@@ -14,6 +14,7 @@ import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineCopy, AiOutlineDelete, AiOutlinePlus } from 'react-icons/ai';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
+import { RiZzzFill } from 'react-icons/ri';
 import { Lift, Program } from '../../../types/types';
 import LiftSection from './LiftSection';
 const newLift: Lift = {
@@ -86,7 +87,7 @@ export default function DaySection({
                   onChange={handleChange}
                 />
 
-                <Group position="right" noWrap spacing={0}>
+                <Group position="right" noWrap spacing={4}>
                   <Tooltip label="Edit Summary" color="cyan" withArrow>
                     <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                       {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].summary.length ? (
@@ -112,6 +113,16 @@ export default function DaySection({
                   >
                     Lift
                   </Button>
+                  <ActionIcon
+                    size="lg"
+                    color="cyan"
+                    onClick={() => {
+                      console.log('rest day');
+                    }}
+                  >
+                    <RiZzzFill />
+                  </ActionIcon>
+
                   <ActionIcon
                     size="lg"
                     color="cyan"

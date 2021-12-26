@@ -159,7 +159,9 @@ export default function Comment({ comment, user, programID }: any): ReactElement
                   <Text size="sm" weight={700} color="cyan">
                     {reply.data.name}
                   </Text>
-                  <Text key={reply.id}>{reply.data.comment}</Text>
+                  <Text key={reply.id} size="xs">
+                    {reply.data.comment}
+                  </Text>
                 </Group>
                 <Group position="left">
                   <Text size="xs">

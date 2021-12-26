@@ -535,7 +535,7 @@ export default function WeekSection({
               />
             </Collapse>
 
-            <Group direction="column" mt="md" grow>
+            <Group direction="column" mt="md" grow spacing={matches ? 18 : 0}>
               {values.blocks[blockIndex].weeks[weekIndex].days != undefined &&
                 values.blocks[blockIndex].weeks[weekIndex].days.length > 0 &&
                 values.blocks[blockIndex].weeks[weekIndex].days.map((d, dayIndex: number) => (
