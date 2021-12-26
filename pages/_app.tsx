@@ -64,8 +64,8 @@ export default function App(props: AppProps) {
             },
             Container: {
               root: {
-                paddingRight: matches ? 'md' : 0,
-                paddingLeft: matches ? 'md' : 0,
+                paddingRight: matches ? 'md' : 6,
+                paddingLeft: matches ? 'md' : 6,
               },
             },
           }}

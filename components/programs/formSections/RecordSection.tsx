@@ -16,6 +16,7 @@ export default function RecordSection({
   const { setFieldValue } = useFormikContext();
   const { values }: { values: any } = useFormikContext();
   const matches = useMediaQuery('(min-width: 900px)');
+
   return (
     <FlexContainer justify="flex-start">
       <NumberInput

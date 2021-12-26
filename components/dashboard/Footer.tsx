@@ -34,9 +34,7 @@ export default function Footer(): JSX.Element {
               <Col span={6} md={3}>
                 <Group direction="column" align="left">
                   <Title order={3}>Feedback</Title>
-                  <Text>
-                    What features can be improved and what are you looking forward to see?
-                  </Text>
+                  <Text>What features do you want to see?</Text>
                   <Button variant="outline">Leave Feedback</Button>
                 </Group>
               </Col>
@@ -46,8 +44,13 @@ export default function Footer(): JSX.Element {
               <Divider />
             </div>
             <Group position="left">
-              <Text size="xs" align="left">
-                Built different by Adam Rajchwald
+              <Text
+                size="xs"
+                align="left"
+                variant="gradient"
+                gradient={{ from: 'cyan', to: 'blue', deg: 45 }}
+              >
+                🔨 Built different by Adam Rajchwald
               </Text>
             </Group>
           </Group>
