@@ -1,15 +1,26 @@
-import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Button, Group, Tab, Tabs, Text } from '@mantine/core';
+// import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import { Button, Group, Tab, Tabs, Text, TypographyStylesProvider } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
-import { doc, updateDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import GeneralSection from './formSections/GeneralSection';
 import TemplateTabs from './formSections/TemplateTabs';
+import RichText from './RichText';
 
 const ProgramSchema = Yup.object().shape({
   title: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
@@ -61,8 +72,13 @@ export default function FullProgramForm({
 }: any): JSX.Element {
   const [value, onChange] = useState<string>(program ? program.summary : '');
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [subLoading, setSubLoading] = useState(false);
   const notifications = useNotifications();
   const router = useRouter();
+  useEffect(() => {
+    console.log(user);
+    console.log(programID, user.subscribedPrograms);
+  }, []);
 
   const initialValues: Program = program
     ? program.template
@@ -257,6 +273,58 @@ export default function FullProgramForm({
     console.log(sum);
     return sum;
   }
+
+  async function subscribeToProgram() {
+    setSubLoading(true);
+    await setDoc(doc(db, `subscribed`, `${user.uid}-${programID}`), {
+      currentDay: [0, 0, 0],
+      paused: false,
+      completed: false,
+      author: program.author,
+      user: user,
+      userId: user.uid,
+      programId: programID,
+      lastCompletedDay: null,
+      workouts: program.template.blocks,
+    });
+
+    try {
+      await updateDoc(doc(db, 'users', user.uid), {
+        subscribedPrograms: arrayUnion({
+          currentDay: [0, 0, 0],
+          paused: false,
+          completed: false,
+          author: program.author,
+          user: user,
+          userId: user.uid,
+          programId: programID,
+          lastCompletedDay: null,
+          workouts: program.template.blocks,
+        }),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    setSubLoading(false);
+  }
+  async function unsubToProgram() {
+    setSubLoading(true);
+    try {
+      await deleteDoc(doc(db, 'subscribed', `${user.uid}-${programID}`));
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      //get the object which has the programID
+      const pro = user.subscribedPrograms.filter((p: any) => p.programId === programID);
+      console.log(pro);
+      await updateDoc(doc(db, 'users', user.uid), { subscribedPrograms: arrayRemove(pro[0]) });
+    } catch (err) {
+      console.log(err);
+    }
+    setSubLoading(false);
+  }
   return (
     <div>
       <Formik
@@ -280,6 +348,7 @@ export default function FullProgramForm({
                 createdDate: serverTimestamp(),
                 updatedDate: serverTimestamp(),
                 template: values,
+                activeCount: 0,
               })
                 .then((docRef) => {
                   router.push(`/programs/${docRef.id}`);
@@ -369,13 +438,41 @@ export default function FullProgramForm({
               <Tab label="Program">
                 <TemplateTabs values={values} />
               </Tab>
-              {/* <Tab label="Summary">
-                <div>
+              {!program || programAuthor?.uid === user?.uid ? (
+                <Tab label="Summary">
                   <RichText value={value} onChange={onChange} />
-                </div>
-              </Tab> */}
+                </Tab>
+              ) : (
+                <>
+                  {program.summary.length ? (
+                    <Tab label="Summary">
+                      <TypographyStylesProvider>
+                        <div dangerouslySetInnerHTML={{ __html: program.summary }} />
+                      </TypographyStylesProvider>
+                    </Tab>
+                  ) : null}
+                </>
+              )}
             </Tabs>
             <Group position="right" my={40}>
+              {/* {program && !user.subscribedPrograms.some((e: any) => e.programId === programID) && (
+                <Button onClick={() => subscribeToProgram()} loading={subLoading}>
+                  {!subLoading && 'Subscribe'}
+                </Button>
+              )} */}
+              {program &&
+                user.subscribedPrograms.filter((e: any) => e.programId === programID).length ===
+                  0 && (
+                  <Button onClick={() => subscribeToProgram()} loading={subLoading}>
+                    {!subLoading && 'Subscribe'}
+                  </Button>
+                )}
+
+              {program && user.subscribedPrograms.some((e: any) => e.programId === programID) && (
+                <Button onClick={() => unsubToProgram()} loading={subLoading}>
+                  {!subLoading && 'Unsubscribe'}
+                </Button>
+              )}
               <Button variant="outline" type="submit" loading={submitLoading}>
                 {program ? 'Save' : 'Create'}
               </Button>

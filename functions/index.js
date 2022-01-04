@@ -55,29 +55,62 @@ exports.deleteComment = functions.firestore
   });
 
 //update proram Heart if user likes/ decrement if not
-exports.incrementProgramHeart = functions.firestore
-  .document('users/{userId}')
-  .onUpdate(async (change, context) => {
-    const newArr = change.after.data().likedPrograms;
-    const prevArr = change.before.data().likedPrograms;
+// exports.incrementProgramHeart = functions.firestore
+//   .document('users/{userId}')
+//   .onUpdate(async (change, context) => {
+//     const newArr = change.after.data().likedPrograms;
+//     const prevArr = change.before.data().likedPrograms;
 
-    const programID = change.data().programID;
-    const program = await db.doc(`programs/${programID}`).get();
-    if (newArr.length > prevArr.length) {
-      return db.doc(`programs/${programID}`).set(
-        {
-          heartCount: program.data().heartCount + 1,
-        },
-        { merge: true }
-      );
-    } else if (newArr.length < prevArr.length) {
-      return db.doc(`programs/${programID}`).set(
-        {
-          heartCount: program.data().heartCount - 1,
-        },
-        { merge: true }
-      );
-    } else {
-      return;
-    }
+//     const programID = change.data().programID;
+//     const program = await db.doc(`programs/${programID}`).get();
+//     if (newArr.length > prevArr.length) {
+//       return db.doc(`programs/${programID}`).set(
+//         {
+//           heartCount: program.data().heartCount + 1,
+//         },
+//         { merge: true }
+//       );
+//     } else if (newArr.length < prevArr.length) {
+//       return db.doc(`programs/${programID}`).set(
+//         {
+//           heartCount: program.data().heartCount - 1,
+//         },
+//         { merge: true }
+//       );
+//     } else {
+//       return;
+//     }
+//   });
+
+//add subscribed program to user document
+exports.addSubscribedProgram = functions.firestore
+  .document('subscribed/{subId}')
+  .onCreate(async (snap, context) => {
+    const subbedProgram = snap.data();
+    const subbedProgramId = context.params.subId;
+    const userId = subbedProgram.userId;
+    const programId = subbedProgram.programId;
+
+    const user = await db.doc(`users/${userId}`).get();
+    const program = await db.doc(`programs/${programId}`).get();
+    const userSubbedPrograms = user.data().subscribedPrograms;
+    console.log(userSubbedPrograms);
+    return db
+      .doc(`programs/${programId}`)
+      .set({ activeCount: program.data().activeCount + 1 }, { merge: true });
+  });
+
+//unsubscribe from a subscription
+exports.unsubscribedPrograms = functions.firestore
+  .document('subscribed/{subId}')
+  .onDelete(async (snap, context) => {
+    const subbedProgram = snap.data();
+
+    const programId = subbedProgram.programId;
+
+    const program = await db.doc(`programs/${programId}`).get();
+
+    return db
+      .doc(`programs/${programId}`)
+      .set({ activeCount: program.data().activeCount - 1 }, { merge: true });
   });

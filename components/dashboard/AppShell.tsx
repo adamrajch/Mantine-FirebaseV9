@@ -25,7 +25,6 @@ type Props = {
   children: React.ReactNode;
 };
 const generalLinks = [
-  { href: '/dashboard', title: 'Dashboard' },
   { href: '/programs', title: 'Programs' },
   {
     href: '/library',
@@ -34,8 +33,10 @@ const generalLinks = [
   { href: '/basics', title: 'Learn Basics' },
 ];
 const userLinks = [
+  { href: '/dashboard', title: 'Dashboard' },
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
+  { href: '/dashboard/journal', title: 'Journal' },
 ];
 
 export default function Layout({ children }: Props) {

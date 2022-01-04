@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { getDoc } from 'firebase/firestore';
+import { getDoc, onSnapshot } from 'firebase/firestore';
 import router from 'next/router';
 import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -45,13 +45,17 @@ function useProvideAuth() {
         setUser(user);
       }
 
+      const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+        console.log('Updated user: ', doc.data());
+        setUser(doc.data());
+      });
       nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
       setLoading(false);
-      return user;
+      //return user
+      return unsub;
     } else {
       setUser(false);
       nookies.set(undefined, 'token', '', { path: '/' });
-
       setLoading(false);
       return false;
     }
@@ -133,15 +137,11 @@ function useProvideAuth() {
     return () => unsubscribe();
   }, []);
 
+  //refrsh firebase token
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = auth.currentUser;
       if (user) await user.getIdToken(true);
-
-      //   .then(function (idToken) {
-      //   console.log('refreshed');
-      //   nookies.set(undefined, 'token', idToken, { maxAge: 30 * 24 * 60 * 60, path: '/' });
-      // });
     }, 10 * 60 * 1000);
 
     // clean up setInterval
