@@ -3,29 +3,6 @@ import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import ProgramListCard from '../../components/programs/ProgramListCard';
 export default function ProgramFeed(): ReactElement {
-  // const [programs, setPrograms] = useState<any>([]);
-  // useEffect(() => {
-  //   const q = query(collection(db, `programs`));
-  //   const unsub = onSnapshot(q, (querySnapshot) => {
-  //     setPrograms(
-  //       querySnapshot.docs.map((d) => {
-  //         const docObj = {
-  //           id: d.id,
-  //           data: d.data(),
-  //         };
-  //         return docObj;
-  //       })
-  //     );
-  //   });
-  //   return unsub;
-  // }, []);
-
-  // useEffect(() => {
-  //   if (programs.length) {
-  //     console.log('home programs', programs);
-  //   }
-  // }, [programs]);
-
   const pages = [
     {
       title: 'Featured',

@@ -284,6 +284,7 @@ export default function FullProgramForm({
       user: user,
       userId: user.uid,
       programId: programID,
+      title: program.title,
       lastCompletedDay: null,
       workouts: program.template.blocks,
     });
@@ -298,6 +299,7 @@ export default function FullProgramForm({
           user: user,
           userId: user.uid,
           programId: programID,
+          programTitle: program.title,
           lastCompletedDay: null,
           workouts: program.template.blocks,
         }),

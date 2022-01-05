@@ -2,17 +2,18 @@ import { doc } from '@firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { getDoc } from 'firebase/firestore';
+import { getDoc, onSnapshot } from 'firebase/firestore';
 import router from 'next/router';
 import nookies from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { createUser } from '../hooks/createUser';
+
 type Props = {
   children?: React.ReactNode;
 };
@@ -44,13 +45,17 @@ function useProvideAuth() {
         setUser(user);
       }
 
-      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60 });
+      const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+        console.log('Updated user: ', doc.data());
+        setUser(doc.data());
+      });
+      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
       setLoading(false);
-      return user;
+      //return user
+      return unsub;
     } else {
       setUser(false);
-      nookies.set(undefined, 'token', '', {});
-
+      nookies.set(undefined, 'token', '', { path: '/' });
       setLoading(false);
       return false;
     }
@@ -125,11 +130,22 @@ function useProvideAuth() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
       handleUser(user);
     });
 
     return () => unsubscribe();
+  }, []);
+
+  //refrsh firebase token
+  useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
   }, []);
 
   return {
@@ -142,7 +158,7 @@ function useProvideAuth() {
   };
 }
 const formatUser = async (user: any) => {
-  const token = await user.getIdToken();
+  const token = await user.getIdToken(true);
   return {
     uid: user.uid,
     email: user.email,
