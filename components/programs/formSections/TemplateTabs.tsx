@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Center,
   Col,
   Grid,
   Group,
@@ -186,65 +187,69 @@ export default function TemplateTabs({ values }: any): ReactElement {
                                   </div>
                                 </div>
 
-                                {day.summary != undefined && day.summary.length > 0 && (
-                                  <Text size="sm">Summary: {day.summary}</Text>
-                                )}
-
-                                <Table highlightOnHover>
-                                  <thead>
-                                    <tr>
-                                      <th>Movement</th>
-                                      <th>Sets</th>
-                                      <th>Reps</th>
-                                      <th>RPE</th>
-                                      <th>%</th>
-                                      <th>Load</th>
-                                      <th>Note</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {values.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 &&
+                                {day.rest ? (
+                                  <Center>{/* <Title order={2}>Rest Day</Title> */}</Center>
+                                ) : (
+                                  <>
+                                    <Table highlightOnHover>
+                                      <thead>
+                                        <tr>
+                                          <th>Movement</th>
+                                          <th>Sets</th>
+                                          <th>Reps</th>
+                                          <th>RPE</th>
+                                          <th>%</th>
+                                          <th>Load</th>
+                                          <th>Note</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {values.blocks[i].weeks[w].days[dayIndex].lifts.length >
+                                          0 &&
+                                          values.blocks[i].weeks[w].days[dayIndex].lifts !==
+                                            undefined &&
+                                          values.blocks[i].weeks[w].days[dayIndex].lifts.map(
+                                            (l: any, liftIndex: number) => (
+                                              <React.Fragment key={liftIndex}>
+                                                {l.records.map((t: any, tIndex: number) => (
+                                                  <tr key={tIndex}>
+                                                    <td>{tIndex == 0 && l.name}</td>
+                                                    <td>{t.sets}</td>
+                                                    <td>{t.reps}</td>
+                                                    <td>{t.rpe}</td>
+                                                    <td>{t.percent}</td>
+                                                    <td>{t.load}</td>
+                                                    <td>
+                                                      {tIndex == 0 && l.note && (
+                                                        <Tooltip
+                                                          wrapLines
+                                                          withArrow
+                                                          transition="fade"
+                                                          transitionDuration={200}
+                                                          label={l.note}
+                                                        >
+                                                          <FaRegStickyNote color="cyan" />
+                                                        </Tooltip>
+                                                      )}
+                                                    </td>
+                                                  </tr>
+                                                ))}
+                                              </React.Fragment>
+                                            )
+                                          )}
+                                      </tbody>
+                                    </Table>
+                                    {values.blocks[i].weeks[w].days[dayIndex].lifts &&
                                       values.blocks[i].weeks[w].days[dayIndex].lifts !==
                                         undefined &&
-                                      values.blocks[i].weeks[w].days[dayIndex].lifts.map(
-                                        (l: any, liftIndex: number) => (
-                                          <React.Fragment key={liftIndex}>
-                                            {l.records.map((t: any, tIndex: number) => (
-                                              <tr key={tIndex}>
-                                                <td>{tIndex == 0 && l.name}</td>
-                                                <td>{t.sets}</td>
-                                                <td>{t.reps}</td>
-                                                <td>{t.rpe}</td>
-                                                <td>{t.percent}</td>
-                                                <td>{t.load}</td>
-                                                <td>
-                                                  {tIndex == 0 && l.note && (
-                                                    <Tooltip
-                                                      wrapLines
-                                                      withArrow
-                                                      transition="fade"
-                                                      transitionDuration={200}
-                                                      label={l.note}
-                                                    >
-                                                      <FaRegStickyNote color="cyan" />
-                                                    </Tooltip>
-                                                  )}
-                                                </td>
-                                              </tr>
-                                            ))}
-                                          </React.Fragment>
-                                        )
-                                      )}
-                                  </tbody>
-                                </Table>
-                                {values.blocks[i].weeks[w].days[dayIndex].lifts &&
-                                  values.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
-                                  values.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
-                                    <Group>
-                                      <div>Total Sets: {calcTotalSets(i, w, dayIndex)}</div>
-                                      <div>Total Reps: {calcTotalReps(i, w, dayIndex)}</div>
-                                    </Group>
-                                  )}
+                                      values.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
+                                        <Group>
+                                          <div>Total Sets: {calcTotalSets(i, w, dayIndex)}</div>
+                                          <div>Total Reps: {calcTotalReps(i, w, dayIndex)}</div>
+                                        </Group>
+                                      )}{' '}
+                                  </>
+                                )}
                               </Group>
                             </Col>
                           ))}

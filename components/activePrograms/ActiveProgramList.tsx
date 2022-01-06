@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Title } from '@mantine/core';
+import { ActionIcon, Box, Button, Group, Title } from '@mantine/core';
 import router from 'next/router';
 import React, { ReactElement, useEffect } from 'react';
 import { BiLinkExternal } from 'react-icons/bi';
@@ -15,6 +15,7 @@ export default function ActiveProgramList({ user }: any): ReactElement {
           <Group position="apart" grow>
             <Title order={4}>{p.programTitle}</Title>
             <Group>
+              <Button>UnSub</Button>
               <ActionIcon
                 onClick={() => router.push(`/dashboard/activity/${user.uid}-${p.programId}`)}
               >

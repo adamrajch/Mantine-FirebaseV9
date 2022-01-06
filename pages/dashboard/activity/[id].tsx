@@ -1,3 +1,4 @@
+import { Container } from '@mantine/core';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,11 @@ export default function ProgramActivityPage({ id }: { id: string }): JSX.Element
 
     return unsub;
   }, []);
-  return <Layout>{program && <ActivityDash program={program} />}</Layout>;
+  return (
+    <Layout>
+      <Container size="md">{program && <ActivityDash program={program} />} </Container>
+    </Layout>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }: any) => {

@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
+import { BasicWeek } from './FormConstants';
 import GeneralSection from './formSections/GeneralSection';
 import TemplateTabs from './formSections/TemplateTabs';
 import RichText from './RichText';
@@ -45,6 +46,7 @@ type Program = {
       days: Array<{
         name: string;
         summary: string;
+        rest: boolean;
         lifts?: Array<{
           name: string;
           note: string;
@@ -98,162 +100,7 @@ export default function FullProgramForm({
               {
                 name: 'Week 1',
                 summary: '',
-                days: [
-                  {
-                    name: 'Day 1',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 2',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 3',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 4',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 5',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 6',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Day 7',
-                    summary: '',
-                    lifts: [
-                      {
-                        name: 'New Lift',
-                        type: 'single',
-                        note: '',
-                        records: [
-                          {
-                            type: 'working',
-                            load: null,
-                            sets: 5,
-                            reps: 5,
-                            unit: 'lbs',
-                            rpe: null,
-                            percent: null,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
+                days: BasicWeek,
               },
             ],
           },
@@ -276,8 +123,25 @@ export default function FullProgramForm({
 
   async function subscribeToProgram() {
     setSubLoading(true);
+    const b = program.template.blocks;
+    let workouts = [];
+    for (let i = 0; i < b.length; i++) {
+      for (let k = 0; k < b[i].weeks.length; k++) {
+        for (let j = 0; j < b[i].weeks[k].days.length; j++) {
+          workouts.push({
+            blockIndex: i,
+            weekIndex: k,
+            dayIndex: j,
+            lifts: b[i].weeks[k].days[j].lifts,
+            dayName: b[i].weeks[k].days[j].name,
+          });
+        }
+      }
+    }
+
     await setDoc(doc(db, `subscribed`, `${user.uid}-${programID}`), {
       currentDay: [0, 0, 0],
+      currentIndex: 0,
       paused: false,
       completed: false,
       author: program.author,
@@ -286,7 +150,8 @@ export default function FullProgramForm({
       programId: programID,
       title: program.title,
       lastCompletedDay: null,
-      workouts: program.template.blocks,
+      template: program.template.blocks,
+      workouts: workouts,
     });
 
     try {
@@ -301,14 +166,18 @@ export default function FullProgramForm({
           programId: programID,
           programTitle: program.title,
           lastCompletedDay: null,
-          workouts: program.template.blocks,
+          template: program.template.blocks,
+          workouts: workouts,
         }),
       });
     } catch (err) {
       console.log(err);
     }
+
     setSubLoading(false);
+    router.push(`/dashboard/activity/${user.uid}-${programID}`);
   }
+
   async function unsubToProgram() {
     setSubLoading(true);
     try {
