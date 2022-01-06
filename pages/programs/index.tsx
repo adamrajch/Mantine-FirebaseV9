@@ -69,7 +69,7 @@ export default function ProgramFeed(): ReactElement {
           Find Programs
         </Title>
         {/* <ProgramsNav /> */}
-        <Group direction="column">
+        <Group direction="column" grow>
           <Title order={2}>Category</Title>
           <SimpleGrid
             spacing="lg"
@@ -86,6 +86,7 @@ export default function ProgramFeed(): ReactElement {
 
           <Title order={2}>Experience</Title>
           <SimpleGrid
+            spacing="lg"
             breakpoints={[
               { minWidth: 'sm', cols: 1, spacing: 'sm' },
               { minWidth: 'md', cols: 2, spacing: 'lg' },

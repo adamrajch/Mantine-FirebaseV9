@@ -7,6 +7,7 @@ import { useAuth } from '../../context/auth';
 export default function Create(): ReactElement {
   const { user, loading } = useAuth();
   useEffect(() => {
+    console.log(user);
     if (!(user || loading)) {
       router.push('/login');
     }

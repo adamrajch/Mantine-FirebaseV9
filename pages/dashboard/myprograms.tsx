@@ -14,9 +14,7 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
 
   useEffect(() => {
     getPrograms();
-
-    console.log(user);
-  }, [user, loading]);
+  }, [user]);
 
   async function getPrograms() {
     if (!user) {

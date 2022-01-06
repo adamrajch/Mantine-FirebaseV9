@@ -12,7 +12,7 @@ export default function ActiveProgramList({ user }: any): ReactElement {
       <Title order={2}>Active Programs</Title>
       <Group direction="column" grow>
         {user.subscribedPrograms.map((p: any) => (
-          <Group position="apart" grow>
+          <Group position="apart" grow key={p.programId}>
             <Title order={4}>{p.programTitle}</Title>
             <Group>
               <Button>UnSub</Button>

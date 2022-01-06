@@ -8,7 +8,6 @@ export default function ActivityDash({ program }: any): ReactElement {
   const curr = program.currentDay;
   const blocks = program.template;
   const { workouts, currentIndex } = program;
-  console.log(blocks);
 
   const [currIndex, setCurrIndex] = useState<number>(currentIndex);
 
