@@ -23,6 +23,7 @@ export default function GenerateForm({
 
   const { values }: { values: Program } = useFormikContext();
   const numWeeks = values.blocks[blockIndex].weeks.length;
+  const thisWeek = values.blocks[blockIndex].weeks[currentWeek];
   function handleChange(e: any) {
     // e.preventDefault();
     console.log(e);
@@ -37,8 +38,8 @@ export default function GenerateForm({
       for (let i = 0; i < weeks; i++) {
         weekHelpers.push({
           name: `Week ${numWeeks + i + 1}`,
-          summary: currentWeek.summary,
-          days: currentWeek.days,
+          summary: thisWeek.summary,
+          days: thisWeek.days,
         });
       }
       notifications.showNotification({

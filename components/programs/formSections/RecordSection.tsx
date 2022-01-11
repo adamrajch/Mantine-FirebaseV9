@@ -122,31 +122,7 @@ export default function RecordSection({
         icon={matches && <span>%</span>}
         hideControls={!matches}
       />
-      {/* <NumberInput
-        autoComplete="false"
-        min={0}
-        step={45}
-        max={9999}
-        value={
-          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
-            recordIndex
-          ].load
-        }
-        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].load`}
-        onChange={(value) =>
-          setFieldValue(
-            `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].load`,
-            value
-          )
-        }
-        styles={{
-          icon: {
-            fontSize: 12,
-          },
-        }}
-        icon={matches && <span>load</span>}
-        hideControls={!matches}
-      /> */}
+
       <Select
         value={
           values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
@@ -164,8 +140,6 @@ export default function RecordSection({
           { label: 'kilo', value: 'kilo' },
           { label: 'time', value: 'seconds' },
         ]}
-        // rightSectionProps={}
-        // rightSectionWidth={matches ? 0 : 0}
       />
       <ActionIcon onClick={() => recordHelpers.remove(recordIndex)}>
         <MdOutlineCancel color="#ba261c" />

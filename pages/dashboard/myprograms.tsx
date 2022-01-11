@@ -1,6 +1,5 @@
-import { collection, orderBy, query, where } from '@firebase/firestore';
 import { Container, Group, Title } from '@mantine/core';
-import { onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import Loader from '../../components/Loader';

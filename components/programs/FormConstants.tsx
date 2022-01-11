@@ -6,11 +6,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -28,11 +26,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -50,11 +46,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -72,11 +66,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -94,11 +86,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -116,11 +106,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -138,11 +126,9 @@ export const BasicWeek = [
     lifts: [
       {
         name: 'New Lift',
-        type: 'single',
         note: '',
         records: [
           {
-            type: 'working',
             sets: 5,
             reps: 5,
             unit: 'lbs',
@@ -161,7 +147,6 @@ export const BasicLifts = [
     note: '',
     records: [
       {
-        type: 'working',
         sets: 5,
         reps: 5,
         unit: 'lbs',

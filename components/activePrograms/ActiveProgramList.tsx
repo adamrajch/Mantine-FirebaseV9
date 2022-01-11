@@ -8,8 +8,24 @@ export default function ActiveProgramList({ user }: any): ReactElement {
 
   async function fetchActivePrograms() {}
   return (
-    <Box>
-      <Title order={2}>Active Programs</Title>
+    <Box
+      sx={(theme) => ({
+        flexGrow: 1,
+        padding: 8,
+        borderRadius: theme.radius.md,
+        cursor: 'pointer',
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+        boxShadow: '16px 16px 22px  #0f0f0f, -4px -4px 6px #1b3742',
+        '&:hover': {
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[1],
+          boxShadow: '16px 16px 22px  #0f0f0f, -4px -4px 6px #1b3742',
+        },
+      })}
+    >
+      <Title order={2} align="center">
+        Active Programs
+      </Title>
       <Group direction="column" grow>
         {user.subscribedPrograms.map((p: any) => (
           <Group position="apart" grow key={p.programId}>

@@ -79,7 +79,6 @@ export default function FullProgramForm({
   const router = useRouter();
   useEffect(() => {
     console.log(user);
-    console.log(programID, user.subscribedPrograms);
   }, []);
 
   const initialValues: Program = program
@@ -87,7 +86,6 @@ export default function FullProgramForm({
     : {
         title: '',
         public: false,
-        // type: 'routine',
         category: [],
         experience: ['beginner', 'intermediate', 'advanced'],
         periodization: [],
@@ -120,10 +118,7 @@ export default function FullProgramForm({
     console.log(sum);
     return sum;
   }
-
-  async function subscribeToProgram() {
-    setSubLoading(true);
-    const b = program.template.blocks;
+  function calculateWorkouts(b: any) {
     let workouts = [];
     for (let i = 0; i < b.length; i++) {
       for (let k = 0; k < b[i].weeks.length; k++) {
@@ -139,6 +134,11 @@ export default function FullProgramForm({
       }
     }
 
+    return workouts;
+  }
+  async function subscribeToProgram() {
+    setSubLoading(true);
+
     await setDoc(doc(db, `subscribed`, `${user.uid}-${programID}`), {
       currentDay: [0, 0, 0],
       currentIndex: 0,
@@ -151,7 +151,7 @@ export default function FullProgramForm({
       title: program.title,
       lastCompletedDay: null,
       template: program.template.blocks,
-      workouts: workouts,
+      workouts: program.workouts,
     });
 
     try {
@@ -167,7 +167,7 @@ export default function FullProgramForm({
           programTitle: program.title,
           lastCompletedDay: null,
           template: program.template.blocks,
-          workouts: workouts,
+          workouts: program.workouts,
         }),
       });
     } catch (err) {
@@ -202,6 +202,7 @@ export default function FullProgramForm({
         initialValues={initialValues}
         onSubmit={async (values) => {
           console.log(values);
+          //create a program
           if (!program || program === undefined) {
             try {
               setSubmitLoading(true);
@@ -220,6 +221,7 @@ export default function FullProgramForm({
                 updatedDate: serverTimestamp(),
                 template: values,
                 activeCount: 0,
+                workouts: calculateWorkouts(values.blocks),
               })
                 .then((docRef) => {
                   router.push(`/programs/${docRef.id}`);
@@ -239,6 +241,7 @@ export default function FullProgramForm({
               console.log('from create : ', error);
             }
           } else {
+            //update existing program
             try {
               const docRef = doc(db, 'programs', programID);
               const updatedProgram = {
@@ -251,6 +254,7 @@ export default function FullProgramForm({
                 periodization: values.periodization,
                 updatedDate: serverTimestamp(),
                 photoUrl: values.photoUrl,
+                workouts: calculateWorkouts(values.blocks),
               };
               await updateDoc(docRef, updatedProgram);
               setSubmitLoading(false);
@@ -349,7 +353,7 @@ export default function FullProgramForm({
               </Button>
             </Group>
 
-            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+            <pre>{JSON.stringify(values, null, 2)}</pre>
           </form>
         )}
       </Formik>

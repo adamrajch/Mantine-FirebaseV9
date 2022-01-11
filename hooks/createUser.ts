@@ -9,6 +9,7 @@ export async function createUser(uid: string, data: any) {
       likedPrograms: [],
       savedPrograms: [],
       subscribedPrograms: [],
+      recentWorkouts: [],
       ...data,
     },
     { merge: true }

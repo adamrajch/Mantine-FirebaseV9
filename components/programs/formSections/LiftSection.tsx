@@ -25,7 +25,6 @@ export default function LiftSection({
     unit: 'lbs',
     rpe: null,
     percent: null,
-    load: null,
   };
   return (
     <div>
@@ -37,7 +36,6 @@ export default function LiftSection({
             <Box
               sx={(theme) => ({
                 width: '100%',
-
                 marginTop: 2,
                 marginBottom: 2,
                 borderRadius: 8,
@@ -104,33 +102,6 @@ export default function LiftSection({
                   onChange={handleChange}
                 />
               </Collapse>
-              {/* {!matches && (
-                <Grid columns={21}>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs">sets</Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs" style={{ paddingBottom: 0 }}>
-                      reps
-                    </Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs">rpe</Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs">%</Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs">load</Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <Text size="xs">unit</Text>
-                  </Col>
-                  <Col span={3} style={{ paddingBottom: 0 }}>
-                    <></>
-                  </Col>
-                </Grid>
-              )} */}
 
               <Group direction="column" mt="md">
                 {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]

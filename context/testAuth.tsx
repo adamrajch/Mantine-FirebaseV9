@@ -31,39 +31,7 @@ function useProvideAuth() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
 
-  // const handleUser = async (rawUser: any) => {
-  //   if (rawUser) {
-  //     const user = await formatUser(rawUser);
-  //     const { token, ...userWithoutToken } = user;
-  //     const docRef = doc(db, 'users', user.uid);
-  //     const docSnap = await getDoc(docRef);
-  //     //check if user exists, set the user or if it doesnt create one
-  //     if (docSnap.exists()) {
-  //       // console.log('Document data:', docSnap.data());
-  //       setUser(docSnap.data());
-  //     } else {
-  //       createUser(user.uid, userWithoutToken);
-  //       setUser(user);
-  //     }
-
-  //     const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-  //       console.log('Updated user: ', doc.data());
-  //       setUser(doc.data());
-  //     });
-  //     nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
-  //     setLoading(false);
-  //     //return user
-  //     return unsub;
-  //   } else {
-  //     setUser(false);
-  //     nookies.set(undefined, 'token', '', { path: '/' });
-  //     setLoading(false);
-  //     return false;
-  //   }
-  // };
-
   const createUserWithEmail = (email: string, password: string) => {
-    setLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -83,8 +51,6 @@ function useProvideAuth() {
   };
 
   const signinWithEmail = (email: string, password: string) => {
-    setLoading(true);
-
     return signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         handleUser(userCredential.user);
@@ -99,8 +65,6 @@ function useProvideAuth() {
   };
 
   const signinWithGoogle = (redirect: any) => {
-    setLoading(true);
-
     return signInWithPopup(auth, new GoogleAuthProvider())
       .then((response) => {
         handleUser(response.user);
@@ -132,52 +96,49 @@ function useProvideAuth() {
 
   const handleUser = async (rawUser: any) => {
     if (rawUser) {
-      const user = await formatUser(rawUser);
-      const { token, ...userWithoutToken } = user;
-      const docRef = doc(db, 'users', user.uid);
+      const formattedUser = await formatUser(rawUser);
+      const { token, ...userWithoutToken } = formattedUser;
+      const docRef = doc(db, 'users', formattedUser.uid);
       const docSnap = await getDoc(docRef);
       //check if user exists, set the user or if it doesnt create one
       if (!docSnap.exists()) {
-        createUser(user.uid, userWithoutToken);
+        createUser(formattedUser.uid, userWithoutToken);
       }
 
-      setProfile(user);
-      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
-      setLoading(false);
+      setProfile(formattedUser);
+      nookies.set(undefined, 'token', token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
     } else {
       setProfile(null);
       nookies.set(undefined, 'token', '', { path: '/' });
-      setLoading(false);
     }
-    console.log('auth user:', profile);
   };
 
   useEffect(() => {
-    const unsubscribe = onIdTokenChanged(auth, async (user) => {
-      handleUser(user);
+    const unsubscribe = onIdTokenChanged(auth, async (authUser) => {
+      handleUser(authUser);
     });
 
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
+    let unsub;
     if (profile) {
-      const unsub = onSnapshot(doc(db, 'users', profile.uid), (doc) => {
-        console.log('Updated user: ', doc.data());
+      unsub = onSnapshot(doc(db, 'users', profile.uid), (doc) => {
         setUser(doc.data());
       });
-      return unsub;
     } else {
       setUser(null);
     }
-    console.log('user hook: ', user);
+    setLoading(false);
+    return unsub;
   }, [profile]);
 
   //refrsh firebase token
   useEffect(() => {
     const handle = setInterval(async () => {
-      const user = auth.currentUser;
-      if (user) await profile.getIdToken(true);
+      const tokenUser = auth.currentUser;
+      if (tokenUser) await tokenUser.getIdToken(true);
     }, 10 * 60 * 1000);
 
     // clean up setInterval
@@ -186,6 +147,7 @@ function useProvideAuth() {
 
   return {
     user,
+    profile,
     loading,
     signinWithEmail,
     signinWithGoogle,

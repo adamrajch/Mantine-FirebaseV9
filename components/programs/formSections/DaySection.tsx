@@ -22,12 +22,9 @@ import { BasicLifts } from '../FormConstants';
 import LiftSection from './LiftSection';
 const newLift: Lift = {
   name: 'New Lift',
-  type: 'single',
   note: '',
   records: [
     {
-      type: 'working',
-      load: null,
       sets: 5,
       reps: 5,
       unit: 'lbs',

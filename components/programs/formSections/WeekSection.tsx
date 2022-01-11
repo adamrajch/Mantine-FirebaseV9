@@ -211,11 +211,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -233,11 +231,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -255,11 +251,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -277,11 +271,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -299,11 +291,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -321,11 +311,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -343,11 +331,9 @@ export default function WeekSection({
           lifts: [
             {
               name: 'New Lift',
-              type: 'single',
               note: '',
               records: [
                 {
-                  type: 'working',
                   load: null,
                   sets: 5,
                   reps: 5,
@@ -416,7 +402,7 @@ export default function WeekSection({
               <Group position="right" spacing={matches ? 12 : 4} noWrap>
                 <Tooltip label="Edit Summary" color="cyan" withArrow>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
-                    {values.blocks[blockIndex].weeks[weekIndex].summary.length ? (
+                    {values.blocks[blockIndex].weeks[weekIndex].summary.length > 0 ? (
                       <FaStickyNote />
                     ) : (
                       <FaRegStickyNote />

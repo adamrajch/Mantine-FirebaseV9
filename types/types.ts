@@ -1,16 +1,13 @@
 export type Record = {
-  type: string;
   sets: number;
   reps: number;
   rpe: number | null;
-  load: number | null;
   unit: string;
   percent: number | null;
 };
 
 export type Lift = {
   name: string;
-  type: string;
   note: string;
   records: Record[];
 };
@@ -59,13 +56,10 @@ export type Program = {
         lifts: Array<{
           name: string;
           note: string;
-          type: string;
           records: Array<{
-            type: string;
             sets: number;
             reps: number;
             rpe: number | null;
-            load: number | null;
             unit: string | null;
             percent: number | null;
           }>;

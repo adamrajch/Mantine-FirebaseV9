@@ -34,6 +34,7 @@ const generalLinks = [
 ];
 const userLinks = [
   { href: '/dashboard', title: 'Dashboard' },
+  { href: '/dashboard/post', title: 'Add Workout' },
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
   { href: '/dashboard/journal', title: 'Journal' },
@@ -72,13 +73,20 @@ export default function Layout({ children }: Props) {
             </Group>
           </Navbar.Section>
           <Divider my="sm" />
-          <Navbar.Section grow>
-            <Group position="left" direction="column" spacing={0}>
-              {userLinks.map((g) => (
-                <NavBarLink key={g.href} href={g.href} title={g.title} />
-              ))}
-            </Group>
-          </Navbar.Section>
+          {user ? (
+            <Navbar.Section grow>
+              <Group position="left" direction="column" spacing={0}>
+                {userLinks.map((g) => (
+                  <NavBarLink key={g.href} href={g.href} title={g.title} />
+                ))}
+              </Group>
+            </Navbar.Section>
+          ) : (
+            <Navbar.Section grow>
+              <div></div>
+            </Navbar.Section>
+          )}
+
           <Navbar.Section>
             {user ? (
               <div>
