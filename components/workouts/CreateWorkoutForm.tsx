@@ -1,7 +1,7 @@
 import { Box, Button, Group, Text } from '@mantine/core';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, onSnapshot } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { date } from 'yup';
 import { db } from '../../firebase';
 import WorkoutLiftSection from './WorkoutLiftSection';
@@ -21,6 +21,18 @@ interface MyFormValues {
   }>;
 }
 export default function CreateWorkoutForm({ workout, user }: any): ReactElement {
+  const [list, setList] = useState<any>([]);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
+      console.log('Current data: ', doc.data());
+
+      setList(doc.data().lifts);
+    });
+
+    return unsub;
+  }, []);
+  console.log(user);
   const initialValues: MyFormValues = workout
     ? { lifts: workout.lifts }
     : {
@@ -84,17 +96,26 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
                     Add Lift
                   </Button>
                 </Group>
+                {list.length > 0 && (
+                  <Group direction="column" my="4" spacing="xl">
+                    {values.lifts.length > 0 &&
+                      values.lifts.map((lift, li) => (
+                        <WorkoutLiftSection
+                          key={li}
+                          lift={lift}
+                          li={li}
+                          liftHelpers={liftHelpers}
+                          user={user}
+                          list={list}
+                        />
+                      ))}
 
-                <Group direction="column" my="4" spacing="xl">
-                  {values.lifts.length > 0 &&
-                    values.lifts.map((lift, li) => (
-                      <WorkoutLiftSection key={li} lift={lift} li={li} liftHelpers={liftHelpers} />
-                    ))}
+                    <Button size="md" onClick={() => handleSubmit()}>
+                      Submit
+                    </Button>
+                  </Group>
+                )}
 
-                  <Button size="md" onClick={() => handleSubmit()}>
-                    Submit
-                  </Button>
-                </Group>
                 <pre>{JSON.stringify(values, null, 2)}</pre>
               </Box>
             )}

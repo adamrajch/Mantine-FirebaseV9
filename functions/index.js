@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const liftsList = require('./LiftsData.ts');
 admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -113,4 +114,11 @@ exports.unsubscribedPrograms = functions.firestore
     return db
       .doc(`programs/${programId}`)
       .set({ activeCount: program.data().activeCount - 1 }, { merge: true });
+  });
+exports.addLifts = functions.firestore
+  .document('users/{userId}')
+  .onCreate(async (snap, context) => {
+    const userId = context.params.userId;
+
+    return db.doc(`users/${userId}/lifts/${userId}`).set({ lifts: liftsList });
   });

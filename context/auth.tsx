@@ -42,6 +42,7 @@ function useProvideAuth() {
         setUser(docSnap.data());
       } else {
         createUser(user.uid, userWithoutToken);
+
         setUser(user);
       }
 

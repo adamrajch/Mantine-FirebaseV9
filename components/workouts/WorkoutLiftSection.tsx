@@ -11,13 +11,21 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { arrayUnion, doc, setDoc } from 'firebase/firestore';
 import { FieldArray, useFormikContext } from 'formik';
+import { nanoid } from 'nanoid';
 import React, { ReactElement, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { LiftsData } from './LiftData';
+import { db } from '../../firebase';
 
-export default function WorkoutLiftSection({ li, lift, liftHelpers }: any): ReactElement {
+export default function WorkoutLiftSection({
+  li,
+  lift,
+  liftHelpers,
+  user,
+  list,
+}: any): ReactElement {
   const { values, handleChange, setFieldValue }: any = useFormikContext();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,8 +33,29 @@ export default function WorkoutLiftSection({ li, lift, liftHelpers }: any): Reac
   const [modalLift, setModalLift] = useState<any>(null);
   const [opened, setOpened] = useState(false);
   const [openedNewLift, setOpenedNewLift] = useState(false);
-  const [list, setList] = useState<any>(LiftsData);
+  // const [list, setList] = useState<any>(user.lifts);
   const matches = useMediaQuery('(min-width: 900px)');
+  async function CreateLiftData(q: string) {
+    const newId = nanoid();
+    await setDoc(
+      doc(db, `users/${user.uid}/lifts`, user.uid),
+      {
+        lifts: arrayUnion({
+          name: q,
+          id: newId,
+          value: q,
+          label: q,
+        }),
+      },
+      { merge: true }
+    );
+    setFieldValue(`lifts[${li}]`, {
+      name: q,
+      id: newId,
+      note: values.lifts[li].note,
+      records: values.lifts[li].records,
+    });
+  }
   return (
     <Box
       key={li}
@@ -76,18 +105,35 @@ export default function WorkoutLiftSection({ li, lift, liftHelpers }: any): Reac
                   icon={<BiSearch />}
                   creatable
                   getCreateLabel={(query) => `+ Add ${query}`}
-                  onCreate={(query) => {
-                    //   setList((current: any) => [...current, query]),
-                    setOpenedNewLift(true);
+                  onCreate={(q) => {
+                    let selected = list.find((item: any) => item.value === q);
+                    // setFieldValue(`lifts[${li}]`, {
+                    //   name: q,
+                    //   id: nanoid(),
+                    //   note: values.lifts[li].note,
+                    //   records: values.lifts[li].records,
+                    // });
                   }}
                   onChange={(q) => {
                     let selected = list.find((item: any) => item.value === q);
-                    setFieldValue(`lifts[${li}]`, {
-                      name: q,
-                      id: selected.id,
-                      note: values.lifts[li].note,
-                      records: values.lifts[li].records,
-                    });
+                    if (selected?.id) {
+                      setFieldValue(`lifts[${li}]`, {
+                        name: q,
+                        id: selected.id,
+                        note: values.lifts[li].note,
+                        records: values.lifts[li].records,
+                      });
+                    } else {
+                      //track new lift
+                      CreateLiftData(q);
+                      // setFieldValue(`lifts[${li}]`, {
+                      //   name: q,
+                      //   id: nanoid(),
+                      //   note: values.lifts[li].note,
+                      //   records: values.lifts[li].records,
+                      // });
+                      setOpenedNewLift(true);
+                    }
                   }}
                 />
                 <ActionIcon
