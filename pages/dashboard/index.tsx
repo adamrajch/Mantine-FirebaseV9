@@ -12,7 +12,7 @@ export default function DashboardHome(): JSX.Element {
       {user && (
         <Container size="xl">
           <Title>Welcome {user.name}</Title>
-          <Group position="center" grow style={{ width: '100%' }}>
+          <Group position="center">
             <HistoryList user={user} />
             <ActiveProgramList user={user} />
           </Group>

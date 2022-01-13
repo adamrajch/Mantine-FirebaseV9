@@ -15,11 +15,9 @@ export default function ActiveProgramList({ user }: any): ReactElement {
         borderRadius: theme.radius.md,
         cursor: 'pointer',
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
-        boxShadow: '16px 16px 22px  #0f0f0f, -4px -4px 6px #1b3742',
+        boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
         '&:hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[1],
-          boxShadow: '16px 16px 22px  #0f0f0f, -4px -4px 6px #1b3742',
+          boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
         },
       })}
     >

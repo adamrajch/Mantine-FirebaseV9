@@ -1,12 +1,20 @@
-import { Box, Button, Group, Text } from '@mantine/core';
-import { addDoc, collection, doc, onSnapshot } from 'firebase/firestore';
+import { Box, Button, Group, TextInput } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import dayjs from 'dayjs';
+import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
+import Router from 'next/router';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { date } from 'yup';
+import * as Yup from 'yup';
 import { db } from '../../firebase';
 import WorkoutLiftSection from './WorkoutLiftSection';
 
+const WorkoutSchema = Yup.object().shape({
+  name: Yup.string().min(2, 'Too Short!').max(30, 'Too Long!').required('Required'),
+});
+
 interface MyFormValues {
+  name: string;
   lifts: Array<{
     name: string;
     note: string;
@@ -22,7 +30,7 @@ interface MyFormValues {
 }
 export default function CreateWorkoutForm({ workout, user }: any): ReactElement {
   const [list, setList] = useState<any>([]);
-
+  const [dateInput, setDateInput] = useState<any>(new Date());
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
@@ -34,11 +42,12 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
   }, []);
   console.log(user);
   const initialValues: MyFormValues = workout
-    ? { lifts: workout.lifts }
+    ? { name: workout.name, lifts: workout.lifts }
     : {
+        name: '',
         lifts: [
           {
-            name: 'Lift',
+            name: '',
             id: null,
             note: '',
             records: [
@@ -53,12 +62,23 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
         ],
       };
   async function handleFormSubmit(values: any) {
-    const workoutRef = await addDoc(collection(db, 'workouts'), {
-      date: date,
+    await addDoc(collection(db, 'workouts'), {
+      date: dateInput,
       lifts: values.lifts,
-      name: 'custom',
+      name: values.name,
       user: user.uid,
     });
+
+    let newArr = user.recentWorkouts;
+
+    if (user.recentWorkouts.length >= 5) {
+      newArr.shift();
+    }
+    newArr.push({ date: dateInput, lifts: values.lifts, name: values.name, user: user.uid });
+    await updateDoc(doc(db, 'users', user.uid), {
+      recentWorkouts: newArr,
+    });
+    Router.push('/dashboard');
   }
   return (
     <Formik
@@ -66,21 +86,44 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
       onSubmit={async (values) => {
         handleFormSubmit(values);
       }}
+      enableReinitialize={false}
+      // validateOnChange={false}
+      validateOnBlur={false}
+      validationSchema={WorkoutSchema}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+      {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting }) => (
         <Box>
           <FieldArray name="lifts">
             {(liftHelpers) => (
               <Box>
-                <Group position="apart">
-                  <Text>Date Completed: </Text>
+                <Group position="apart" my={8}>
+                  <Group position="center" style={{ alignItems: 'flex-start' }}>
+                    <TextInput
+                      name="name"
+                      label="Workout Name"
+                      value={values.name}
+                      onChange={handleChange}
+                      required
+                      error={errors.name ? errors.name : false}
+                    />
+
+                    <DatePicker
+                      placeholder="Pick date"
+                      label="Date Performed"
+                      required
+                      value={dateInput}
+                      onChange={setDateInput}
+                      maxDate={dayjs(new Date()).toDate()}
+                    />
+                  </Group>
 
                   <Button
-                    size="md"
+                    size="sm"
+                    variant="outline"
                     onClick={() =>
                       liftHelpers.push({
-                        name: 'Lift',
-                        id: 2,
+                        name: '',
+                        id: null,
                         note: '',
                         records: [
                           {
@@ -92,12 +135,13 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
                         ],
                       })
                     }
+                    style={{ alignSelf: 'center' }}
                   >
                     Add Lift
                   </Button>
                 </Group>
                 {list.length > 0 && (
-                  <Group direction="column" my="4" spacing="xl">
+                  <Group direction="column" spacing="md">
                     {values.lifts.length > 0 &&
                       values.lifts.map((lift, li) => (
                         <WorkoutLiftSection
@@ -110,13 +154,19 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
                         />
                       ))}
 
-                    <Button size="md" onClick={() => handleSubmit()}>
+                    <Button
+                      size="sm"
+                      onClick={() => handleSubmit()}
+                      variant="outline"
+                      loading={isSubmitting}
+                    >
                       Submit
                     </Button>
                   </Group>
                 )}
 
-                <pre>{JSON.stringify(values, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(values, null, 2)}</pre>
+                <pre>{JSON.stringify(errors, null, 2)}</pre> */}
               </Box>
             )}
           </FieldArray>

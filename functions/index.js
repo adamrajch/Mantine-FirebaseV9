@@ -115,6 +115,24 @@ exports.unsubscribedPrograms = functions.firestore
       .doc(`programs/${programId}`)
       .set({ activeCount: program.data().activeCount - 1 }, { merge: true });
   });
+
+// exports.addWorkoutToUser = functions.firestore
+//   .document('workouts/{workoutId}')
+//   .onCreate(async (snap, context) => {
+//     const workoutData = snap.data();
+//     console.log(workoutData);
+//     const user = await db.doc(`users/${workoutData.user}`).get();
+//     console.log('user:', user);
+//     let newArr = user.data().recentWorkouts;
+//     console.log('workouts', newArr);
+//     newArr.push(workoutData);
+//     if (newArr.length >= 5) {
+//       newArr.shift();
+//     }
+
+//     return db.doc(`users/${workoutData.user}`).set({ recentWorkouts: newArr }, { merge: true });
+//   });
+
 exports.addLifts = functions.firestore
   .document('users/{userId}')
   .onCreate(async (snap, context) => {
