@@ -14,9 +14,8 @@ export default function HistoryList({ user }: Props): ReactElement {
   return (
     <Box
       sx={(theme) => ({
-        padding: 8,
+        padding: 16,
         borderRadius: theme.radius.md,
-
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
         boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
         '&:hover': {
@@ -26,11 +25,31 @@ export default function HistoryList({ user }: Props): ReactElement {
     >
       <Group position="apart">
         <Title order={2} align="center">
-          Recent Worouts
+          Recent Workouts
         </Title>
-        <Link href="/dashboard/workouts">
-          <Group spacing={0} style={{ cursor: 'pointer' }}>
-            <Text size="xs">See all </Text>
+        <Link href={`/dashboard/workouts/`}>
+          <Group
+            spacing={0}
+            sx={{
+              cursor: 'pointer',
+              '&:hover': {
+                color: '#14b8f8',
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            <Text
+              size="xs"
+              sx={{
+                cursor: 'pointer',
+                '&:hover': {
+                  color: '#14b8f8',
+                  textDecoration: 'underline',
+                },
+              }}
+            >
+              See all{' '}
+            </Text>
             <ActionIcon>
               <ExternalLinkIcon />
             </ActionIcon>
@@ -45,8 +64,8 @@ export default function HistoryList({ user }: Props): ReactElement {
               <Link href={`/dashboard/workouts/${w.id}`}>
                 <Text
                   weight={500}
-                  style={{ cursor: 'pointer' }}
                   sx={{
+                    cursor: 'pointer',
                     '&:hover': {
                       color: '#14b8f8',
                       textDecoration: 'underline',
@@ -57,7 +76,9 @@ export default function HistoryList({ user }: Props): ReactElement {
                 </Text>
               </Link>
 
-              <Text color="dimmed">{dayjs(w.date.toDate()).fromNow()}</Text>
+              <Text color="dimmed" size="sm">
+                {dayjs(w.date.toDate()).fromNow()}
+              </Text>
             </Group>
           </Box>
         ))}

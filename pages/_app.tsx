@@ -46,9 +46,9 @@ export default function App(props: AppProps) {
               },
             },
             Text: {
-              root: {
-                fontSize: matches ? 16 : 13,
-              },
+              // root: {
+              //   fontSize: matches ? 16 : 13,
+              // },
             },
             Group: {
               root: {

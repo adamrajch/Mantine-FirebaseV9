@@ -67,6 +67,7 @@ export default function WorkoutLiftSection({
                   icon={<BiSearch />}
                   creatable
                   getCreateLabel={(query) => `+ Add ${query}`}
+                  value={values.lifts[li].name}
                   // onCreate={(q) => {
                   //   let selected = list.find((item: any) => item.value === q);
                   // }}

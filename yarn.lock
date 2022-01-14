@@ -1242,6 +1242,16 @@
   "resolved" "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-12.0.7.tgz"
   "version" "12.0.7"
 
+"@node-redis/client@^1.0.0":
+  "integrity" "sha512-C+gkx68pmTnxfV+y4pzasvCH3s4UGHNOAUNhdJxGI27aMdnXNDZct7ffDHBL7bAZSGv9FSwCP5PeYvEIEKGbiA=="
+  "resolved" "https://registry.npmjs.org/@node-redis/client/-/client-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "cluster-key-slot" "1.1.0"
+    "generic-pool" "3.8.2"
+    "redis-parser" "3.0.0"
+    "yallist" "4.0.0"
+
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
   "resolved" "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -2446,6 +2456,11 @@
   "integrity" "sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA=="
   "resolved" "https://registry.npmjs.org/clsx/-/clsx-1.1.1.tgz"
   "version" "1.1.1"
+
+"cluster-key-slot@1.1.0":
+  "integrity" "sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw=="
+  "resolved" "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.1.0.tgz"
+  "version" "1.1.0"
 
 "co@^4.6.0":
   "integrity" "sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ="
@@ -3787,6 +3802,11 @@
     "google-auth-library" "^7.0.0"
     "pumpify" "^2.0.0"
     "stream-events" "^1.0.4"
+
+"generic-pool@3.8.2":
+  "integrity" "sha512-nGToKy6p3PAbYQ7p1UlWl6vSPwfwU6TMSWK7TTu+WUY4ZjyZQGniGGt2oNVvyNSpyZYSB43zMXVLcBm08MTMkg=="
+  "resolved" "https://registry.npmjs.org/generic-pool/-/generic-pool-3.8.2.tgz"
+  "version" "3.8.2"
 
 "gensync@^1.0.0-beta.2":
   "integrity" "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="
@@ -6520,6 +6540,26 @@
   dependencies:
     "picomatch" "^2.2.1"
 
+"redis-errors@^1.0.0":
+  "integrity" "sha1-62LSrbFeTq9GEMBK/hUpOEJQq60="
+  "resolved" "https://registry.npmjs.org/redis-errors/-/redis-errors-1.2.0.tgz"
+  "version" "1.2.0"
+
+"redis-om@^0.1.7":
+  "integrity" "sha512-ujex442x/VCcKDgUqjJQF256IPEbdF+G5661xIblbKeTDFHzmUoSSuYQXeEPE9CmnRfAQ+WC9FGv1wvs0OoKDw=="
+  "resolved" "https://registry.npmjs.org/redis-om/-/redis-om-0.1.7.tgz"
+  "version" "0.1.7"
+  dependencies:
+    "@node-redis/client" "^1.0.0"
+    "ulid" "^2.3.0"
+
+"redis-parser@3.0.0":
+  "integrity" "sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ="
+  "resolved" "https://registry.npmjs.org/redis-parser/-/redis-parser-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "redis-errors" "^1.0.0"
+
 "regenerator-runtime@^0.13.4":
   "integrity" "sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA=="
   "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
@@ -7495,6 +7535,11 @@
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.5.4.tgz"
   "version" "4.5.4"
 
+"ulid@^2.3.0":
+  "integrity" "sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw=="
+  "resolved" "https://registry.npmjs.org/ulid/-/ulid-2.3.0.tgz"
+  "version" "2.3.0"
+
 "unbox-primitive@^1.0.1":
   "integrity" "sha512-tZU/3NqK3dA5gpE1KtyiJUrEB0lxnGkMFHptJ7q6ewdZ8s12QrODwNbhIJStmJkd1QDXa1NRA8aF2A1zk/Ypyw=="
   "resolved" "https://registry.npmjs.org/unbox-primitive/-/unbox-primitive-1.0.1.tgz"
@@ -7872,7 +7917,7 @@
   "resolved" "https://registry.npmjs.org/yallist/-/yallist-2.1.2.tgz"
   "version" "2.1.2"
 
-"yallist@^4.0.0":
+"yallist@^4.0.0", "yallist@4.0.0":
   "integrity" "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A=="
   "resolved" "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz"
   "version" "4.0.0"

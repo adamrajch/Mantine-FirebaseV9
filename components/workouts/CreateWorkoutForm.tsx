@@ -28,7 +28,7 @@ interface MyFormValues {
     }>;
   }>;
 }
-export default function CreateWorkoutForm({ workout, user }: any): ReactElement {
+export default function CreateWorkoutForm({ workout, user, workoutId }: any): ReactElement {
   const [list, setList] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
   useEffect(() => {
@@ -62,22 +62,55 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
         ],
       };
   async function handleFormSubmit(values: any) {
-    await addDoc(collection(db, 'workouts'), {
-      date: dateInput,
-      lifts: values.lifts,
-      name: values.name,
-      user: user.uid,
-    });
+    if (workoutId) {
+      await updateDoc(doc(db, 'workouts', workoutId), {
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+      });
 
-    let newArr = user.recentWorkouts;
+      if (user.recentWorkouts.find((e: any) => e.id === workoutId)) {
+        let arr = user.recentWorkouts.map((p) =>
+          p.id === workoutId
+            ? {
+                date: dateInput,
+                lifts: values.lifts,
+                name: values.name,
+                user: user.uid,
+                id: workoutId,
+              }
+            : p
+        );
 
-    if (user.recentWorkouts.length >= 5) {
-      newArr.shift();
+        await updateDoc(doc(db, 'users', user.uid), {
+          recentWorkouts: arr,
+        });
+      }
+    } else {
+      const docRef = await addDoc(collection(db, 'workouts'), {
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+        user: user.uid,
+      });
+
+      const workoutId = docRef.id;
+      let newArr = user.recentWorkouts;
+
+      if (user.recentWorkouts.length >= 5) {
+        newArr.shift();
+      }
+      newArr.push({
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+        user: user.uid,
+        id: workoutId,
+      });
+      await updateDoc(doc(db, 'users', user.uid), {
+        recentWorkouts: newArr,
+      });
     }
-    newArr.push({ date: dateInput, lifts: values.lifts, name: values.name, user: user.uid });
-    await updateDoc(doc(db, 'users', user.uid), {
-      recentWorkouts: newArr,
-    });
     Router.push('/dashboard');
   }
   return (
@@ -165,8 +198,8 @@ export default function CreateWorkoutForm({ workout, user }: any): ReactElement 
                   </Group>
                 )}
 
-                {/* <pre>{JSON.stringify(values, null, 2)}</pre>
-                <pre>{JSON.stringify(errors, null, 2)}</pre> */}
+                <pre>{JSON.stringify(values, null, 2)}</pre>
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
               </Box>
             )}
           </FieldArray>
