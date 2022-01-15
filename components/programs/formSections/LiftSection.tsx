@@ -1,9 +1,8 @@
-import { ActionIcon, Box, Collapse, Group, Select, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Collapse, Group, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
-import { BiSearch } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
 import RecordSection from './RecordSection';
@@ -27,20 +26,6 @@ export default function LiftSection({
     percent: null,
   };
 
-  const handleCreateLift = async (event) => {
-    const form = new FormData(event.target);
-    const formData = Object.fromEntries(form.entries());
-
-    console.log(formData);
-
-    const res = await fetch('/api/lifts', {
-      body: JSON.stringify(formData),
-      headers: {
-        'Content-type': 'application/json',
-        method: 'POST',
-      },
-    });
-  };
   return (
     <div>
       <FieldArray
@@ -79,32 +64,7 @@ export default function LiftSection({
                   }}
                   size={matches ? 'sm' : 'xs'}
                 />
-                <Select
-                  placeholder="Select Lift"
-                  searchable
-                  data={[{ value: 'hehe', label: 'hehe' }]}
-                  nothingFound="No Lifts"
-                  maxDropdownHeight={200}
-                  icon={<BiSearch />}
-                  creatable
-                  getCreateLabel={(query) => `+ Add ${query}`}
-                  value={
-                    values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].name
-                  }
-                  // onChange={(q) => {
-                  //   let selected = list.find((item: any) => item.value === q);
-                  //   if (selected?.id) {
-                  //     setFieldValue(`lifts[${li}]`, {
-                  //       name: q,
-                  //       id: selected.id,
-                  //       note: values.lifts[li].note,
-                  //       records: values.lifts[li].records,
-                  //     });
-                  //   } else {
-                  //     CreateLiftData(q);
-                  //   }
-                  // }}
-                />
+
                 <Group position="right" spacing={matches ? 6 : 0} noWrap>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note

@@ -17,6 +17,7 @@ import { AiFillFileAdd, AiFillSetting, AiOutlineDelete, AiOutlineEdit } from 're
 import { BiDuplicate } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
+import AddLiftForm from './AddLiftForm';
 import DaySection from './DaySection';
 import GenerateForm from './GenerateForm';
 
@@ -390,7 +391,6 @@ export default function WeekSection({
             </>
             <Group position="apart" noWrap>
               <TextInput
-                // label="Week Name"
                 placeholder="week name"
                 name={`blocks[${blockIndex}].weeks[${weekIndex}].name`}
                 value={values.blocks[blockIndex].weeks[weekIndex].name}
@@ -400,6 +400,7 @@ export default function WeekSection({
                 }}
               />
               <Group position="right" spacing={matches ? 12 : 4} noWrap>
+                <AddLiftForm />
                 <Tooltip label="Edit Summary" color="cyan" withArrow>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].summary.length > 0 ? (
