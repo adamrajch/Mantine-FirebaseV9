@@ -40,7 +40,7 @@ export default function CreateWorkoutForm({ workout, user, workoutId }: any): Re
 
     return unsub;
   }, []);
-  console.log(user);
+
   const initialValues: MyFormValues = workout
     ? { name: workout.name, lifts: workout.lifts }
     : {
@@ -70,7 +70,7 @@ export default function CreateWorkoutForm({ workout, user, workoutId }: any): Re
       });
 
       if (user.recentWorkouts.find((e: any) => e.id === workoutId)) {
-        let arr = user.recentWorkouts.map((p) =>
+        let arr = user.recentWorkouts.map((p: any) =>
           p.id === workoutId
             ? {
                 date: dateInput,
@@ -173,6 +173,7 @@ export default function CreateWorkoutForm({ workout, user, workoutId }: any): Re
                     Add Lift
                   </Button>
                 </Group>
+
                 {list.length > 0 && (
                   <Group direction="column" spacing="md">
                     {values.lifts.length > 0 &&
@@ -198,8 +199,8 @@ export default function CreateWorkoutForm({ workout, user, workoutId }: any): Re
                   </Group>
                 )}
 
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(values, null, 2)}</pre>
+                <pre>{JSON.stringify(errors, null, 2)}</pre> */}
               </Box>
             )}
           </FieldArray>

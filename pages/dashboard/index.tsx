@@ -1,4 +1,4 @@
-import { Container, Group, Title } from '@mantine/core';
+import { Container, Grid } from '@mantine/core';
 import React from 'react';
 import ActiveProgramList from '../../components/activePrograms/ActiveProgramList';
 import Layout from '../../components/dashboard/AppShell';
@@ -11,11 +11,14 @@ export default function DashboardHome(): JSX.Element {
     <Layout>
       {user && (
         <Container size="xl">
-          <Title>Welcome {user.name}</Title>
-          <Group position="center">
-            <HistoryList user={user} />
-            <ActiveProgramList user={user} />
-          </Group>
+          <Grid>
+            <Grid.Col span={4}>
+              <HistoryList user={user} />
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <ActiveProgramList user={user} />
+            </Grid.Col>
+          </Grid>
         </Container>
       )}
     </Layout>

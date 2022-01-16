@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Collapse, Group, Select, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Collapse, Group, Select, Textarea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
@@ -28,7 +28,7 @@ export default function LiftSection({
     percent: null,
   };
 
-  const searchLifts = async (q) => {
+  const searchLifts = async (q: string) => {
     if (q.length > 2) {
       const params = new URLSearchParams({ q });
 
@@ -62,12 +62,6 @@ export default function LiftSection({
               })}
             >
               <Group position="apart" noWrap>
-                <TextInput
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    searchLifts(e.target.value);
-                  }}
-                />
                 <Select
                   placeholder="Select Lift"
                   searchable

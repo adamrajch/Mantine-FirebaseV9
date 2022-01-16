@@ -131,7 +131,6 @@ export default function FullTemplate({ blocks }: any): ReactElement {
                                   <Center>Rest Day</Center>
                                 ) : (
                                   <>
-                                    {' '}
                                     <Table highlightOnHover>
                                       <thead>
                                         <tr>

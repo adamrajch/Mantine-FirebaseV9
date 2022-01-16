@@ -59,7 +59,7 @@ export default function DaySection({
       setFieldValue(`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts`, []);
       setFieldValue(`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}]`, {
         name: 'Rest Day',
-        summary: 'Chill out today, you deserve it  :) ',
+        summary: '',
         rest: true,
         lifts: [],
       });

@@ -20,10 +20,8 @@ export default function AddLiftForm({}): ReactElement {
     category: [],
   };
 
-  const handleCreateLift = async (e: any) => {
-    // const form = new FormData(event.target);
-    // const formData = Object.fromEntries(form.entries());
-    e.preventDefault();
+  const handleCreateLift = async () => {
+    // e.preventDefault();
     const formValues = {
       label: name,
       value: name,
@@ -55,6 +53,7 @@ export default function AddLiftForm({}): ReactElement {
     { value: 'shoulders', label: 'shoulders' },
     { value: 'biceps', label: 'biceps' },
     { value: 'triceps', label: 'triceps' },
+    { value: 'cardio', label: 'cardio' },
     { value: 'core', label: 'core' },
     { value: 'mobility', label: 'mobility' },
   ];
@@ -81,7 +80,7 @@ export default function AddLiftForm({}): ReactElement {
               clearButtonLabel="Clear selection"
               clearable
             />
-            <Button size="sm" type="submit">
+            <Button size="sm" onClick={() => handleCreateLift()}>
               Save
             </Button>
           </Group>
@@ -89,7 +88,9 @@ export default function AddLiftForm({}): ReactElement {
       </Modal>
 
       <Group position="center">
-        <Button onClick={() => setOpened(true)}>Open Modal</Button>
+        <Button onClick={() => setOpened(true)} variant="outline">
+          Add Lift to DB
+        </Button>
       </Group>
     </>
   );
