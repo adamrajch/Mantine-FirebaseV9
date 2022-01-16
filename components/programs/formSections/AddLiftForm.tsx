@@ -1,5 +1,4 @@
 import { Button, Group, Modal, MultiSelect, TextInput } from '@mantine/core';
-import { Formik } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import * as Yup from 'yup';
 const LiftSchema = Yup.object().shape({
@@ -14,19 +13,20 @@ type Lift = {
 
 export default function AddLiftForm({}): ReactElement {
   const [opened, setOpened] = useState(false);
+  const [name, setName] = useState('');
   const [value, setValue] = useState<any>([]);
   const initialValues: Lift = {
     name: '',
     category: [],
   };
 
-  const handleCreateLift = async (values: any) => {
+  const handleCreateLift = async (e: any) => {
     // const form = new FormData(event.target);
     // const formData = Object.fromEntries(form.entries());
-
+    e.preventDefault();
     const formValues = {
-      name: values.name,
-      value: values.name,
+      label: name,
+      value: name,
       category: value,
     };
     console.log(formValues);
@@ -42,53 +42,50 @@ export default function AddLiftForm({}): ReactElement {
   };
 
   const data = [
-    { value: 'bodybuilding', label: 'Bodybuilding' },
-    { value: 'powerlifting', label: 'Powerlifting' },
-    { value: 'weightlifting', label: 'weightlifting' },
-    { value: 'crossfit', label: 'crossfit' },
+    { value: 'fullbody', label: 'fullbody' },
+    { value: 'push', label: 'push' },
+    { value: 'pull', label: 'pull' },
+    { value: 'legs', label: 'legs' },
+    { value: 'chest', label: 'chest' },
+    { value: 'back', label: 'back' },
+    { value: 'arms', label: 'arms' },
+    { value: 'quads', label: 'quads' },
+    { value: 'hamstrings', label: 'hamstrings' },
+    { value: 'glutes', label: 'glutes' },
+    { value: 'shoulders', label: 'shoulders' },
+    { value: 'biceps', label: 'biceps' },
+    { value: 'triceps', label: 'triceps' },
+    { value: 'core', label: 'core' },
     { value: 'mobility', label: 'mobility' },
-    { value: 'strongman', label: 'strongman' },
-    { value: 'sport', label: 'sport' },
   ];
   return (
     <>
       <Modal opened={opened} onClose={() => setOpened(false)}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={async (values) => handleCreateLift(values)}
-          enableReinitialize={false}
-          validateOnChange={false}
-          validateOnBlur={false}
-          validationSchema={LiftSchema}
-        >
-          {({ handleSubmit, values, errors, handleChange }) => (
-            <form onSubmit={handleSubmit}>
-              <Group direction="column" grow>
-                <TextInput
-                  value={values.name}
-                  onChange={handleChange}
-                  name="name"
-                  placeholder="Create a lift"
-                  label="Lift Name"
-                />
-                <MultiSelect
-                  data={data}
-                  label="Add categories"
-                  placeholder="Select up to 5 tags"
-                  value={value}
-                  onChange={(val) => setValue(val)}
-                  searchable
-                  nothingFound="Nothing found"
-                  clearButtonLabel="Clear selection"
-                  clearable
-                />
-                <Button size="sm" type="submit">
-                  Save
-                </Button>
-              </Group>
-            </form>
-          )}
-        </Formik>
+        <form onSubmit={handleCreateLift}>
+          <Group direction="column" grow>
+            <TextInput
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              name="name"
+              placeholder="Create a lift"
+              label="Lift Name"
+            />
+            <MultiSelect
+              data={data}
+              label="Add categories"
+              placeholder="Select up to 5 tags"
+              value={value}
+              onChange={(val) => setValue(val)}
+              searchable
+              nothingFound="Nothing found"
+              clearButtonLabel="Clear selection"
+              clearable
+            />
+            <Button size="sm" type="submit">
+              Save
+            </Button>
+          </Group>
+        </form>
       </Modal>
 
       <Group position="center">

@@ -49,6 +49,7 @@ type Program = {
         rest: boolean;
         lifts?: Array<{
           name: string;
+          id?: string;
           note: string;
           type: string;
           records?: Array<{

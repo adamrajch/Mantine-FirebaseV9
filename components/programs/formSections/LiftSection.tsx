@@ -1,8 +1,9 @@
-import { ActionIcon, Box, Collapse, Group, Textarea, TextInput } from '@mantine/core';
+import { ActionIcon, Box, Collapse, Group, Select, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
+import { BiSearch } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
 import RecordSection from './RecordSection';
@@ -14,7 +15,8 @@ export default function LiftSection({
   liftHelpers,
   liftIndex,
 }: any): ReactElement {
-  const { handleChange } = useFormikContext();
+  const [hits, setHits] = useState<any>([]);
+  const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
   const matches = useMediaQuery('(min-width: 900px)');
@@ -26,6 +28,17 @@ export default function LiftSection({
     percent: null,
   };
 
+  const searchLifts = async (q) => {
+    if (q.length > 2) {
+      const params = new URLSearchParams({ q });
+
+      const res = await fetch('/api/search?' + params);
+      console.log(q);
+      const result = await res.json();
+      console.log(result);
+      setHits(result.lifts);
+    }
+  };
   return (
     <div>
       <FieldArray
@@ -50,21 +63,41 @@ export default function LiftSection({
             >
               <Group position="apart" noWrap>
                 <TextInput
-                  autoComplete="false"
-                  required
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    searchLifts(e.target.value);
+                  }}
+                />
+                <Select
+                  placeholder="Select Lift"
+                  searchable
+                  data={hits}
+                  maxDropdownHeight={200}
+                  icon={<BiSearch />}
                   value={
                     values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].name
                   }
-                  name={`blocks[${blockIndex}].weeks.${weekIndex}.days.${dayIndex}.lifts[${liftIndex}].name`}
-                  onChange={handleChange}
-                  style={{
-                    marginTop: 'auto',
-                    marginBottom: 'auto',
-                    minWidth: 0,
+                  onSearchChange={(q) => {
+                    searchLifts(q);
                   }}
-                  size={matches ? 'sm' : 'xs'}
-                />
+                  onChange={(q) => {
+                    let selected = hits.find((item: any) => item.value === q);
 
+                    setFieldValue(
+                      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}]`,
+                      {
+                        name: q,
+                        id: selected.entityId,
+                        note: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
+                          liftIndex
+                        ].note,
+                        records:
+                          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]
+                            .records,
+                      }
+                    );
+                  }}
+                />
                 <Group position="right" spacing={matches ? 6 : 0} noWrap>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note

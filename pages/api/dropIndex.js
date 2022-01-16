@@ -1,6 +1,6 @@
-import { createIndex } from '../../lib/redis';
+import { dropIndex } from '../../lib/redis';
 
 export default async function handler(req, res) {
-  await createIndex();
+  await dropIndex();
   res.status(200).send('ok');
 }
