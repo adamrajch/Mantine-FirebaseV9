@@ -55,3 +55,5 @@ module.exports = [
     value: 'jm press',
   },
 ];
+
+import index from './'
