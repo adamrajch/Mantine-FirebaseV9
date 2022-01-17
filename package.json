@@ -19,7 +19,7 @@
     "@mantine/rte": "^3.5.4",
     "@modulz/radix-icons": "^4.0.0",
     "dayjs": "^1.10.7",
-    "firebase": "^9.6.2",
+    "firebase": "^9.6.3",
     "firebase-admin": "^10.0.1",
     "formik": "^2.2.9",
     "js-cookie": "^3.0.1",

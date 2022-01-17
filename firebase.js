@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -17,4 +18,18 @@ const db = getFirestore(app);
 const storage = getStorage();
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 export { app, db, storage, auth, provider };
+
+// export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+// export const fromMillis = firebase.firestore.Timestamp.fromMillis;
+// export const increment = firebase.firestore.FieldValue.increment;
+export function postToJSON(doc) {
+  const data = doc.data();
+  return {
+    ...data,
+    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+    createdAt: data?.createdAt.toMillis() || 0,
+    updatedAt: data?.updatedAt.toMillis() || 0,
+  };
+}
