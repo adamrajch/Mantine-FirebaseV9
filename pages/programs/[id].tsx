@@ -8,7 +8,7 @@ import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
-  const p = JSON.parse(programProps);
+  const p = programProps;
 
   const { user, loading } = useAuth();
 
