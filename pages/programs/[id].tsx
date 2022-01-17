@@ -6,7 +6,7 @@ import Layout from '../../components/dashboard/AppShell';
 import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
-import { db, postToJSON } from '../../firebase';
+import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
   const p = programProps;
   console.log(programProps);
@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   if (docSnap.exists()) {
     return {
       props: {
-        programProps: postToJSON(docSnap) || null,
+        programProps: JSON.stringify(docSnap.data()) || null,
         programID: id,
       },
     };
