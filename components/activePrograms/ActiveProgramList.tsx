@@ -1,11 +1,9 @@
 import { ActionIcon, Box, Button, Group, Text, Title } from '@mantine/core';
 import router from 'next/router';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { BiLinkExternal } from 'react-icons/bi';
 
 export default function ActiveProgramList({ user }: any): ReactElement {
-  useEffect(() => {}, []);
-
   return (
     <Box
       sx={(theme) => ({

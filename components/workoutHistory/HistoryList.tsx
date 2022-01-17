@@ -72,7 +72,8 @@ export default function HistoryList({ user }: Props): ReactElement {
                     },
                   }}
                 >
-                  {w.name}
+                  {`${w.name} `}
+                  {w.programTitle ? `(${w.programTitle})` : ''}
                 </Text>
               </Link>
 

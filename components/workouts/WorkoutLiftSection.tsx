@@ -50,7 +50,7 @@ export default function WorkoutLiftSection({
         padding: matches ? '12px' : '6px',
         border: '2px solid',
         borderColor: theme.colors.gray[7],
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[5],
       })}
     >
       <FieldArray name={`lifts[${li}].records`}>

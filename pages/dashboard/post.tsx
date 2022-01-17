@@ -1,12 +1,12 @@
 import { Box, Container, Title } from '@mantine/core';
 import React, { ReactElement, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
-import WorkoutContainer from '../../components/workouts/WorkoutContainer';
+import CustomWorkoutForm from '../../components/workouts/CustomWorkoutForm';
 import { useAuth } from '../../context/auth';
 
 export default function Post(): ReactElement {
   const { user, loading } = useAuth();
-  const [sesh, setSesh] = useState<any>(null);
+  const [sesh, setSesh] = useState<any>('titl');
   return (
     <Layout>
       {user && (
@@ -21,9 +21,11 @@ export default function Post(): ReactElement {
               boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
             })}
           >
-            <Title align="center">Add A Workout</Title>
+            <Title align="center" order={2}>
+              Add Custom Workout
+            </Title>
 
-            <WorkoutContainer user={user} />
+            <CustomWorkoutForm user={user} />
           </Box>
         </Container>
       )}

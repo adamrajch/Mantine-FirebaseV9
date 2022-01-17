@@ -82,7 +82,7 @@ export default function IndividualWorkout(): ReactElement {
 
                             <Group direction="column" grow noWrap spacing={0}>
                               {l.records.map((r: any, ri: number) => (
-                                <Text align="right">{`${r.load} ${r.sets}x${r.reps} ${
+                                <Text align="right">{`${r.load ? r.load : ''} ${r.sets}x${r.reps} ${
                                   r.rpe ? `@${r.rpe}` : ''
                                 }`}</Text>
                               ))}

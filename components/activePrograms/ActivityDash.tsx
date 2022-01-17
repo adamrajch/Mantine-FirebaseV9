@@ -1,31 +1,38 @@
-import { ActionIcon, Box, Button, Container, Group, Modal, Text, Title } from '@mantine/core';
+import { ActionIcon, Box, Button, Group, Modal, Text, Title } from '@mantine/core';
 import React, { ReactElement, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { MdFullscreen, MdToday } from 'react-icons/md';
 import { useAuth } from '../../context/auth';
-import CreateWorkoutForm from '../workouts/CreateWorkoutForm';
+import ProgramWorkoutForm from '../workouts/ProgramWorkoutForm';
 import FullTemplate from './FullTemplate';
 
-export default function ActivityDash({ program }: any): ReactElement {
+export default function ActivityDash({ program, id }: any): ReactElement {
   const curr = program.currentDay;
   const blocks = program.template;
   const { workouts, currentIndex } = program;
   const { user } = useAuth();
   console.log(workouts);
   const [currIndex, setCurrIndex] = useState<number>(currentIndex);
-
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEdit] = useState(false);
 
   function handleRight() {
+    if (editing) {
+      setEdit(false);
+    }
     if (currIndex < workouts.length - 1) {
       setCurrIndex((prev) => prev + 1);
     }
   }
   function handleLeft() {
+    if (editing) {
+      setEdit(false);
+    }
     if (currIndex > 0) {
       setCurrIndex((prev) => prev - 1);
     }
   }
+  console.log(program);
 
   return (
     <Box
@@ -88,7 +95,20 @@ export default function ActivityDash({ program }: any): ReactElement {
               </Modal>
             </>
           </Group>
-          <Container size="sm">
+
+          {editing ? (
+            <ProgramWorkoutForm
+              user={user}
+              workout={workouts[currIndex]}
+              setEdit={setEdit}
+              programId={program.programId}
+              programTitle={program.title}
+              currentIndex={currIndex}
+              setCurrIndex={setCurrIndex}
+              workoutsLength={workouts.length}
+              id={id}
+            />
+          ) : (
             <Group direction="column" grow my={16}>
               {workouts[currIndex].lifts.map((l: any, li: number) => (
                 <Group
@@ -117,23 +137,23 @@ export default function ActivityDash({ program }: any): ReactElement {
                       </Text>
                     ))}
                   </Group>
-
-                  <Modal
-                    opened={modalOpen}
-                    onClose={() => setModalOpen(false)}
-                    transition="fade"
-                    transitionDuration={400}
-                    transitionTimingFunction="ease"
-                    size="60%"
-                  >
-                    <Text>{workouts[currentIndex]}</Text>
-                    <CreateWorkoutForm user={user} workout={workouts[currentIndex]} />
-                  </Modal>
                 </Group>
               ))}
-              <Button>Complete Workout</Button>
             </Group>
-          </Container>
+          )}
+
+          {!editing && (
+            <Group position="center">
+              <Button
+                onClick={() => {
+                  setEdit(true);
+                }}
+                variant="outline"
+              >
+                Log Workout
+              </Button>
+            </Group>
+          )}
         </Box>
       )}
     </Box>

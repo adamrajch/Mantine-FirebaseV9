@@ -18,24 +18,17 @@ interface MyFormValues {
   lifts: Array<{
     name: string;
     note: string;
-    id?: string;
+    id?: string | null;
     records: Array<{
       sets: number;
       reps: number;
       rpe: number | null;
       load: number | null;
-      unit: string | null;
+      unit?: string | null;
     }>;
   }>;
 }
-export default function CreateWorkoutForm({
-  workout,
-  user,
-  workoutId,
-  setEdit,
-  programId,
-  programTitle,
-}: any): ReactElement {
+export default function CustomWorkoutForm({ user }: any): ReactElement {
   const [list, setList] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
   useEffect(() => {
@@ -47,91 +40,50 @@ export default function CreateWorkoutForm({
 
     return unsub;
   }, []);
-  const mappedLifts = workout?.lifts.map((w: any) => {
-    return { value: w.name, label: w.name, id: w.id };
-  });
-  const fullData = list.concat(mappedLifts);
 
-  console.log(workout);
-
-  const initialValues: MyFormValues = workout
-    ? { name: workout.dayName, lifts: workout.lifts }
-    : {
+  const initialValues: MyFormValues = {
+    name: '',
+    lifts: [
+      {
         name: '',
-        lifts: [
+        id: null,
+        note: '',
+        records: [
           {
-            name: '',
-            id: null,
-            note: '',
-            records: [
-              {
-                sets: 5,
-                reps: 5,
-                rpe: 8,
-                load: 135,
-              },
-            ],
+            sets: 5,
+            reps: 5,
+            rpe: 8,
+            load: 135,
           },
         ],
-      };
+      },
+    ],
+  };
   async function handleFormSubmit(values: any) {
-    if (workoutId) {
-      await updateDoc(doc(db, 'workouts', workoutId), {
-        date: dateInput,
-        lifts: values.lifts,
-        name: values.name,
-        programId: programId,
-        programTitle: programTitle,
-      });
+    const docRef = await addDoc(collection(db, 'workouts'), {
+      date: dateInput,
+      lifts: values.lifts,
+      name: values.name,
+      user: user.uid,
+    });
 
-      if (user.recentWorkouts.find((e: any) => e.id === workoutId)) {
-        let arr = user.recentWorkouts.map((p: any) =>
-          p.id === workoutId
-            ? {
-                date: dateInput,
-                lifts: values.lifts,
-                name: values.name,
-                user: user.uid,
-                id: workoutId,
-                programId: programId,
-                programTitle: programTitle,
-              }
-            : p
-        );
+    const workoutId = docRef.id;
+    let newArr = user.recentWorkouts;
 
-        await updateDoc(doc(db, 'users', user.uid), {
-          recentWorkouts: arr,
-        });
-      }
-    } else {
-      const docRef = await addDoc(collection(db, 'workouts'), {
-        date: dateInput,
-        lifts: values.lifts,
-        name: values.name,
-        user: user.uid,
-        programId: programId,
-        programTitle: programTitle,
-      });
-
-      const workoutId = docRef.id;
-      let newArr = user.recentWorkouts;
-
-      if (user.recentWorkouts.length >= 5) {
-        newArr.shift();
-      }
-      newArr.push({
-        date: dateInput,
-        lifts: values.lifts,
-        name: values.name,
-        user: user.uid,
-        id: workoutId,
-        programId: programId,
-        programTitle: programTitle,
-      });
-      await updateDoc(doc(db, 'users', user.uid), {
-        recentWorkouts: newArr,
-      });
+    if (user.recentWorkouts.length >= 5) {
+      newArr.shift();
     }
+    newArr.push({
+      date: dateInput,
+      lifts: values.lifts,
+      name: values.name,
+      user: user.uid,
+      id: workoutId,
+    });
+    await updateDoc(doc(db, 'users', user.uid), {
+      recentWorkouts: newArr,
+    });
+
     Router.push('/dashboard');
   }
   return (
@@ -145,7 +97,7 @@ export default function CreateWorkoutForm({
       validateOnBlur={false}
       validationSchema={WorkoutSchema}
     >
-      {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting }) => (
+      {({ handleChange, handleSubmit, values, errors, isSubmitting }) => (
         <Box>
           <FieldArray name="lifts">
             {(liftHelpers) => (
@@ -196,7 +148,7 @@ export default function CreateWorkoutForm({
                 </Group>
 
                 {list.length > 0 && (
-                  <Group direction="column" spacing="md">
+                  <Group direction="column" spacing="md" grow>
                     {values.lifts.length > 0 &&
                       values.lifts.map((lift, li) => (
                         <WorkoutLiftSection
@@ -205,25 +157,23 @@ export default function CreateWorkoutForm({
                           li={li}
                           liftHelpers={liftHelpers}
                           user={user}
-                          list={fullData}
+                          list={list}
                         />
                       ))}
-
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                      variant="outline"
-                      loading={isSubmitting}
-                    >
-                      Submit
-                    </Button>
+                    <Group position="center">
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          handleSubmit();
+                        }}
+                        variant="outline"
+                        loading={isSubmitting}
+                      >
+                        Submit
+                      </Button>
+                    </Group>
                   </Group>
                 )}
-
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
               </Box>
             )}
           </FieldArray>

@@ -19,7 +19,7 @@ export default function ProgramActivityPage({ id }: { id: string }): JSX.Element
   }, []);
   return (
     <Layout>
-      <Container size="md">{program && <ActivityDash program={program} />} </Container>
+      <Container size="md">{program && <ActivityDash program={program} id={id} />} </Container>
     </Layout>
   );
 }
