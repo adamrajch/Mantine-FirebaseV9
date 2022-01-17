@@ -8,7 +8,7 @@ import FullProgramForm from '../../components/programs/FullProgramForm';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
-  const p = programProps;
+  const p = JSON.parse(programProps);
   console.log(programProps);
   const { user, loading } = useAuth();
 
@@ -22,7 +22,7 @@ export default function Program({ programProps, programID }: any): ReactElement 
           },
         })}
       >
-        {!loading && (
+        {!loading && user && (
           <FullProgramForm program={p} programID={programID} user={user} programAuthor={p.author} />
         )}
 
