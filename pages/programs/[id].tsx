@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   if (docSnap.exists()) {
     return {
       props: {
-        programProps: JSON.stringify(docSnap.data()) || null,
+        programProps: JSON.parse(JSON.stringify(docSnap.data())) || null,
         programID: id,
       },
     };
