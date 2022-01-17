@@ -130,7 +130,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
 
                   <Group direction="column">
                     {l.records.map((r: any, ri: number) => (
-                      <Text>
+                      <Text key={ri}>
                         {`${r.sets} x ${r.reps} ${r.rpe ? `@${r.rpe}` : ''} ${
                           r.percent ? `${r.percent}%` : ''
                         }${r.load ? `@${r.load}` : ''} `}

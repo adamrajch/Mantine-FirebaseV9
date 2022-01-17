@@ -80,7 +80,8 @@ export default function ProgramCard({ program, id }: any): ReactElement {
           background: p.photoUrl ? 'rgba( 3, 3, 3, 0.9 )' : '',
 
           backdropFilter: ' blur( 8px )',
-          '-webkit-backdrop-filter': 'blur( 4px )',
+          WebkitBackdropFilter: 'blur( 4px )',
+          // '-webkit-backdrop-filter': 'blur( 4px )',
           height: '100%',
           border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
           // '&:hover': {

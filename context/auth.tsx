@@ -1,171 +1,66 @@
-import { doc } from '@firebase/firestore';
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onIdTokenChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from 'firebase/auth';
-import { getDoc, onSnapshot } from 'firebase/firestore';
-import router from 'next/router';
+import { doc, onSnapshot } from 'firebase/firestore';
 import nookies from 'nookies';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
-import { createUser } from '../hooks/createUser';
-
+// Custom hook to read  auth record and user profile doc
 type Props = {
   children?: React.ReactNode;
 };
-
 const AuthContext = createContext<any>({});
 
 export function AuthProvider({ children }: Props) {
-  const auth = useProvideAuth();
+  const auth = useUserData();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
 export const useAuth = () => useContext(AuthContext);
 
-function useProvideAuth() {
+export function useUserData() {
+  const [authUser] = useAuthState(auth);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleUser = async (rawUser: any) => {
-    if (rawUser) {
-      const user = await formatUser(rawUser);
-      const { token, ...userWithoutToken } = user;
-      const docRef = doc(db, 'users', user.uid);
-      const docSnap = await getDoc(docRef);
-      //check if user exists, set the user or if it doesnt create one
-      if (docSnap.exists()) {
-        // console.log('Document data:', docSnap.data());
-        setUser(docSnap.data());
-      } else {
-        createUser(user.uid, userWithoutToken);
+  useEffect(() => {
+    async function handleUser() {
+      let unsubscribe: any;
+      if (authUser) {
+        const formattedUser = await formatUser(authUser);
+        const { token } = formattedUser;
 
-        setUser(user);
+        const ref = doc(db, 'users', authUser.uid);
+        unsubscribe = onSnapshot(ref, (doc) => {
+          console.log('sets user, ', doc.data());
+          setUser(doc.data());
+        });
+
+        nookies.set(undefined, 'token', token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
+        setLoading(false);
+        return unsubscribe;
+      } else {
+        nookies.set(undefined, 'token', '', { path: '/' });
+        setUser(null);
+        setLoading(false);
       }
 
-      const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-        console.log('Updated user: ', doc.data());
-        setUser(doc.data());
-      });
-      nookies.set(undefined, 'token', user.token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
-      setLoading(false);
-      //return user
-      return unsub;
-    } else {
-      setUser(false);
-      nookies.set(undefined, 'token', '', { path: '/' });
-      setLoading(false);
-      return false;
+      return unsubscribe;
     }
-  };
 
-  const createUserWithEmail = (email: string, password: string) => {
-    setLoading(true);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
+    handleUser();
 
-        handleUser(userCredential.user);
-        router.push('/dashboard');
-        return user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage, errorCode);
-        return errorMessage;
-        // ..
-      });
-  };
+    return;
+  }, [authUser]);
 
-  const signinWithEmail = (email: string, password: string) => {
-    setLoading(true);
-
-    return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        handleUser(userCredential.user);
-        router.push('/dashboard');
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorMessage, errorCode);
-      });
-  };
-
-  const signinWithGoogle = (redirect: any) => {
-    setLoading(true);
-
-    return signInWithPopup(auth, new GoogleAuthProvider())
-      .then((response) => {
-        handleUser(response.user);
-
-        if (redirect) {
-          router.push(redirect);
-        }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage, errorCode);
-      });
-  };
-
-  const signout = () => {
-    router.push('/');
-
-    return signOut(auth)
-      .then(() => {
-        console.log('sucessfully logged out');
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    const unsubscribe = onIdTokenChanged(auth, async (user) => {
-      handleUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  //refrsh firebase token
-  useEffect(() => {
-    const handle = setInterval(async () => {
-      const user = auth.currentUser;
-      if (user) await user.getIdToken(true);
-    }, 10 * 60 * 1000);
-
-    // clean up setInterval
-    return () => clearInterval(handle);
-  }, []);
-
-  return {
-    user,
-    loading,
-    signinWithEmail,
-    signinWithGoogle,
-    createUserWithEmail,
-    signout,
-  };
+  return { user, loading };
 }
-const formatUser = async (user: any) => {
+
+async function formatUser(user: any) {
   const token = await user.getIdToken(true);
   return {
+    token: token,
     uid: user.uid,
     email: user.email,
     name: user.displayName,
+    photoUrl: user.photoUrl,
     provider: user.providerData[0].providerId,
-    photoUrl: user.photoURL,
-    token,
   };
-};
+}

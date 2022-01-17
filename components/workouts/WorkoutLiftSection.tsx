@@ -124,7 +124,7 @@ export default function WorkoutLiftSection({
 
               <Group direction="column" grow>
                 {lift.records.map((r: any, ri: number) => (
-                  <Grid columns={13} style={{ textAlign: 'center' }}>
+                  <Grid columns={13} style={{ textAlign: 'center' }} key={ri}>
                     {/* <Group key={ri} position="apart" grow> */}
                     <Grid.Col span={3}>
                       <NumberInput

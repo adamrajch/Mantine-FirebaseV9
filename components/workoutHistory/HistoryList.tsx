@@ -59,7 +59,7 @@ export default function HistoryList({ user }: Props): ReactElement {
 
       <Group direction="column" grow my={12}>
         {user.recentWorkouts.map((w: any) => (
-          <Box>
+          <Box key={w.id}>
             <Group position="apart">
               <Link href={`/dashboard/workouts/${w.id}`}>
                 <Text
