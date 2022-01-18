@@ -1,15 +1,31 @@
-import { Box, Container, Group, Text, Title } from '@mantine/core';
+import { Button, Container, Group, Text, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { collection, limit, onSnapshot, query, where } from 'firebase/firestore';
-import Link from 'next/link';
+import {
+  collection,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+  Timestamp,
+  where,
+} from 'firebase/firestore';
 import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../../components/dashboard/AppShell';
+import DynamicWorkoutList from '../../../components/workouts/DynamicWorkoutList';
 import { useAuth } from '../../../context/auth';
 import { db } from '../../../firebase';
-export default function IndividualWorkout(): ReactElement {
-  const { user, loading } = useAuth();
+
+const LIMIT = 10;
+
+export default function WorkoutsFeed(): ReactElement {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
   const [workouts, setWorkouts] = useState<any>([]);
+  const [listEnd, setListEnd] = useState(false);
+
   dayjs.extend(relativeTime);
 
   useEffect(() => {
@@ -20,7 +36,12 @@ export default function IndividualWorkout(): ReactElement {
   async function fetchWorkouts() {
     let unsubscribe;
     if (user?.uid) {
-      const q = query(collection(db, 'workouts'), where('user', '==', user.uid), limit(15));
+      const q = query(
+        collection(db, 'workouts'),
+        where('user', '==', user.uid),
+        orderBy('date', 'desc'),
+        limit(LIMIT)
+      );
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         let arr: any[] = [];
         querySnapshot.forEach((doc) => {
@@ -32,72 +53,47 @@ export default function IndividualWorkout(): ReactElement {
 
     return unsubscribe;
   }
+
+  const getMorePosts = async () => {
+    setLoading(true);
+    const last = workouts[workouts.length - 1];
+
+    const cursor = typeof last.date === 'number' ? Timestamp.fromMillis(last.date) : last.date;
+
+    const ref = collection(db, 'workouts');
+    const workoutsQuery = query(
+      ref,
+      where('user', '==', user.uid),
+      orderBy('date', 'desc'),
+      startAfter(cursor),
+      limit(LIMIT)
+    );
+
+    const newWorkouts = (await getDocs(workoutsQuery)).docs.map((doc) => doc.data());
+
+    setWorkouts(workouts.concat(newWorkouts));
+    setLoading(false);
+
+    if (newWorkouts.length < LIMIT) {
+      setListEnd(true);
+    }
+  };
+
   return (
     <Layout>
       {user && (
-        <Container size="md">
+        <Container size="xl">
           <Title align="center">Workouts</Title>
-          <Group direction="column" position="center" my={12}>
-            {workouts.length > 0 ? (
-              <Group direction="column" position="center" grow>
-                {workouts.map((w: any, wi: number) => (
-                  <Box
-                    sx={(theme) => ({
-                      maxWidth: 400,
-                      padding: 16,
-                      borderRadius: theme.radius.md,
-                      backgroundColor:
-                        theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
-                      boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
-                      '&:hover': {
-                        boxShadow: '8px 8px 18px  #0f0f0f, -2px -2px 6px #14698b',
-                      },
-                    })}
-                  >
-                    <Group position="apart">
-                      <Link href={`/dashboard/workouts/${w.id}`}>
-                        <Title
-                          order={3}
-                          sx={{
-                            cursor: 'pointer',
-                            '&:hover': {
-                              color: '#14b8f8',
-                              textDecoration: 'underline',
-                            },
-                          }}
-                        >
-                          {w.name}
-                        </Title>
-                      </Link>
-                      <Text color="dimmed" size="sm">
-                        {dayjs(w.date.toDate()).fromNow()}
-                      </Text>
-                    </Group>
 
-                    <Group direction="column" key={wi} grow spacing={1}>
-                      {w.lifts.map((l: any, li: number) => (
-                        <Group direction="column" key={l.id} grow>
-                          <Group noWrap grow position="apart">
-                            <Text>{l.name}</Text>
+          <DynamicWorkoutList workouts={workouts} />
 
-                            <Group direction="column" grow noWrap spacing={0}>
-                              {l.records.map((r: any, ri: number) => (
-                                <Text align="right">{`${r.load ? r.load : ''} ${r.sets}x${r.reps} ${
-                                  r.rpe ? `@${r.rpe}` : ''
-                                }`}</Text>
-                              ))}
-                            </Group>
-                          </Group>
-                        </Group>
-                      ))}
-                    </Group>
-                  </Box>
-                ))}
-              </Group>
-            ) : (
-              <div>No workouts :D</div>
-            )}
-          </Group>
+          {!loading && !listEnd && (
+            <Group position="center">
+              <Button onClick={getMorePosts}>Load more</Button>
+            </Group>
+          )}
+
+          {listEnd && <Text align="center">You have reached the end!</Text>}
         </Container>
       )}
     </Layout>

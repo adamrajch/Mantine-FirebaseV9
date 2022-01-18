@@ -1,18 +1,21 @@
 import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
+import { GoogleAuthProvider, signInAnonymously, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
+import Router from 'next/router';
 import React from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
 import { useAuth } from '../../context/auth';
-
+import { auth } from '../../firebase';
+const provider = new GoogleAuthProvider();
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().min(2, 'Too Short!').max(40, 'Too Long!').required('Required'),
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function Login(): JSX.Element {
-  const { user, setUser, setError, signinWithGoogle, signinWithEmail } = useAuth();
+  const { user } = useAuth();
 
   // const loginWithGoogle = () => {
   //   signInWithPopup(auth, provider)
@@ -37,6 +40,37 @@ export default function Login(): JSX.Element {
   //       // ...
   //     });
   // };
+  function SignInButton() {
+    const signInWithGoogle = async () => {
+      await signInWithPopup(auth, provider)
+        .then((result) => {
+          Router.push('/dashboard');
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // setError(errorMessage);
+          // // ...
+        });
+    };
+
+    return (
+      <>
+        <Button variant="outline" leftIcon={<AiOutlineGoogle />} onClick={signInWithGoogle}>
+          Google
+        </Button>
+
+        <Button variant="outline" onClick={() => signInAnonymously(auth)}>
+          Sign in Anonymously
+        </Button>
+      </>
+    );
+  }
   const initialValues = {
     email: '',
     password: '',
@@ -47,7 +81,7 @@ export default function Login(): JSX.Element {
       <Formik
         initialValues={initialValues}
         onSubmit={async (values) => {
-          signinWithEmail(values.email, values.password);
+          // signinWithEmail(values.email, values.password);
         }}
         enableReinitialize={false}
         validateOnChange={false}
@@ -99,13 +133,7 @@ export default function Login(): JSX.Element {
                   Submit
                 </Button>
                 <Group>
-                  <Button
-                    variant="outline"
-                    leftIcon={<AiOutlineGoogle />}
-                    onClick={() => signinWithGoogle('/dashboard')}
-                  >
-                    Google
-                  </Button>
+                  <SignInButton />
                 </Group>
               </SimpleGrid>
             </div>

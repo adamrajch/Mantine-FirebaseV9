@@ -3,6 +3,7 @@ import React from 'react';
 import ActiveProgramList from '../../components/activePrograms/ActiveProgramList';
 import Layout from '../../components/dashboard/AppShell';
 import HistoryList from '../../components/workoutHistory/HistoryList';
+import DynamicWorkoutList from '../../components/workouts/DynamicWorkoutList';
 import WorkoutContainer from '../../components/workouts/WorkoutContainer';
 import { useAuth } from '../../context/auth';
 
@@ -39,6 +40,7 @@ export default function DashboardHome(): JSX.Element {
               <ActiveProgramList user={user} />
             </Grid.Col>
           </Grid>
+          <DynamicWorkoutList userId={user.uid} />
         </Container>
       )}
     </Layout>

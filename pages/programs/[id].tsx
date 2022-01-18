@@ -9,7 +9,7 @@ import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
   const p = JSON.parse(programProps);
-  console.log(programProps);
+  console.log(p);
   const { user, loading } = useAuth();
 
   return (
@@ -47,6 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   if (docSnap.exists()) {
     return {
       props: {
+        // programProps: JSON.stringify(docSnap.data()) || null,
         programProps: JSON.stringify(docSnap.data()) || null,
         programID: id,
       },

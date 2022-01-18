@@ -21,6 +21,16 @@ export function useUserData() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
+  }, []);
+
+  useEffect(() => {
     async function handleUser() {
       let unsubscribe: any;
       if (authUser) {

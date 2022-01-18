@@ -13,16 +13,15 @@ export default function ProgramListCard({ page }: any): JSX.Element {
         component="a"
         sx={(theme) => ({
           border: '2px solid ',
-          borderRadius: theme.radius.sm,
           cursor: 'pointer',
           width: '100%',
           borderColor: theme.colors.dark[8],
-          backgroundColor: theme.colors.dark[8],
-          boxShadow: '12px 12px 24px  #0a0d0f, ',
+          borderRadius: theme.radius.md,
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+          boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
           '&:hover': {
-            // borderColor: '#F08C00',
-            // ' -webkit-box-shadow': '6px 6px 12px #b2b8c9, -6px -6px 12px #f0f8ff',
-            boxShadow: '12px 12px 24px  #0a0d0f, -2px -2px 6px #174e68 ',
+            boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
           },
         })}
       >

@@ -54,18 +54,12 @@ export default function ProgramCard({ program, id }: any): ReactElement {
     <Box
       onClick={() => router.push(`/programs/${id}`)}
       sx={(theme) => ({
-        // border: '1px solid cyan',
-        borderRadius: theme.radius.md,
-        backgroundImage: `url(${p.photoUrl})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
         cursor: 'pointer',
-
+        borderRadius: theme.radius.md,
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[1],
+        boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
         '&:hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.cyan[8] : theme.colors.cyan[1],
-          boxShadow: '16px 16px 24px  #0f0f0f, -4px -4px 8px #1b3742',
+          boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
         },
       })}
     >
@@ -73,21 +67,13 @@ export default function ProgramCard({ program, id }: any): ReactElement {
         padding="md"
         shadow="md"
         sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[0],
           borderRadius: theme.radius.md,
-          opacity: 0.95,
-          background: p.photoUrl ? 'rgba( 3, 3, 3, 0.9 )' : '',
-
-          backdropFilter: ' blur( 8px )',
-          WebkitBackdropFilter: 'blur( 4px )',
-          // '-webkit-backdrop-filter': 'blur( 4px )',
-          height: '100%',
-          border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
-          // '&:hover': {
-          //   backgroundColor:
-          //     theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-          // },
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[1],
+          boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 2px #1b3742',
+          '&:hover': {
+            boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 2px #14698b',
+          },
         })}
       >
         {/* <Card.Section>

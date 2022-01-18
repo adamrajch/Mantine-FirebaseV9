@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, Timestamp } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
@@ -17,13 +17,17 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 const storage = getStorage();
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-export { app, db, storage, auth, provider };
+export { app, db, storage, auth };
 
-// export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
-// export const fromMillis = firebase.firestore.Timestamp.fromMillis;
+// export const serverTimestamp = Timestamp;
+
 // export const increment = firebase.firestore.FieldValue.increment;
+
+/**`
+ * Converts a firestore document to JSON
+ * @param  {DocumentSnapshot} doc
+ */
 export function postToJSON(doc) {
   const data = doc.data();
   return {

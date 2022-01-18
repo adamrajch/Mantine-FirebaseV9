@@ -13,10 +13,12 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
+import { signOut } from 'firebase/auth';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
+import { auth } from '../../firebase';
 import ColorModeSwitch from '../ColorModeSwitch';
 import NavBarLink from '../NavBarLink';
 import Footer from './Footer';
@@ -43,7 +45,7 @@ const userLinks = [
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
-  const { user, signout } = useAuth();
+  const { user } = useAuth();
   const { height, width } = useViewportSize();
   const headerHeight = 60;
   const mainHeight = height - headerHeight;
@@ -99,7 +101,7 @@ export default function Layout({ children }: Props) {
                     </Text>
                   </Link>
 
-                  <ActionIcon onClick={() => signout()}>
+                  <ActionIcon onClick={() => signOut(auth)}>
                     <AiOutlineLogout />
                   </ActionIcon>
                 </Group>
