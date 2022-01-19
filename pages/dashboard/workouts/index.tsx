@@ -18,7 +18,7 @@ import DynamicWorkoutList from '../../../components/workouts/DynamicWorkoutList'
 import { useAuth } from '../../../context/auth';
 import { db } from '../../../firebase';
 
-const LIMIT = 10;
+const LIMIT = 6;
 
 export default function WorkoutsFeed(): ReactElement {
   const { user } = useAuth();

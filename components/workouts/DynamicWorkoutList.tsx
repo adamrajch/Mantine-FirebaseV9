@@ -24,6 +24,7 @@ export default function DynamicWorkoutList({ workouts }: any): ReactElement {
                   boxShadow: '8px 8px 18px  #0f0f0f, -2px -2px 6px #14698b',
                 },
                 height: 320,
+                overflowY: 'hidden',
               })}
             >
               <Group position="apart" mb={8}>
