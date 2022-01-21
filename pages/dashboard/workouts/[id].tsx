@@ -1,22 +1,21 @@
-import { Container, Title } from '@mantine/core';
+import { Container } from '@mantine/core';
 import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import React, { ReactElement, useState } from 'react';
 import Layout from '../../../components/dashboard/AppShell';
-import CreateWorkoutForm from '../../../components/workouts/CreateWorkoutForm';
+import UpdateWorkoutForm from '../../../components/workouts/UpdateWorkoutForm';
 import { useAuth } from '../../../context/auth';
-import { db } from '../../../firebase';
+import { db, postToJSON } from '../../../firebase';
 
 export default function IndividualWorkout({ workoutProps, workoutId }: any): ReactElement {
   const { user, loading } = useAuth();
-  const [workout, setWorkout] = useState(JSON.parse(workoutProps));
+  const [workout, setWorkout] = useState(workoutProps);
+
   return (
     <Layout>
       {user && (
         <Container size="lg">
-          <Title align="center">Workout</Title>
-
-          <CreateWorkoutForm user={user} workout={workout} workoutId={workoutId} />
+          <UpdateWorkoutForm user={user} workout={workout} workoutId={workoutId} />
         </Container>
       )}
     </Layout>
@@ -31,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   if (docSnap.exists()) {
     return {
       props: {
-        workoutProps: JSON.stringify(docSnap.data()) || null,
+        workoutProps: postToJSON(docSnap) || null,
         workoutId: id,
       },
     };

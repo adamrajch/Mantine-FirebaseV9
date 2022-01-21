@@ -15,7 +15,7 @@ export default function WorkoutLiftSection({
   user,
   list,
 }: any): ReactElement {
-  const { values, handleChange, setFieldValue }: any = useFormikContext();
+  const { values, setFieldValue }: any = useFormikContext();
 
   const matches = useMediaQuery('(min-width: 900px)');
   async function CreateLiftData(q: string | null) {
@@ -68,11 +68,23 @@ export default function WorkoutLiftSection({
                   creatable
                   getCreateLabel={(query) => `+ Add ${query}`}
                   value={values.lifts[li].name}
+                  clearable
                   // onCreate={(q) => {
                   //   let selected = list.find((item: any) => item.value === q);
                   // }}
                   onChange={(q) => {
                     let selected = list.find((item: any) => item.value === q);
+                    if (q === null) {
+                      setFieldValue(`lifts[${li}]`, {
+                        name: q,
+                        id: null,
+                        note: values.lifts[li].note,
+                        records: values.lifts[li].records,
+                      });
+
+                      return;
+                    }
+
                     if (selected?.id) {
                       setFieldValue(`lifts[${li}]`, {
                         name: q,

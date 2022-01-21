@@ -93,7 +93,7 @@ export default function WorkoutsFeed(): ReactElement {
             </Group>
           )}
 
-          {listEnd && <Text align="center">You have reached the end!</Text>}
+          {listEnd && <Text align="center">No more workouts!</Text>}
         </Container>
       )}
     </Layout>

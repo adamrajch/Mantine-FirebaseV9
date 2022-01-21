@@ -1,4 +1,4 @@
-import { Container, Group, Title } from '@mantine/core';
+import { Container, Title } from '@mantine/core';
 import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/dashboard/AppShell';
@@ -53,10 +53,8 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
           My Programs
         </Title>
 
-        <Group position="center" direction="column" grow>
-          {/* {loading && <Loader />} */}
-          {user && programs.length > 0 && <ProgramList programsProps={programs} />}
-        </Group>
+        {/* {loading && <Loader />} */}
+        {user && programs.length > 0 && <ProgramList programsProps={programs} />}
       </Container>
     </Layout>
   );

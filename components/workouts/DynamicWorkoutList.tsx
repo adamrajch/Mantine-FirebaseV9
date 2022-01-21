@@ -10,7 +10,7 @@ export default function DynamicWorkoutList({ workouts }: any): ReactElement {
     <>
       <Grid grow my={18} gutter="md" justify="center">
         {workouts.map((w: any, wi: number) => (
-          <Grid.Col span={12} sm={6} md={4}>
+          <Grid.Col span={12} sm={6} md={4} key={w.id}>
             <Box
               key={w.id}
               sx={(theme) => ({
@@ -55,9 +55,9 @@ export default function DynamicWorkoutList({ workouts }: any): ReactElement {
 
                       <Group direction="column" grow noWrap spacing={0}>
                         {l.records.map((r: any, ri: number) => (
-                          <Text align="right">{`${r.load ? r.load : ''} ${r.sets}x${r.reps} ${
-                            r.rpe ? `@${r.rpe}` : ''
-                          }`}</Text>
+                          <Text align="right" key={ri}>{`${r.load ? r.load : ''} ${r.sets}x${
+                            r.reps
+                          } ${r.rpe ? `@${r.rpe}` : ''}`}</Text>
                         ))}
                       </Group>
                     </Group>

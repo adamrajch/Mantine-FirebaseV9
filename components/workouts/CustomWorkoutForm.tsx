@@ -1,7 +1,7 @@
 import { Box, Button, Group, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import Router from 'next/router';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -59,31 +59,64 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
       },
     ],
   };
-  async function handleFormSubmit(values: any) {
-    const docRef = await addDoc(collection(db, 'workouts'), {
+  async function handleFormSubmit(values: MyFormValues) {
+    const batch = writeBatch(db);
+
+    //add workout, updateUser user recents, add lifts
+    const r = collection(db, 'workouts');
+    const workoutRef = doc(r);
+
+    batch.set(workoutRef, {
       date: dateInput,
       lifts: values.lifts,
       name: values.name,
       user: user.uid,
     });
 
-    const workoutId = docRef.id;
-    let newArr = user.recentWorkouts;
-
-    if (user.recentWorkouts.length >= 5) {
-      newArr.shift();
-    }
+    const workoutId = workoutRef.id;
+    //add workout to sorted array
+    let newArr = user.recentWorkouts.map((w: any) => {
+      return { ...w, date: w.date.toDate() };
+    });
+    console.log(newArr);
     newArr.push({
       date: dateInput,
       lifts: values.lifts,
       name: values.name,
       user: user.uid,
-      id: workoutId,
+      workoutId: workoutId,
     });
-    await updateDoc(doc(db, 'users', user.uid), {
-      recentWorkouts: newArr,
+    console.log('new Arr', newArr);
+
+    let sortedArr = newArr.sort((f: any, s: any) => {
+      console.log(f, s);
+      return s.date - f.date;
     });
 
+    if (sortedArr.length >= 5) {
+      sortedArr = sortedArr.slice(0, 5);
+    } else {
+    }
+    console.log(sortedArr);
+
+    const userRef = doc(db, 'users', user.uid);
+    batch.update(userRef, { recentWorkouts: sortedArr });
+
+    for (let i = 0; i < values.lifts.length; i++) {
+      for (let k = 0; k < values.lifts[i].records.length; k++) {
+        const lr = collection(db, `users/${user.uid}/records`);
+        const liftRef = doc(lr);
+        batch.set(liftRef, {
+          name: values.lifts[i].name,
+          id: values.lifts[i].id,
+          records: values.lifts[i].records[k],
+          date: dateInput,
+          workoutId: workoutId,
+        });
+      }
+    }
+
+    await batch.commit();
     Router.push('/dashboard');
   }
   return (

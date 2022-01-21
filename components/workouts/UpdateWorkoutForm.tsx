@@ -1,7 +1,8 @@
-import { Box, Button, Group, TextInput } from '@mantine/core';
+import { Box, Button, Group, Text, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
+import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, onSnapshot, Timestamp } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -27,20 +28,17 @@ interface MyFormValues {
     }>;
   }>;
 }
-export default function ProgramWorkoutForm({
+export default function UpdateWorkoutForm({
   workout,
   user,
-  setEdit,
-  programId,
-  programTitle,
+
   id,
-  currentIndex,
-  workoutsLength,
-  setCurrIndex,
 }: any): ReactElement {
   const [list, setList] = useState<any>([]);
-  const [dateInput, setDateInput] = useState<any>(new Date());
+  const [dateInput, setDateInput] = useState<any>(new Date(workout.date));
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const notifications = useNotifications();
+  const t = Timestamp;
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
@@ -56,70 +54,29 @@ export default function ProgramWorkoutForm({
   });
   const fullData = list.concat(mappedLifts);
 
-  //   console.log(workout);
-  console.log('currIndex and workout:', currentIndex, workoutsLength);
-  const initialValues: MyFormValues = workout
-    ? { name: workout.dayName, lifts: workout.lifts }
-    : {
-        name: '',
-        lifts: [
-          {
-            name: '',
-            id: null,
-            note: '',
-            records: [
-              {
-                sets: 5,
-                reps: 5,
-                rpe: 8,
-                load: 135,
-              },
-            ],
-          },
-        ],
-      };
+  const initialValues: MyFormValues = { name: workout.name, lifts: workout.lifts };
+
   async function handleFormSubmit(values: any) {
     setSubmitting(true);
-    const docRef = await addDoc(collection(db, 'workouts'), {
-      date: dateInput,
-      lifts: values.lifts,
-      name: values.name,
-      user: user.uid,
-      programId: programId,
-      programTitle: programTitle,
-    });
-
-    const workoutId = docRef.id;
-    let newArr = user.recentWorkouts;
-
-    if (user.recentWorkouts.length >= 5) {
-      newArr.shift();
-    }
-    newArr.push({
-      date: dateInput,
-      lifts: values.lifts,
-      name: values.name,
-      user: user.uid,
-      id: workoutId,
-      programId: programId,
-      programTitle: programTitle,
-    });
-    await updateDoc(doc(db, 'users', user.uid), {
-      recentWorkouts: newArr,
-    });
-
-    //update program completed to move currentIndex
-    if (currentIndex < workoutsLength - 1) {
-      await updateDoc(doc(db, 'subscribed', id), {
-        currentIndex: currentIndex + 1,
+    try {
+      await addDoc(collection(db, 'workouts'), {
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+        user: user.uid,
+        programId: workout.programId,
+        programTitle: workout.programTitle,
       });
-      setCurrIndex(currentIndex + 1);
-      setEdit(false);
+
+      notifications.showNotification({
+        title: 'Updated',
+        message: 'Workout successfully updated',
+      });
+      console.log('submitted');
+    } catch (err) {
+      console.log(err);
     }
 
-    //move activity dash currentIndex +1 if there is a next workout
-
-    // Router.push('/dashboard');
     setSubmitting(false);
   }
   return (
@@ -138,6 +95,10 @@ export default function ProgramWorkoutForm({
           <FieldArray name="lifts">
             {(liftHelpers) => (
               <Group direction="column" grow>
+                <Title align="center">Update Workout</Title>
+                <Text align="center" color="dimmed">
+                  {workout.programTitle}
+                </Text>
                 <Group position="apart" my={8}>
                   <Group position="center" style={{ alignItems: 'flex-start' }}>
                     <TextInput
@@ -196,16 +157,7 @@ export default function ProgramWorkoutForm({
                           list={fullData}
                         />
                       ))}
-                    <Group position="center" grow>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setEdit(false);
-                        }}
-                        variant="default"
-                      >
-                        Cancel
-                      </Button>
+                    <Group position="center">
                       <Button
                         size="sm"
                         onClick={() => {
