@@ -31,6 +31,7 @@ interface MyFormValues {
 export default function CustomWorkoutForm({ user }: any): ReactElement {
   const [list, setList] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
+  const [submitting, setSubmitting] = useState<boolean>(false);
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
@@ -60,6 +61,7 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
     ],
   };
   async function handleFormSubmit(values: MyFormValues) {
+    setSubmitting(true);
     const batch = writeBatch(db);
 
     //add workout, updateUser user recents, add lifts
@@ -78,7 +80,7 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
     let newArr = user.recentWorkouts.map((w: any) => {
       return { ...w, date: w.date.toDate() };
     });
-    console.log(newArr);
+
     newArr.push({
       date: dateInput,
       lifts: values.lifts,
@@ -92,15 +94,12 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
       console.log(f, s);
       return s.date - f.date;
     });
-
+    const userRef = doc(db, 'users', user.uid);
     if (sortedArr.length >= 5) {
       sortedArr = sortedArr.slice(0, 5);
+      batch.update(userRef, { recentWorkouts: sortedArr });
     } else {
     }
-    console.log(sortedArr);
-
-    const userRef = doc(db, 'users', user.uid);
-    batch.update(userRef, { recentWorkouts: sortedArr });
 
     for (let i = 0; i < values.lifts.length; i++) {
       for (let k = 0; k < values.lifts[i].records.length; k++) {
@@ -117,6 +116,7 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
     }
 
     await batch.commit();
+    setSubmitting(false);
     Router.push('/dashboard');
   }
   return (
@@ -200,7 +200,7 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
                           handleSubmit();
                         }}
                         variant="outline"
-                        loading={isSubmitting}
+                        loading={submitting}
                       >
                         Submit
                       </Button>

@@ -10,13 +10,13 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { useModals } from '@mantine/modals';
 import { FieldArray, useFormikContext } from 'formik';
 import React, { ReactElement, useState } from 'react';
 import { AiFillFileAdd, AiFillSetting, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { BiDuplicate } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
+import { BasicDays, BasicWeeks } from '../FormConstants';
 import AddLiftForm from './AddLiftForm';
 import DaySection from './DaySection';
 import GenerateForm from './GenerateForm';
@@ -31,348 +31,24 @@ export default function WeekSection({
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState<boolean>(false);
   const [openGen, setOpenGen] = useState<boolean>(false);
-  const modals = useModals();
+  const [blockEditModal, setBlockEditModal] = useState<boolean>(false);
+
   const matches = useMediaQuery('(min-width: 900px)');
   const smol = useMediaQuery('(min-width: 500px)');
   const freshBlock = {
     name: `Block 1`,
     summary: '',
-    weeks: [
-      {
-        name: 'Week 1',
-        summary: '',
-        days: [
-          {
-            name: 'Day 1',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 2',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 3',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 4',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 5',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 6',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Day 7',
-            summary: '',
-            lifts: [
-              {
-                name: 'New Lift',
-                type: 'single',
-                note: '',
-                records: [
-                  {
-                    type: 'working',
-                    load: null,
-                    sets: 5,
-                    reps: 5,
-                    unit: 'lbs',
-                    rpe: null,
-                    percent: null,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    weeks: BasicWeeks,
   };
 
   function handleAddWeek(weekHelpers: any, blockIndex: number) {
     weekHelpers.push({
       name: `Week ${values.blocks[blockIndex].weeks?.length + 1}`,
       summary: '',
-      days: [
-        {
-          name: 'Day 1',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 2',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 3',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 4',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 5',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 6',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'Day 7',
-          summary: '',
-          lifts: [
-            {
-              name: 'New Lift',
-              note: '',
-              records: [
-                {
-                  load: null,
-                  sets: 5,
-                  reps: 5,
-                  unit: 'lbs',
-                  rpe: null,
-                  percent: null,
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      days: BasicDays,
     });
   }
-  const openEditBlockModal = () => {
-    const id = modals.openModal({
-      title: 'Edit Block',
-      children: (
-        <Group direction="column" grow>
-          <TextInput
-            label="Block Name"
-            name={`blocks[${blockIndex}].name`}
-            value={values.blocks[blockIndex].name}
-            onChange={handleChange}
-          />
-          <Textarea
-            label="Summary"
-            name={`blocks[${blockIndex}].summary`}
-            // value={values.blocks[blockIndex].summary}
-            onChange={(e) => setFieldValue(blockIndex, e.target.value)}
-          />
-          <Button fullWidth onClick={() => modals.closeModal(id)}>
-            Save
-          </Button>
-        </Group>
-      ),
-    });
-  };
+
   return (
     <div>
       <FieldArray
@@ -387,6 +63,28 @@ export default function WeekSection({
                   currentWeek={weekIndex}
                   onClose={() => setOpenGen(false)}
                 />
+              </Modal>
+            </>
+
+            <>
+              <Modal opened={blockEditModal} onClose={() => setBlockEditModal(false)} size="lg">
+                <Group direction="column" grow>
+                  <TextInput
+                    label="Block Name"
+                    name={`blocks[${blockIndex}].name`}
+                    value={values.blocks[blockIndex].name}
+                    onChange={handleChange}
+                  />
+                  <Textarea
+                    label="Summary"
+                    name={`blocks[${blockIndex}].summary`}
+                    // value={values.blocks[blockIndex].summary}
+                    onChange={(e) => setFieldValue(blockIndex, e.target.value)}
+                  />
+                  <Button fullWidth onClick={() => setBlockEditModal(false)}>
+                    Save
+                  </Button>
+                </Group>
               </Modal>
             </>
             <Group position="apart" noWrap>
@@ -420,6 +118,7 @@ export default function WeekSection({
                             values.blocks[blockIndex].weeks[weekIndex]?.days.length + 1
                           }`,
                           summary: '',
+                          rest: false,
                           lifts: [
                             {
                               name: 'New Lift',
@@ -450,17 +149,18 @@ export default function WeekSection({
 
                 <Menu
                   control={
-                    <Button
-                      variant="outline"
-                      onClick={() => handleAddWeek(weekHelpers, blockIndex)}
-                      leftIcon={<AiFillSetting />}
-                      size="xs"
-                    >
+                    <Button variant="outline" leftIcon={<AiFillSetting />} size="xs">
                       {smol ? 'Week' : 'W'}
                     </Button>
                   }
                   zIndex={1200}
                 >
+                  <Menu.Item
+                    icon={<BiDuplicate color="cyan" />}
+                    onClick={() => handleAddWeek(weekHelpers, blockIndex)}
+                  >
+                    Add Week
+                  </Menu.Item>
                   <Menu.Item icon={<BiDuplicate color="cyan" />} onClick={() => setOpenGen(true)}>
                     Duplicate Weeks
                   </Menu.Item>
@@ -494,7 +194,7 @@ export default function WeekSection({
 
                   <Menu.Item
                     icon={<AiOutlineEdit color="cyan" />}
-                    onClick={() => openEditBlockModal()}
+                    onClick={() => setBlockEditModal(true)}
                   >
                     Edit Block
                   </Menu.Item>

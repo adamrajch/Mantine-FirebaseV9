@@ -1,4 +1,4 @@
-export const BasicWeek = [
+export const BasicDays = [
   {
     name: 'Day 1',
     summary: '',
@@ -140,6 +140,8 @@ export const BasicWeek = [
     ],
   },
 ];
+
+export const BasicWeeks = [{ name: '', summary: '', days: BasicDays }];
 
 export const BasicLifts = [
   {

@@ -1,4 +1,5 @@
-import { Box, Container, Grid, Group, Title } from '@mantine/core';
+import { Box, Container, Grid, Group, Text, Title } from '@mantine/core';
+import Link from 'next/link';
 import React from 'react';
 import ActiveProgramList from '../../components/activePrograms/ActiveProgramList';
 import Layout from '../../components/dashboard/AppShell';
@@ -14,23 +15,65 @@ export default function DashboardHome(): JSX.Element {
         <Container size="xl">
           <Grid>
             <Grid.Col span={12} lg={4}>
-              <Box
-                sx={(theme) => ({
-                  padding: 16,
-                  borderRadius: theme.radius.md,
+              <Group direction="column" grow>
+                <Box
+                  sx={(theme) => ({
+                    padding: 16,
+                    borderRadius: theme.radius.md,
+                    height: 90,
+                    backgroundColor:
+                      theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+                    boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
+                    '&:hover': {
+                      boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
+                    },
+                  })}
+                >
+                  <Text size="lg">
+                    Welcome Back{' '}
+                    <Link href="/dashboard/profile">
+                      <Text
+                        weight={500}
+                        size="lg"
+                        transform="capitalize"
+                        component="span"
+                        sx={(theme) => ({
+                          cursor: 'pointer',
+                          '&:hover': {
+                            textDecoration: 'underline',
+                            color: '#18a6df',
+                          },
+                        })}
+                      >
+                        {user.name}
+                      </Text>
+                    </Link>
+                  </Text>
+                </Box>
+                <Box
+                  sx={(theme) => ({
+                    padding: 16,
+                    borderRadius: theme.radius.md,
+                    height: 195,
+                    backgroundColor:
+                      theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+                    boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
+                    '&:hover': {
+                      boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
+                    },
+                  })}
+                >
+                  <Group direction="column" grow>
+                    <Title align="center" order={2}>
+                      Add A Workout
+                    </Title>
 
-                  backgroundColor:
-                    theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
-                  boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
-                })}
-              >
-                <Group grow direction="column">
-                  <Title align="center" order={2}>
-                    Add A Workout
-                  </Title>
-                  <WorkoutContainer user={user} />
-                </Group>
-              </Box>
+                    <Group grow direction="column">
+                      <WorkoutContainer user={user} />
+                    </Group>
+                  </Group>
+                </Box>
+              </Group>
             </Grid.Col>
             <Grid.Col span={12} lg={4}>
               <HistoryList user={user} />

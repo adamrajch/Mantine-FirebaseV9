@@ -2,7 +2,7 @@ import { Box, Button, Group, Text, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { addDoc, collection, doc, onSnapshot, Timestamp } from 'firebase/firestore';
+import { collection, doc, onSnapshot, Timestamp, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -59,14 +59,42 @@ export default function UpdateWorkoutForm({
   async function handleFormSubmit(values: any) {
     setSubmitting(true);
     try {
-      await addDoc(collection(db, 'workouts'), {
+      const batch = writeBatch(db);
+
+      //add workout, updateUser user recents, add lifts
+      const r = collection(db, 'workouts');
+      const workoutRef = doc(r);
+      batch.update(workoutRef, {
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+      });
+
+      let newArr = user.recentWorkouts.map((w: any) => {
+        return { ...w, date: w.date.toDate() };
+      });
+
+      newArr.push({
         date: dateInput,
         lifts: values.lifts,
         name: values.name,
         user: user.uid,
-        programId: workout.programId,
-        programTitle: workout.programTitle,
+        workoutId: id,
       });
+      console.log('new Arr', newArr);
+
+      let sortedArr = newArr.sort((f: any, s: any) => {
+        console.log(f, s);
+        return s.date - f.date;
+      });
+
+      if (sortedArr.length >= 5) {
+        sortedArr = sortedArr.slice(0, 5);
+
+        const userRef = doc(db, 'users', user.uid);
+        batch.update(userRef, { recentWorkouts: sortedArr });
+      } else {
+      }
 
       notifications.showNotification({
         title: 'Updated',

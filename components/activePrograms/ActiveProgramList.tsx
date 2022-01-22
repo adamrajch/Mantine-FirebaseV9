@@ -15,6 +15,7 @@ export default function ActiveProgramList({ user }: any): ReactElement {
         '&:hover': {
           boxShadow: '6px 6px 14px  #0f0f0f, -2px -2px 6px #14698b',
         },
+        height: 300,
       })}
     >
       <Title order={2} align="center">

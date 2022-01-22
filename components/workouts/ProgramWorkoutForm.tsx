@@ -1,7 +1,7 @@
 import { Box, Button, Group, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -80,7 +80,14 @@ export default function ProgramWorkoutForm({
       };
   async function handleFormSubmit(values: any) {
     setSubmitting(true);
-    const docRef = await addDoc(collection(db, 'workouts'), {
+
+    const batch = writeBatch(db);
+
+    //add workout, updateUser user recents, add lifts
+    const r = collection(db, 'workouts');
+    const workoutRef = doc(r);
+
+    batch.set(workoutRef, {
       date: dateInput,
       lifts: values.lifts,
       name: values.name,
@@ -89,26 +96,50 @@ export default function ProgramWorkoutForm({
       programTitle: programTitle,
     });
 
-    const workoutId = docRef.id;
-    let newArr = user.recentWorkouts;
+    const workoutId = workoutRef.id;
 
-    if (user.recentWorkouts.length >= 5) {
-      newArr.shift();
-    }
+    let newArr = user.recentWorkouts.map((w: any) => {
+      return { ...w, date: w.date.toDate() };
+    });
+
     newArr.push({
       date: dateInput,
       lifts: values.lifts,
       name: values.name,
       user: user.uid,
-      id: workoutId,
-      programId: programId,
-      programTitle: programTitle,
+      workoutId: workoutId,
     });
-    await updateDoc(doc(db, 'users', user.uid), {
-      recentWorkouts: newArr,
+    console.log('new Arr', newArr);
+
+    let sortedArr = newArr.sort((f: any, s: any) => {
+      console.log(f, s);
+      return s.date - f.date;
     });
+    const userRef = doc(db, 'users', user.uid);
+    if (sortedArr.length >= 5) {
+      sortedArr = sortedArr.slice(0, 5);
+
+      batch.update(userRef, { recentWorkouts: sortedArr });
+    } else {
+    }
+    console.log(sortedArr);
+
+    for (let i = 0; i < values.lifts.length; i++) {
+      for (let k = 0; k < values.lifts[i].records.length; k++) {
+        const lr = collection(db, `users/${user.uid}/records`);
+        const liftRef = doc(lr);
+        batch.set(liftRef, {
+          name: values.lifts[i].name,
+          id: values.lifts[i].id,
+          records: values.lifts[i].records[k],
+          date: dateInput,
+          workoutId: workoutId,
+        });
+      }
+    }
 
     //update program completed to move currentIndex
+
     if (currentIndex < workoutsLength - 1) {
       await updateDoc(doc(db, 'subscribed', id), {
         currentIndex: currentIndex + 1,
@@ -117,9 +148,8 @@ export default function ProgramWorkoutForm({
       setEdit(false);
     }
 
-    //move activity dash currentIndex +1 if there is a next workout
-
     // Router.push('/dashboard');
+    await batch.commit();
     setSubmitting(false);
   }
   return (

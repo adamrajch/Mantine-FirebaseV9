@@ -11,19 +11,24 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
   const { user, loading } = useAuth();
 
   useEffect(() => {
+    console.log(user?.uid);
     getPrograms();
   }, [user]);
+
+  useEffect(() => {
+    console.log(programs);
+  }, [programs]);
 
   async function getPrograms() {
     if (!user) {
       return;
     }
-
+    console.log(user);
     const collectionRef = collection(db, 'programs');
     const q = query(
       collectionRef,
       where('author.uid', '==', user.uid),
-      orderBy('createdDate', 'desc')
+      orderBy('createdAt', 'desc')
     );
     // const querySnapshot = await getDocs(q);
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -32,12 +37,13 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
           const docObj = {
             id: d.id,
             ...d.data(),
-            created: d.data().createdDate.toDate().getTime(),
-            updated: d.data().updatedDate.toDate().getTime(),
+            created: d.data().createdAt.toDate().getTime(),
+            updated: d.data().updatedAt.toDate().getTime(),
           };
           return docObj;
         })
       );
+      console.log(querySnapshot.docs);
     });
     setProgramLoading(false);
     return unsubscribe;
@@ -63,11 +69,6 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
 //   context: GetServerSidePropsContext
 // ) => {
 //   try {
-//     const cookies = nookies.get(context);
-//     const token = await verifyIdToken(cookies.token);
-
-//     const { user_id } = token;
-
 //     const collectionRef = collection(db, 'programs');
 //     const q = query(
 //       collectionRef,

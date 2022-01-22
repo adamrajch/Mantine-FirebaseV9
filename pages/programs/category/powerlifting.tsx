@@ -104,8 +104,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
       programs.push({
         ...doc.data(),
         id: doc.id,
-        created: doc.data().createdDate.toDate().getTime(),
-        updated: doc.data().updatedDate.toDate().getTime(),
+        created: doc.data().createdAt.toDate().getTime(),
+        updated: doc.data().updatedAt.toDate().getTime(),
       });
     });
     const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];

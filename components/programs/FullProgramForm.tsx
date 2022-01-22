@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { db } from '../../firebase';
 import DynamicTemplateForm from './DynamicTemplateForm';
-import { BasicWeek } from './FormConstants';
+import { BasicDays } from './FormConstants';
 import GeneralSection from './formSections/GeneralSection';
 import TemplateTabs from './formSections/TemplateTabs';
 import RichText from './RichText';
@@ -99,7 +99,7 @@ export default function FullProgramForm({
               {
                 name: 'Week 1',
                 summary: '',
-                days: BasicWeek,
+                days: BasicDays,
               },
             ],
           },
@@ -130,6 +130,7 @@ export default function FullProgramForm({
             dayIndex: j,
             lifts: b[i].weeks[k].days[j].lifts,
             dayName: b[i].weeks[k].days[j].name,
+            rest: b[i].weeks[k].days[j].rest,
           });
         }
       }
@@ -145,7 +146,11 @@ export default function FullProgramForm({
       currentIndex: 0,
       paused: false,
       completed: false,
-      author: program.author,
+      author: {
+        email: user.email,
+        name: user.name,
+        uid: user.uid,
+      },
       user: user,
       userId: user.uid,
       programId: programID,
@@ -161,7 +166,11 @@ export default function FullProgramForm({
           currentDay: [0, 0, 0],
           paused: false,
           completed: false,
-          author: program.author,
+          author: {
+            email: user.email,
+            name: user.name,
+            uid: user.uid,
+          },
           user: user,
           userId: user.uid,
           programId: programID,
@@ -203,7 +212,8 @@ export default function FullProgramForm({
         initialValues={initialValues}
         onSubmit={async (values) => {
           console.log(values);
-          //create a program
+          console.log(calculateWorkouts(values.blocks));
+
           if (!program || program === undefined) {
             try {
               setSubmitLoading(true);
@@ -213,7 +223,11 @@ export default function FullProgramForm({
                 experience: values.experience,
                 category: values.category,
                 periodization: values.periodization,
-                author: user,
+                author: {
+                  email: user.email,
+                  name: user.name,
+                  uid: user.uid,
+                },
                 numberOfWeeks: calculateWeeks(values),
                 heartCount: 0,
                 commentCount: 0,

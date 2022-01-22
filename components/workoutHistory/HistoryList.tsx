@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Text, Title } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Text, Title } from '@mantine/core';
 import { ExternalLinkIcon } from '@modulz/radix-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -21,25 +21,17 @@ export default function HistoryList({ user }: Props): ReactElement {
         '&:hover': {
           boxShadow: '8px 8px 18px  #0f0f0f, -2px -2px 6px #14698b',
         },
+        height: 300,
       })}
     >
-      <Group position="apart">
+      <Group position="apart" grow>
         <Title order={2} align="center">
           Recent Workouts
         </Title>
-        <Link href={`/dashboard/workouts/`}>
-          <Group
-            spacing={0}
-            sx={{
-              cursor: 'pointer',
-              '&:hover': {
-                color: '#14b8f8',
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Text
-              size="xs"
+        {user.recentWorkouts.lenth > 0 && (
+          <Link href={`/dashboard/workouts/`}>
+            <Group
+              spacing={0}
               sx={{
                 cursor: 'pointer',
                 '&:hover': {
@@ -48,42 +40,58 @@ export default function HistoryList({ user }: Props): ReactElement {
                 },
               }}
             >
-              See all{' '}
-            </Text>
-            <ActionIcon>
-              <ExternalLinkIcon />
-            </ActionIcon>
-          </Group>
-        </Link>
-      </Group>
-
-      <Group direction="column" grow my={12}>
-        {user.recentWorkouts.map((w: any) => (
-          <Box key={w.id}>
-            <Group position="apart">
-              <Link href={`/dashboard/workouts/${w.id}`}>
-                <Text
-                  weight={500}
-                  sx={{
-                    cursor: 'pointer',
-                    '&:hover': {
-                      color: '#14b8f8',
-                      textDecoration: 'underline',
-                    },
-                  }}
-                >
-                  {`${w.name} `}
-                  {w.programTitle ? `(${w.programTitle})` : ''}
-                </Text>
-              </Link>
-
-              <Text color="dimmed" size="sm">
-                {dayjs(w.date.toDate()).fromNow()}
+              <Text
+                size="xs"
+                sx={{
+                  cursor: 'pointer',
+                  '&:hover': {
+                    color: '#14b8f8',
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                See all{' '}
               </Text>
+              <ActionIcon>
+                <ExternalLinkIcon />
+              </ActionIcon>
             </Group>
-          </Box>
-        ))}
+          </Link>
+        )}
       </Group>
+      {user.recentWorkouts.length > 0 ? (
+        <Group direction="column" grow my={12}>
+          {user.recentWorkouts.map((w: any) => (
+            <Box key={w.workoutId}>
+              <Group position="apart">
+                <Link href={`/dashboard/workouts/${w.workoutId}`}>
+                  <Text
+                    weight={500}
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': {
+                        color: '#14b8f8',
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    {`${w.name} `}
+                    {w.programTitle ? `(${w.programTitle})` : ''}
+                  </Text>
+                </Link>
+
+                <Text color="dimmed" size="sm">
+                  {dayjs(w.date.toDate()).fromNow()}
+                </Text>
+              </Group>
+            </Box>
+          ))}
+        </Group>
+      ) : (
+        <Center style={{ height: 50 }}>
+          <Text color="dimmed">No workouts!</Text>
+        </Center>
+      )}
     </Box>
   );
 }
