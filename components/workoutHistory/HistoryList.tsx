@@ -25,11 +25,11 @@ export default function HistoryList({ user }: Props): ReactElement {
       })}
     >
       <Group position="apart" grow>
-        <Title order={2} align="center">
+        <Title order={3} align="center">
           Recent Workouts
         </Title>
-        {user.recentWorkouts.lenth > 0 && (
-          <Link href={`/dashboard/workouts/`}>
+        {user.recentWorkouts.length > 0 && (
+          <Link href={`/dashboard/workouts`}>
             <Group
               spacing={0}
               sx={{

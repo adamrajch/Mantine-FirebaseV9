@@ -1,7 +1,7 @@
 import { Box, Button, Group, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { collection, doc, onSnapshot, updateDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, updateDoc, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -39,6 +39,7 @@ export default function ProgramWorkoutForm({
   setCurrIndex,
 }: any): ReactElement {
   const [list, setList] = useState<any>([]);
+  const [hits, setHits] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
   const [submitting, setSubmitting] = useState<boolean>(false);
   useEffect(() => {
@@ -46,17 +47,45 @@ export default function ProgramWorkoutForm({
       console.log('Current data: ', doc.data());
 
       const data = doc.data();
-      setList(data?.lifts);
+      console.log(data);
+      setList(
+        data?.lifts.map((l: any) => {
+          return {
+            label: l.name,
+            value: l.name,
+            id: l.id,
+          };
+        })
+      );
     });
 
     return unsub;
   }, []);
-  const mappedLifts = workout?.lifts.map((w: any) => {
-    return { value: w.name, label: w.name, id: w.id };
-  });
-  const fullData = list.concat(mappedLifts);
 
-  //   console.log(workout);
+  useEffect(() => {
+    fetchGlobalLifts();
+  }, []);
+
+  async function fetchGlobalLifts() {
+    const docRef = doc(db, 'global-lifts', 'global');
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    console.log(data);
+    if (docSnap.exists()) {
+      setHits(
+        data?.lifts.map((l: any) => {
+          return {
+            label: l.name,
+            value: l.name,
+            id: l.id,
+          };
+        })
+      );
+    } else {
+      console.log('No such document!');
+    }
+  }
+
   console.log('currIndex and workout:', currentIndex, workoutsLength);
   const initialValues: MyFormValues = workout
     ? { name: workout.dayName, lifts: workout.lifts }
@@ -104,10 +133,11 @@ export default function ProgramWorkoutForm({
 
     newArr.push({
       date: dateInput,
-      lifts: values.lifts,
       name: values.name,
       user: user.uid,
       workoutId: workoutId,
+      programId: programId,
+      programTitle: programTitle,
     });
     console.log('new Arr', newArr);
 
@@ -121,6 +151,7 @@ export default function ProgramWorkoutForm({
 
       batch.update(userRef, { recentWorkouts: sortedArr });
     } else {
+      batch.update(userRef, { recentWorkouts: sortedArr });
     }
     console.log(sortedArr);
 
@@ -213,42 +244,41 @@ export default function ProgramWorkoutForm({
                   </Button>
                 </Group>
 
-                {list.length > 0 && (
-                  <Group direction="column" spacing="md" grow>
-                    {values.lifts.length > 0 &&
-                      values.lifts.map((lift, li) => (
-                        <WorkoutLiftSection
-                          key={li}
-                          lift={lift}
-                          li={li}
-                          liftHelpers={liftHelpers}
-                          user={user}
-                          list={fullData}
-                        />
-                      ))}
-                    <Group position="center" grow>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setEdit(false);
-                        }}
-                        variant="default"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          handleSubmit();
-                        }}
-                        variant="outline"
-                        loading={submitting}
-                      >
-                        Submit
-                      </Button>
-                    </Group>
+                <Group direction="column" spacing="md" grow>
+                  {values.lifts.length > 0 &&
+                    values.lifts.map((lift, li) => (
+                      <WorkoutLiftSection
+                        key={li}
+                        lift={lift}
+                        li={li}
+                        liftHelpers={liftHelpers}
+                        user={user}
+                        list={list}
+                        hits={hits}
+                      />
+                    ))}
+                  <Group position="center" grow>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEdit(false);
+                      }}
+                      variant="default"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                      variant="outline"
+                      loading={submitting}
+                    >
+                      Submit
+                    </Button>
                   </Group>
-                )}
+                </Group>
 
                 {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
                 {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}

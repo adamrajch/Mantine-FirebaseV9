@@ -32,6 +32,7 @@
     "react-firebase-hooks": "^4.0.2",
     "react-icons": "^4.3.1",
     "react-select-search": "^3.0.9",
+    "recharts": "^2.1.8",
     "redis-om": "^0.1.7",
     "yup": "^0.32.11"
   },

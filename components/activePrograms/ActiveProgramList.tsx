@@ -1,7 +1,7 @@
-import { ActionIcon, Box, Button, Group, Text, Title } from '@mantine/core';
+import { Box, Button, Group, Text, Title } from '@mantine/core';
+import Link from 'next/link';
 import router from 'next/router';
 import React, { ReactElement } from 'react';
-import { BiLinkExternal } from 'react-icons/bi';
 
 export default function ActiveProgramList({ user }: any): ReactElement {
   return (
@@ -18,21 +18,27 @@ export default function ActiveProgramList({ user }: any): ReactElement {
         height: 300,
       })}
     >
-      <Title order={2} align="center">
+      <Title order={3} align="center">
         Active Programs
       </Title>
       <Group direction="column" grow>
         {user.subscribedPrograms.length > 0 ? (
           user.subscribedPrograms.map((p: any) => (
-            <Group position="apart" grow key={p.programId}>
-              <Title order={4}>{p.programTitle}</Title>
-              <Group position="right">
-                <ActionIcon
-                  onClick={() => router.push(`/dashboard/activity/${user.uid}-${p.programId}`)}
+            <Group position="apart" grow key={p.programId} my={12}>
+              <Link href={`/dashboard/activity/${user.uid}-${p.programId}`}>
+                <Text
+                  weight={500}
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                      color: '#14b8f8',
+                      textDecoration: 'underline',
+                    },
+                  }}
                 >
-                  <BiLinkExternal />
-                </ActionIcon>
-              </Group>
+                  {p.programTitle}
+                </Text>
+              </Link>
             </Group>
           ))
         ) : (

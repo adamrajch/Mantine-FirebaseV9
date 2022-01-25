@@ -3,14 +3,11 @@ import { Button, Group, Tab, Tabs, Text, TypographyStylesProvider } from '@manti
 import { useNotifications } from '@mantine/notifications';
 import {
   addDoc,
-  arrayRemove,
-  arrayUnion,
   collection,
-  deleteDoc,
   doc,
   serverTimestamp,
-  setDoc,
   updateDoc,
+  writeBatch,
 } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import { useRouter } from 'next/router';
@@ -141,7 +138,10 @@ export default function FullProgramForm({
   async function subscribeToProgram() {
     setSubLoading(true);
 
-    await setDoc(doc(db, `subscribed`, `${user.uid}-${programID}`), {
+    const batch = writeBatch(db);
+    const subbedRef = doc(db, `subscribed`, `${user.uid}-${programID}`);
+
+    batch.set(subbedRef, {
       currentDay: [0, 0, 0],
       currentIndex: 0,
       paused: false,
@@ -151,7 +151,6 @@ export default function FullProgramForm({
         name: user.name,
         uid: user.uid,
       },
-      user: user,
       userId: user.uid,
       programId: programID,
       title: program.title,
@@ -160,50 +159,50 @@ export default function FullProgramForm({
       workouts: program.workouts,
     });
 
-    try {
-      await updateDoc(doc(db, 'users', user.uid), {
-        subscribedPrograms: arrayUnion({
-          currentDay: [0, 0, 0],
-          paused: false,
-          completed: false,
-          author: {
-            email: user.email,
-            name: user.name,
-            uid: user.uid,
-          },
-          user: user,
-          userId: user.uid,
-          programId: programID,
-          programTitle: program.title,
-          lastCompletedDay: null,
-          template: program.template.blocks,
-          workouts: program.workouts,
-        }),
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    const userRef = doc(db, 'users', user.uid);
+    let newArr = user.subscribedPrograms;
+    newArr.push({
+      paused: false,
+      completed: false,
+      author: {
+        email: user.email,
+        name: user.name,
+        uid: user.uid,
+      },
+      userId: user.uid,
+      programId: programID,
+      programTitle: program.title,
+      lastCompletedDay: null,
+    });
 
+    batch.update(userRef, { subscribedPrograms: newArr });
+
+    await batch.commit();
     setSubLoading(false);
-    router.push(`/dashboard/activity/${user.uid}-${programID}`);
+    // router.push(`/dashboard/activity/${user.uid}-${programID}`);
   }
 
   async function unsubToProgram() {
     setSubLoading(true);
-    try {
-      await deleteDoc(doc(db, 'subscribed', `${user.uid}-${programID}`));
-    } catch (err) {
-      console.log(err);
-    }
 
-    try {
-      //get the object which has the programID
-      const pro = user.subscribedPrograms.filter((p: any) => p.programId === programID);
-      console.log(pro);
-      await updateDoc(doc(db, 'users', user.uid), { subscribedPrograms: arrayRemove(pro[0]) });
-    } catch (err) {
-      console.log(err);
-    }
+    const batch = writeBatch(db);
+    const subbedRef = doc(db, `subscribed`, `${user.uid}-${programID}`);
+
+    batch.delete(subbedRef);
+
+    const userRef = doc(db, 'users', user.uid);
+    let newArr = user.subscribedPrograms.filter((p: any) => p.programId !== programID);
+    batch.update(userRef, { subscribedPrograms: newArr });
+
+    // try {
+    //   //get the object which has the programID
+    //   const pro = user.subscribedPrograms.filter((p: any) => p.programId === programID);
+    //   console.log(pro);
+    //   await updateDoc(doc(db, 'users', user.uid), { subscribedPrograms: arrayRemove(pro[0]) });
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    await batch.commit();
     setSubLoading(false);
   }
   return (

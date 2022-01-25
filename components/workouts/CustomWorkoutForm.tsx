@@ -1,7 +1,7 @@
 import { Box, Button, Group, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import Router from 'next/router';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -30,18 +30,48 @@ interface MyFormValues {
 }
 export default function CustomWorkoutForm({ user }: any): ReactElement {
   const [list, setList] = useState<any>([]);
+  const [hits, setHits] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
   const [submitting, setSubmitting] = useState<boolean>(false);
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
       const data = doc.data();
-      setList(data?.lifts);
+      setList(
+        data?.lifts.map((l: any) => {
+          console.log('indi L ', l);
+
+          return {
+            label: l.name,
+            value: l.name,
+            id: l.id,
+          };
+        })
+      );
     });
 
     return unsub;
   }, []);
+  useEffect(() => {
+    fetchGlobalLifts();
+  }, []);
 
+  async function fetchGlobalLifts() {
+    const docRef = doc(db, 'global-lifts', 'global');
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    console.log(data);
+
+    setHits(
+      data?.lifts.map((l: any) => {
+        return {
+          label: l.name,
+          value: l.name,
+          id: l.id,
+        };
+      })
+    );
+  }
   const initialValues: MyFormValues = {
     name: '',
     lifts: [
@@ -83,7 +113,6 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
 
     newArr.push({
       date: dateInput,
-      lifts: values.lifts,
       name: values.name,
       user: user.uid,
       workoutId: workoutId,
@@ -91,14 +120,13 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
     console.log('new Arr', newArr);
 
     let sortedArr = newArr.sort((f: any, s: any) => {
-      console.log(f, s);
+      // console.log(f, s);
       return s.date - f.date;
     });
     const userRef = doc(db, 'users', user.uid);
     if (sortedArr.length >= 5) {
       sortedArr = sortedArr.slice(0, 5);
-      batch.update(userRef, { recentWorkouts: sortedArr });
-    } else {
+      // batch.update(userRef, { recentWorkouts: sortedArr });
     }
 
     for (let i = 0; i < values.lifts.length; i++) {
@@ -114,6 +142,22 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
         });
       }
     }
+
+    const tracked = user.trackedLifts;
+    console.log('user tracked lifts: ', tracked);
+    let newLifts = values.lifts.filter((item: any) => {
+      return tracked.every((f: any) => {
+        return f.id !== item.id;
+      });
+    });
+    const formatNew = newLifts.map((n: any) => {
+      return {
+        id: n.id,
+        name: n.name,
+      };
+    });
+    console.log('new lifts:', newLifts);
+    batch.update(userRef, { trackedLifts: tracked.concat(formatNew), recentWorkouts: sortedArr });
 
     await batch.commit();
     setSubmitting(false);
@@ -180,33 +224,36 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
                   </Button>
                 </Group>
 
-                {list.length > 0 && (
-                  <Group direction="column" spacing="md" grow>
-                    {values.lifts.length > 0 &&
-                      values.lifts.map((lift, li) => (
-                        <WorkoutLiftSection
-                          key={li}
-                          lift={lift}
-                          li={li}
-                          liftHelpers={liftHelpers}
-                          user={user}
-                          list={list}
-                        />
-                      ))}
-                    <Group position="center">
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          handleSubmit();
-                        }}
-                        variant="outline"
-                        loading={submitting}
-                      >
-                        Submit
-                      </Button>
-                    </Group>
+                <Group direction="column" spacing="md" grow>
+                  {values.lifts.length > 0 &&
+                    values.lifts.map((lift, li) => (
+                      <>
+                        {hits.length > 0 && (
+                          <WorkoutLiftSection
+                            key={li}
+                            lift={lift}
+                            li={li}
+                            liftHelpers={liftHelpers}
+                            user={user}
+                            list={list}
+                            hits={hits}
+                          />
+                        )}
+                      </>
+                    ))}
+                  <Group position="center">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                      variant="outline"
+                      loading={submitting}
+                    >
+                      Submit
+                    </Button>
                   </Group>
-                )}
+                </Group>
               </Box>
             )}
           </FieldArray>

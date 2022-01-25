@@ -1,57 +1,82 @@
 export const LiftsData = [
   {
     id: 1,
-    label: 'bench press',
-    value: 'bench press',
+    name: 'bench press',
   },
   {
     id: 2,
-    label: 'deadlift',
-    value: 'deadlift',
+    name: 'deadlift',
   },
   {
     id: 3,
-    label: 'back squat',
-    value: 'back squat',
+    name: 'back squat',
   },
   {
     id: 4,
-    label: 'front squat',
-    value: 'front squat',
+    name: 'front squat',
   },
   {
     id: 5,
-    label: 'chin up',
-    value: 'chin up',
+    name: 'chin up',
   },
   {
     id: 6,
-    label: 'pull up',
-    value: 'pull up',
+    name: 'pull up',
   },
   {
     id: 7,
-    label: 'netural pull up',
-    value: 'netural pull up',
+    name: 'netural pull up',
   },
   {
     id: 8,
-    label: 'bb bicep curl',
-    value: 'bb bicep curl',
+    name: 'bb bicep curl',
   },
   {
     id: 9,
-    label: 'db hammer curl',
-    value: 'db hammer curl',
+    name: 'db hammer curl',
   },
   {
     id: 10,
-    label: 'cable tricep extension',
-    value: 'cable tricep extension',
+    name: 'cable tricep extension',
   },
   {
     id: 11,
-    label: 'jm press',
-    value: 'jm press',
+    name: 'jm press',
+  },
+  {
+    id: 12,
+    name: 'bb incline bench',
+  },
+  {
+    id: 14,
+    name: 'db incline bench',
+  },
+  {
+    id: 15,
+    name: 'db flat bench',
+  },
+  {
+    id: 16,
+    name: 'db seated shoulder press',
+  },
+  {
+    id: 17,
+    name: 'overhead press',
+  },
+  {
+    id: 18,
+    name: 'clean and jerk',
+  },
+  {
+    id: 19,
+    name: 'snatch',
+  },
+  {
+    id: 19,
+    name: 'bb curl',
+  },
+  {
+    id: 20,
+    name: 'bb preacher curl',
   },
 ];

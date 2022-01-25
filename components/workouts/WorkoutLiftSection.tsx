@@ -14,6 +14,7 @@ export default function WorkoutLiftSection({
   liftHelpers,
   user,
   list,
+  hits,
 }: any): ReactElement {
   const { values, setFieldValue }: any = useFormikContext();
 
@@ -26,8 +27,6 @@ export default function WorkoutLiftSection({
         lifts: arrayUnion({
           name: q,
           id: newId,
-          value: q,
-          label: q,
         }),
       },
       { merge: true }
@@ -39,6 +38,25 @@ export default function WorkoutLiftSection({
       records: values.lifts[li].records,
     });
   }
+
+  // const searchLifts = async (q: string) => {
+  //   if (q.length > 1) {
+  //     let edited = q.toLowerCase().trim();
+  //     const params = new URLSearchParams({ q });
+
+  //     const res = await fetch('/api/search?' + params);
+  //     console.log(q);
+  //     const result = await res.json();
+  //     console.log(result);
+  //     setResults(
+  //       result.lifts.map((l: any) => {
+  //         return { label: l.name, value: l.name, category: l.category };
+  //       })
+  //     );
+  //   }
+  // };
+
+  let dataList = [...hits, ...list];
   return (
     <Box
       key={li}
@@ -61,7 +79,7 @@ export default function WorkoutLiftSection({
                 <Select
                   placeholder="Select Lift"
                   searchable
-                  data={list}
+                  data={dataList}
                   nothingFound="No Lifts"
                   maxDropdownHeight={200}
                   icon={<BiSearch />}
@@ -72,8 +90,11 @@ export default function WorkoutLiftSection({
                   // onCreate={(q) => {
                   //   let selected = list.find((item: any) => item.value === q);
                   // }}
+                  // onSearchChange={(q) => {
+                  //   searchLifts(q);
+                  // }}
                   onChange={(q) => {
-                    let selected = list.find((item: any) => item.value === q);
+                    let selected = dataList.find((item: any) => item.value === q);
                     if (q === null) {
                       setFieldValue(`lifts[${li}]`, {
                         name: q,

@@ -30,13 +30,18 @@ export default function LiftSection({
 
   const searchLifts = async (q: string) => {
     if (q.length > 2) {
+      let edited = q.toLowerCase().trim();
       const params = new URLSearchParams({ q });
 
       const res = await fetch('/api/search?' + params);
       console.log(q);
       const result = await res.json();
       console.log(result);
-      setHits(result.lifts);
+      setHits(
+        result.lifts.map((l: any) => {
+          return { label: l.name, value: l.name, category: l.category };
+        })
+      );
     }
   };
   return (
@@ -91,6 +96,10 @@ export default function LiftSection({
                       }
                     );
                   }}
+                  // filter={(value, item) =>
+                  //   item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
+                  //   item.category.includes(value.toLowerCase().trim())
+                  // }
                 />
                 <Group position="right" spacing={matches ? 6 : 0} noWrap>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>

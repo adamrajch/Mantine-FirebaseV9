@@ -13,7 +13,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
   const blocks = program.template;
   const { workouts, currentIndex } = program;
   const { user } = useAuth();
-
+  console.log(program);
   const [currIndex, setCurrIndex] = useState<number>(currentIndex);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEdit] = useState(false);
@@ -127,7 +127,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
                 transitionTimingFunction="ease"
                 size="60%"
               >
-                <FullTemplate blocks={blocks} />
+                <FullTemplate blocks={blocks} title={program.title} />
               </Modal>
             </>
           </Group>

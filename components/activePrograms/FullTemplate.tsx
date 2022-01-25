@@ -17,7 +17,7 @@ import React, { ReactElement } from 'react';
 import { BiNote } from 'react-icons/bi';
 import { FaRegStickyNote } from 'react-icons/fa';
 
-export default function FullTemplate({ blocks }: any): ReactElement {
+export default function FullTemplate({ blocks, title }: any): ReactElement {
   const theme = useMantineTheme();
 
   const modals = useModals();
@@ -53,7 +53,7 @@ export default function FullTemplate({ blocks }: any): ReactElement {
   return (
     <Group direction="column" position="left" grow my={20}>
       <Title order={2} align="center">
-        Full Program
+        {title}
       </Title>
       <Tabs variant="outline">
         {blocks.map((block: any, i: number) => (

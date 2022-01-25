@@ -23,8 +23,7 @@ export default function AddLiftForm({}): ReactElement {
   const handleCreateLift = async () => {
     // e.preventDefault();
     const formValues = {
-      label: name,
-      value: name,
+      name,
       category: value,
     };
     console.log(formValues);
@@ -53,6 +52,7 @@ export default function AddLiftForm({}): ReactElement {
     { value: 'shoulders', label: 'shoulders' },
     { value: 'biceps', label: 'biceps' },
     { value: 'triceps', label: 'triceps' },
+    { value: 'hand', label: 'hand' },
     { value: 'cardio', label: 'cardio' },
     { value: 'core', label: 'core' },
     { value: 'mobility', label: 'mobility' },

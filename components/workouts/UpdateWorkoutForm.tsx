@@ -2,7 +2,7 @@ import { Box, Button, Group, Text, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { collection, doc, onSnapshot, Timestamp, writeBatch } from 'firebase/firestore';
+import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -31,14 +31,16 @@ interface MyFormValues {
 export default function UpdateWorkoutForm({
   workout,
   user,
-
+  programId,
+  programTitle,
   id,
 }: any): ReactElement {
   const [list, setList] = useState<any>([]);
+  const [hits, setHits] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date(workout.date));
   const [submitting, setSubmitting] = useState<boolean>(false);
   const notifications = useNotifications();
-  const t = Timestamp;
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
@@ -68,6 +70,8 @@ export default function UpdateWorkoutForm({
         date: dateInput,
         lifts: values.lifts,
         name: values.name,
+        programId: programId,
+        programTitle: programTitle,
       });
 
       let newArr = user.recentWorkouts.map((w: any) => {
@@ -76,10 +80,11 @@ export default function UpdateWorkoutForm({
 
       newArr.push({
         date: dateInput,
-        lifts: values.lifts,
         name: values.name,
         user: user.uid,
         workoutId: id,
+        programId: programId,
+        programTitle: programTitle,
       });
       console.log('new Arr', newArr);
 
@@ -87,13 +92,13 @@ export default function UpdateWorkoutForm({
         console.log(f, s);
         return s.date - f.date;
       });
-
+      const userRef = doc(db, 'users', user.uid);
       if (sortedArr.length >= 5) {
         sortedArr = sortedArr.slice(0, 5);
 
-        const userRef = doc(db, 'users', user.uid);
         batch.update(userRef, { recentWorkouts: sortedArr });
       } else {
+        batch.update(userRef, { recentWorkouts: sortedArr });
       }
 
       notifications.showNotification({
@@ -182,7 +187,8 @@ export default function UpdateWorkoutForm({
                           li={li}
                           liftHelpers={liftHelpers}
                           user={user}
-                          list={fullData}
+                          list={list}
+                          hits={hits}
                         />
                       ))}
                     <Group position="center">
