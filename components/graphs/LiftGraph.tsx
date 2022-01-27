@@ -1,7 +1,7 @@
-import { Box } from '@mantine/core';
+import { Box, Text, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 import toObject from 'dayjs/plugin/toObject';
-import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import {
   Area,
@@ -9,9 +9,11 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
+import { NameType, ValueType } from 'recharts/src/component/DefaultTooltipContent';
 import { db } from '../../firebase';
 type Props = {
   lift: {
@@ -33,9 +35,11 @@ export default function LiftGraph({ lift, userId }: Props) {
   }, [data]);
   dayjs.extend(toObject);
   async function getRecords(id: string) {
+    console.log('fetching');
     const q = query(
       collection(db, `users/${userId}/records`),
       where('name', '==', lift.value),
+      orderBy('date', 'asc'),
       limit(20)
     );
 
@@ -63,7 +67,7 @@ export default function LiftGraph({ lift, userId }: Props) {
       })
     );
   }
-  const dataSet = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }];
+
   return (
     <div>
       <Box my={20}>
@@ -107,14 +111,58 @@ export default function LiftGraph({ lift, userId }: Props) {
               tickCount={8}
               tickFormatter={(number) => `${number.toFixed(1)} `}
             />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <CartesianGrid opacity={0.1} vertical={false} />
           </AreaChart>
         </ResponsiveContainer>
-
+        {/* <ResponsiveContainer width="100%" height="100%">
+          <ScatterChart
+            width={400}
+            height={400}
+            margin={{
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <CartesianGrid />
+            <XAxis type="category" dataKey="date" name="date" unit="cm" />
+            <YAxis type="number" dataKey="load" name="weight" unit="lb" />
+            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+            <Scatter name="Lift History" data={data} fill="#8884d8" />
+          </ScatterChart>
+        </ResponsiveContainer> */}
         {records.length > 0 &&
           records.map((r: any) => <div key={r.recordId}>{r.records.load}</div>)}
       </Box>
     </div>
   );
 }
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+  if (active && payload) {
+    return (
+      <Box
+        sx={(theme) => ({
+          padding: 16,
+          borderRadius: theme.radius.md,
+
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+          boxShadow: '3px 3px  16px   #0f0f0f, -1px -1px 2px #14abe7',
+        })}
+      >
+        <Title order={5}>{dayjs(label).format('dddd, D MMM, YYYY')}</Title>
+        <Text>
+          {`${payload[0].payload.sets}x${payload[0].payload.reps} ${payload[0].value} ${
+            payload[0].payload.rpe ? `@${payload[0].payload.rpe}` : ''
+          } `}
+        </Text>
+        {/* <Text>{JSON.stringify(payload[0], null, 2)}</Text> */}
+      </Box>
+    );
+  }
+
+  return null;
+};

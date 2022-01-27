@@ -1,21 +1,62 @@
-import { Container } from '@mantine/core';
-import { doc, getDoc } from 'firebase/firestore';
+import { Box, Container } from '@mantine/core';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from '../../../components/dashboard/AppShell';
 import UpdateWorkoutForm from '../../../components/workouts/UpdateWorkoutForm';
+import WorkoutDisplay from '../../../components/workouts/WorkoutDisplay';
 import { useAuth } from '../../../context/auth';
-import { db, postToJSON } from '../../../firebase';
+import { db } from '../../../firebase';
 
-export default function IndividualWorkout({ workoutProps, workoutId }: any): ReactElement {
+export default function IndividualWorkout({ workoutId }: any): ReactElement {
   const { user, loading } = useAuth();
-  const [workout, setWorkout] = useState(workoutProps);
+  const [workout, setWorkout] = useState<any>(null);
+  const [edit, setEdit] = useState<boolean>(false);
+  // const router = useRouter();
+
+  // const { id } = router.query;
+
+  useEffect(() => {
+    let unsub = onSnapshot(doc(db, 'workouts', workoutId), (doc) => {
+      console.log('Current data: ', doc.data());
+      if (doc.data() === undefined) {
+        console.log('no data');
+      } else {
+        const w = {
+          id: doc?.data()?.id,
+          ...doc.data(),
+        };
+        setWorkout(w);
+      }
+    });
+
+    return unsub;
+  }, []);
 
   return (
     <Layout>
-      {user && (
-        <Container size="lg">
-          <UpdateWorkoutForm user={user} workout={workout} workoutId={workoutId} />
+      {user && workout && (
+        <Container size="md">
+          <Box
+            sx={(theme) => ({
+              padding: 16,
+              borderRadius: theme.radius.md,
+              backgroundColor:
+                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+              boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #17aae4',
+            })}
+          >
+            {edit ? (
+              <UpdateWorkoutForm
+                user={user}
+                workout={workout}
+                workoutId={workoutId}
+                setEdit={setEdit}
+              />
+            ) : (
+              <WorkoutDisplay workout={workout} setEdit={setEdit} />
+            )}
+          </Box>
         </Container>
       )}
     </Layout>
@@ -30,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }: any) =>
   if (docSnap.exists()) {
     return {
       props: {
-        workoutProps: postToJSON(docSnap) || null,
+        // workoutProps: postToJSON(docSnap) || null,
         workoutId: id,
       },
     };

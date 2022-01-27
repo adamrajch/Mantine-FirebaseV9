@@ -2,7 +2,7 @@ import { Box, Button, Group, Text, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useNotifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -33,11 +33,12 @@ export default function UpdateWorkoutForm({
   user,
   programId,
   programTitle,
-  id,
+  workoutId,
+  setEdit,
 }: any): ReactElement {
   const [list, setList] = useState<any>([]);
   const [hits, setHits] = useState<any>([]);
-  const [dateInput, setDateInput] = useState<any>(new Date(workout.date));
+  const [dateInput, setDateInput] = useState<any>(new Date(workout.date.toDate()));
   const [submitting, setSubmitting] = useState<boolean>(false);
   const notifications = useNotifications();
 
@@ -46,16 +47,39 @@ export default function UpdateWorkoutForm({
       console.log('Current data: ', doc.data());
 
       const data = doc.data();
-      setList(data?.lifts);
+      setList(
+        data?.lifts.map((l: any) => {
+          return {
+            label: l.name,
+            value: l.name,
+            id: l.id,
+          };
+        })
+      );
     });
 
     return unsub;
   }, []);
-  const mappedLifts = workout?.lifts.map((w: any) => {
-    return { value: w.name, label: w.name, id: w.id };
-  });
-  const fullData = list.concat(mappedLifts);
 
+  useEffect(() => {
+    fetchGlobalLifts();
+  }, []);
+
+  async function fetchGlobalLifts() {
+    const docRef = doc(db, 'global-lifts', 'global');
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    setHits(
+      data?.lifts.map((l: any) => {
+        return {
+          label: l.name,
+          value: l.name,
+          id: l.id,
+        };
+      })
+    );
+  }
   const initialValues: MyFormValues = { name: workout.name, lifts: workout.lifts };
 
   async function handleFormSubmit(values: any) {
@@ -64,14 +88,14 @@ export default function UpdateWorkoutForm({
       const batch = writeBatch(db);
 
       //add workout, updateUser user recents, add lifts
-      const r = collection(db, 'workouts');
-      const workoutRef = doc(r);
+
+      const workoutRef = doc(db, 'workouts', workoutId);
       batch.update(workoutRef, {
         date: dateInput,
         lifts: values.lifts,
         name: values.name,
-        programId: programId,
-        programTitle: programTitle,
+        programId: programId ? programId : null,
+        programTitle: programTitle ? programTitle : null,
       });
 
       let newArr = user.recentWorkouts.map((w: any) => {
@@ -82,30 +106,29 @@ export default function UpdateWorkoutForm({
         date: dateInput,
         name: values.name,
         user: user.uid,
-        workoutId: id,
-        programId: programId,
-        programTitle: programTitle,
+        workoutId: workoutId,
+        programId: programId ? programId : null,
+        programTitle: programTitle ? programTitle : null,
       });
       console.log('new Arr', newArr);
 
       let sortedArr = newArr.sort((f: any, s: any) => {
-        console.log(f, s);
         return s.date - f.date;
       });
       const userRef = doc(db, 'users', user.uid);
       if (sortedArr.length >= 5) {
         sortedArr = sortedArr.slice(0, 5);
-
+        console.log(sortedArr);
         batch.update(userRef, { recentWorkouts: sortedArr });
       } else {
         batch.update(userRef, { recentWorkouts: sortedArr });
       }
-
+      await batch.commit();
       notifications.showNotification({
         title: 'Updated',
         message: 'Workout successfully updated',
       });
-      console.log('submitted');
+      setEdit(false);
     } catch (err) {
       console.log(err);
     }
@@ -192,6 +215,7 @@ export default function UpdateWorkoutForm({
                         />
                       ))}
                     <Group position="center">
+                      <Button onClick={() => setEdit(false)}>Cancel</Button>
                       <Button
                         size="sm"
                         onClick={() => {

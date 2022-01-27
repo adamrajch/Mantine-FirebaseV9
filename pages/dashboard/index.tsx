@@ -77,7 +77,7 @@ export default function DashboardHome(): JSX.Element {
                   })}
                 >
                   <Group direction="column" grow>
-                    <Title align="center" order={2}>
+                    <Title align="center" order={3}>
                       Add A Workout
                     </Title>
 
@@ -94,8 +94,13 @@ export default function DashboardHome(): JSX.Element {
             <Grid.Col span={12} lg={4}>
               <ActiveProgramList user={user} />
             </Grid.Col>
+            {user.trackedLifts.length > 0 && (
+              <Grid.Col span={12}>
+                <LiftGraph lifts={user.trackedLifts} userId={user.uid} />
+              </Grid.Col>
+            )}
           </Grid>
-          <LiftGraph user={user} />
+
           <Box>
             <Button onClick={addGlobalLifts}>Edit Global Lifts Data</Button>
           </Box>
