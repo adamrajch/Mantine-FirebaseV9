@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@mantine/eslint-config": "3.5.4",
+    "@types/classnames": "^2.3.1",
     "@types/js-cookie": "^3.0.1",
     "@types/react": "17.0.38",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
