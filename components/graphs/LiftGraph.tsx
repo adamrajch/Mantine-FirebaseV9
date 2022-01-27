@@ -9,11 +9,10 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
-import { NameType, ValueType } from 'recharts/src/component/DefaultTooltipContent';
+// import { NameType, ValueType } from 'recharts/src/component/DefaultTooltipContent';
 import { db } from '../../firebase';
 type Props = {
   lift: {
@@ -139,8 +138,8 @@ export default function LiftGraph({ lift, userId }: Props) {
     </div>
   );
 }
-
-const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+// : TooltipProps<ValueType, NameType>
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload) {
     return (
       <Box
