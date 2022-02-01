@@ -24,16 +24,13 @@ import Footer from './Footer';
 type Props = {
   children: React.ReactNode;
 };
-const headerLinks = [
-  { href: '/dashboard', title: 'Dashboard' },
-
-  { href: '/about', title: 'About' },
-];
+const headerLinks = [{ href: '/dashboard', title: 'Dashboard' }];
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
   { href: '/basics', title: 'Learn Basics' },
 ];
 const userLinks = [
+  { href: '/dashboard', title: 'Dashboard' },
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
 ];
@@ -60,6 +57,16 @@ export default function BasicShell({ children }: Props) {
               theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
           })}
         >
+          <Navbar.Section>
+            <Group position="left" direction="column" spacing={0}>
+              {generalLinks.map((g) => (
+                <NavBarLink key={g.href} href={g.href} title={g.title} />
+              ))}
+            </Group>
+          </Navbar.Section>
+          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+            <Divider my="sm" />
+          </MediaQuery>
           <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
             <Navbar.Section>
               <Group position="left" direction="column" spacing={0}>
@@ -70,17 +77,7 @@ export default function BasicShell({ children }: Props) {
             </Navbar.Section>
           </MediaQuery>
 
-          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-            <Divider my="sm" />
-          </MediaQuery>
-          <Navbar.Section>
-            <Group position="left" direction="column" spacing={0}>
-              {generalLinks.map((g) => (
-                <NavBarLink key={g.href} href={g.href} title={g.title} />
-              ))}
-            </Group>
-          </Navbar.Section>
-          <Divider my="sm" />
+          {/* <Divider my="sm" /> */}
           <Navbar.Section grow>
             {user ? (
               <Group position="left" direction="column" spacing={0}>

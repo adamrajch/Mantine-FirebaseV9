@@ -1,4 +1,6 @@
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
+import router from 'next/router';
 import nookies from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -60,7 +62,36 @@ export function useUserData() {
     return;
   }, [authUser]);
 
-  return { user, loading };
+  const signinWithGoogle = (redirect: any) => {
+    setLoading(true);
+
+    return signInWithPopup(auth, new GoogleAuthProvider())
+      .then((response) => {
+        if (redirect) {
+          router.push(redirect);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage, errorCode);
+      });
+  };
+  const signout = () => {
+    router.push('/');
+
+    return signOut(auth)
+      .then(() => {
+        console.log('sucessfully logged out');
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+        console.log(error);
+      });
+  };
+
+  return { user, loading, signinWithGoogle, signout };
 }
 
 async function formatUser(user: any) {

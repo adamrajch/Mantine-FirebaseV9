@@ -1,5 +1,4 @@
-import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
-import { useNotifications } from '@mantine/notifications';
+import { Button, Center, Group, Text, TextInput, Title } from '@mantine/core';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
 import React, { ReactElement } from 'react';
@@ -41,9 +40,9 @@ export default function SignUp({}: any): ReactElement {
     email: '',
     password: '',
   };
-  const notifications = useNotifications();
+
   return (
-    <Center style={{ width: '100%', height: '100%' }}>
+    <Center style={{ height: '100%', width: '100%' }}>
       <Formik
         initialValues={initialValues}
         onSubmit={async (values) => {
@@ -56,54 +55,63 @@ export default function SignUp({}: any): ReactElement {
       >
         {({ handleSubmit, handleChange, errors }) => (
           <form onSubmit={handleSubmit}>
-            <div
-              style={{
-                border: '1px solid white',
-                width: '30vw',
-                padding: 25,
-                borderRadius: 10,
-                minHeight: '40vh',
-              }}
+            <Group
+              grow
+              position="center"
+              direction="column"
+              sx={(theme) => ({
+                padding: 16,
+                borderRadius: theme.radius.md,
+                minWidth: 500,
+                backgroundColor:
+                  theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+                boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #02455f',
+                '&:hover': {
+                  boxShadow: '12px 12px 16px  #0f0f0f, -2px -2px 6px #14698b',
+                },
+
+                '@media (max-width: 755px)': {
+                  minWidth: 380,
+                },
+              })}
             >
-              <SimpleGrid cols={1}>
-                <Title align="center">Sign Up</Title>
-                <TextInput
-                  type="email"
-                  label="email"
-                  required
-                  name="email"
-                  onChange={handleChange}
-                  error={errors.email}
-                />
-                <TextInput
-                  type="password"
-                  label="password"
-                  required
-                  name="password"
-                  onChange={handleChange}
-                  error={errors.password}
-                />
-                <Group position="right">
-                  <NextLink href="/forgot-password">
-                    <Text size="sm" style={{ cursor: 'pointer' }}>
-                      Forgot Password?
-                    </Text>
-                  </NextLink>
-                </Group>
-                <Button variant="outline" type="submit">
-                  Submit
+              <Title align="center">Sign Up</Title>
+              <TextInput
+                type="email"
+                label="email"
+                required
+                name="email"
+                onChange={handleChange}
+                error={errors.email}
+              />
+              <TextInput
+                type="password"
+                label="password"
+                required
+                name="password"
+                onChange={handleChange}
+                error={errors.password}
+              />
+              <Group position="right">
+                <NextLink href="/forgot-password">
+                  <Text size="sm" style={{ cursor: 'pointer' }}>
+                    Forgot Password?
+                  </Text>
+                </NextLink>
+              </Group>
+              <Button variant="outline" type="submit">
+                Submit
+              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  leftIcon={<AiOutlineGoogle />}
+                  onClick={() => signinWithGoogle('/dashboard')}
+                >
+                  Google
                 </Button>
-                <Group>
-                  <Button
-                    variant="outline"
-                    leftIcon={<AiOutlineGoogle />}
-                    onClick={() => signinWithGoogle('/dashboard')}
-                  >
-                    Google
-                  </Button>
-                </Group>
-              </SimpleGrid>
-            </div>
+              </Group>
+            </Group>
           </form>
         )}
       </Formik>

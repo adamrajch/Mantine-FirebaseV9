@@ -1,5 +1,4 @@
 import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
-import { useNotifications } from '@mantine/notifications';
 import { GoogleAuthProvider, signInAnonymously, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
@@ -75,7 +74,7 @@ export default function Login(): JSX.Element {
     email: '',
     password: '',
   };
-  const notifications = useNotifications();
+
   return (
     <Center style={{ width: '100%', height: '100%' }}>
       <Formik
@@ -90,14 +89,25 @@ export default function Login(): JSX.Element {
       >
         {({ handleSubmit, handleChange, errors }) => (
           <form onSubmit={handleSubmit}>
-            <div
-              style={{
-                border: '1px solid white',
+            <Group
+              grow
+              position="center"
+              direction="column"
+              sx={(theme) => ({
+                padding: 16,
+                borderRadius: theme.radius.md,
+                minWidth: 500,
+                backgroundColor:
+                  theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+                boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #02455f',
+                '&:hover': {
+                  boxShadow: '12px 12px 16px  #0f0f0f, -2px -2px 6px #14698b',
+                },
 
-                padding: 25,
-                borderRadius: 10,
-                minHeight: '40vh',
-              }}
+                '@media (max-width: 755px)': {
+                  minWidth: 380,
+                },
+              })}
             >
               <SimpleGrid cols={1}>
                 <Title align="center">Login</Title>
@@ -136,7 +146,7 @@ export default function Login(): JSX.Element {
                   <SignInButton />
                 </Group>
               </SimpleGrid>
-            </div>
+            </Group>
           </form>
         )}
       </Formik>
