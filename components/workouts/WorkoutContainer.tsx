@@ -16,6 +16,7 @@ export default function WorkoutContainer({ user, program }: any): ReactElement {
           data={data}
           placeholder="Select Program"
           value={text}
+          nothingFound="No programs"
           onChange={(q) => {
             let selected = data.filter((p: any) => p.value === q);
             const subbedId = `${selected[0].userId}-${selected[0].programId}`;

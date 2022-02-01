@@ -1,10 +1,11 @@
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import router from 'next/router';
 import nookies from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
+import { createUser } from '../hooks/createUser';
 // Custom hook to read  auth record and user profile doc
 type Props = {
   children?: React.ReactNode;
@@ -37,9 +38,21 @@ export function useUserData() {
       let unsubscribe: any;
       if (authUser) {
         const formattedUser = await formatUser(authUser);
-        const { token } = formattedUser;
+        const { token, ...userWithoutToken } = formattedUser;
 
         const ref = doc(db, 'users', authUser.uid);
+
+        const docSnap = await getDoc(ref);
+        if (docSnap.exists()) {
+          console.log('Document data:', docSnap.data());
+          setUser(docSnap.data());
+        } else {
+          console.log(authUser);
+          createUser(authUser.uid, userWithoutToken);
+
+          // setUser(user);
+        }
+
         unsubscribe = onSnapshot(ref, (doc) => {
           console.log('sets user, ', doc.data());
           setUser(doc.data());
@@ -50,6 +63,7 @@ export function useUserData() {
         return unsubscribe;
       } else {
         nookies.set(undefined, 'token', '', { path: '/' });
+
         setUser(null);
         setLoading(false);
       }
@@ -78,12 +92,11 @@ export function useUserData() {
       });
   };
   const signout = () => {
-    router.push('/');
-
     return signOut(auth)
       .then(() => {
         console.log('sucessfully logged out');
         // Sign-out successful.
+        router.push('/');
       })
       .catch((error) => {
         // An error happened.
@@ -101,7 +114,7 @@ async function formatUser(user: any) {
     uid: user.uid,
     email: user.email,
     name: user.displayName,
-    photoUrl: user.photoUrl,
+    photoUrl: user.photoURL,
     provider: user.providerData[0].providerId,
   };
 }

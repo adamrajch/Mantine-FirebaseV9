@@ -1,4 +1,4 @@
-import { doc, setDoc } from '@firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export async function createUser(uid: string, data: any) {
@@ -10,6 +10,7 @@ export async function createUser(uid: string, data: any) {
       savedPrograms: [],
       subscribedPrograms: [],
       recentWorkouts: [],
+      trackedLifts: [],
       ...data,
     },
     { merge: true }

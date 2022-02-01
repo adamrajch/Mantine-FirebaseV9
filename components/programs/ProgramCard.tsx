@@ -135,7 +135,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
             </Text>
             {user && (
               <ActionIcon
-                style={{ zIndex: 1000 }}
+                style={{ zIndex: 10 }}
                 onClick={(e: any) => {
                   e.stopPropagation();
                   likeProgram();

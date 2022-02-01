@@ -1,14 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const liftsList = require('./LiftsData.ts');
+// const liftsList = require('./LiftsData.ts');
 admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+
 const db = admin.firestore();
 // exports.editHeartCount = functions.firestore
 //   .document('/programs/{documentId}')
@@ -27,6 +23,11 @@ const db = admin.firestore();
 //     return snap.ref.set({ uppercase }, { merge: true });
 //   });
 
+exports.deleteUser = functions.auth.user().onDelete((user) => {
+  // ...
+
+  return db.doc(`users/${user.uid}`).delete();
+});
 exports.addComment = functions.firestore
   .document('comments/{commentId}')
   .onCreate(async (change, context) => {
@@ -54,34 +55,6 @@ exports.deleteComment = functions.firestore
       { merge: true }
     );
   });
-
-//update proram Heart if user likes/ decrement if not
-// exports.incrementProgramHeart = functions.firestore
-//   .document('users/{userId}')
-//   .onUpdate(async (change, context) => {
-//     const newArr = change.after.data().likedPrograms;
-//     const prevArr = change.before.data().likedPrograms;
-
-//     const programID = change.data().programID;
-//     const program = await db.doc(`programs/${programID}`).get();
-//     if (newArr.length > prevArr.length) {
-//       return db.doc(`programs/${programID}`).set(
-//         {
-//           heartCount: program.data().heartCount + 1,
-//         },
-//         { merge: true }
-//       );
-//     } else if (newArr.length < prevArr.length) {
-//       return db.doc(`programs/${programID}`).set(
-//         {
-//           heartCount: program.data().heartCount - 1,
-//         },
-//         { merge: true }
-//       );
-//     } else {
-//       return;
-//     }
-//   });
 
 //add subscribed program to user document
 exports.addSubscribedProgram = functions.firestore
@@ -125,10 +98,10 @@ exports.unsubscribedPrograms = functions.firestore
 //     return db.doc(`users/${userId}/lifts/${userId}`).set({ lifts: liftsList });
 //   });
 
-exports.addLifts = functions.firestore
-  .document('users/{userId}')
-  .onCreate(async (snap, context) => {
-    const userId = context.params.userId;
+// exports.addLifts = functions.firestore
+//   .document('users/{userId}')
+//   .onCreate(async (snap, context) => {
+//     const userId = context.params.userId;
 
-    return db.doc(`users/${userId}/lifts/${userId}`).set({ lifts: liftsList });
-  });
+//     return db.doc(`users/${userId}/lifts/${userId}`).set({ lifts: liftsList });
+//   });

@@ -14,12 +14,12 @@ import {
 } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
 import NavBarLink from '../NavBarLink';
 import Footer from './Footer';
-
 type Props = {
   children: React.ReactNode;
 };
@@ -39,6 +39,7 @@ export default function BasicShell({ children }: Props) {
   const theme = useMantineTheme();
   const { user, signout } = useAuth();
   const { height, width } = useViewportSize();
+  const router = useRouter();
   const mainHeight = height - 60;
   return (
     <AppShell
@@ -97,7 +98,11 @@ export default function BasicShell({ children }: Props) {
                     </Text>
                   </Link>
 
-                  <ActionIcon onClick={() => signout()}>
+                  <ActionIcon
+                    onClick={() => {
+                      signout(), router.push('/');
+                    }}
+                  >
                     <AiOutlineLogout />
                   </ActionIcon>
                 </Group>

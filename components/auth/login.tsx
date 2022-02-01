@@ -18,30 +18,6 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function Login(): JSX.Element {
-  // const loginWithGoogle = () => {
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       // const token = credential.accessToken;
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //       // ...
-  //       setUser(user);
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       setError(errorMessage);
-  //       // ...
-  //     });
-  // };
-
   function SignInButton() {
     const signInWithGoogle = async () => {
       await signInWithPopup(auth, provider)
@@ -52,12 +28,7 @@ export default function Login(): JSX.Element {
           // Handle Errors here.
           const errorCode = error.code;
           const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // setError(errorMessage);
-          // // ...
+          console.log(error.message);
         });
     };
 

@@ -7,19 +7,18 @@ import {
   Divider,
   Group,
   Header,
-  MediaQuery,
+  Menu,
   Navbar,
   Text,
   useMantineTheme,
 } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
-import { signOut } from 'firebase/auth';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { AiOutlineLogout } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineLogout } from 'react-icons/ai';
+import { MdSettings } from 'react-icons/md';
 import { useAuth } from '../../context/auth';
-import { auth } from '../../firebase';
-import ColorModeSwitch from '../ColorModeSwitch';
 import NavBarLink from '../NavBarLink';
 import Footer from './Footer';
 
@@ -45,10 +44,11 @@ const userLinks = [
 export default function Layout({ children }: Props) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
-  const { user } = useAuth();
+  const { user, signout } = useAuth();
   const { height, width } = useViewportSize();
   const headerHeight = 60;
   const mainHeight = height - headerHeight;
+  const router = useRouter();
   return (
     <AppShell
       padding={0}
@@ -93,17 +93,45 @@ export default function Layout({ children }: Props) {
             {user ? (
               <div>
                 <Divider my="sm" />
-                <Group position="center" noWrap>
-                  <Avatar size="md" src={user.photoUrl} alt="user" />
+                <Group position="apart" noWrap spacing={1}>
+                  <Avatar size="sm" src={user.photoUrl} alt="user" />
                   <Link href="/dashboard/profile">
                     <Text size="sm" style={{ cursor: 'pointer' }}>
                       {user.name ? user.name : user.email}
                     </Text>
                   </Link>
-
-                  <ActionIcon onClick={() => signOut(auth)}>
-                    <AiOutlineLogout />
-                  </ActionIcon>
+                  <Menu
+                    control={
+                      <ActionIcon>
+                        <MdSettings />
+                      </ActionIcon>
+                    }
+                  >
+                    <Menu.Item
+                      icon={<AiFillEdit />}
+                      onClick={() => {
+                        router.push('/dashboard/profile');
+                      }}
+                      sx={(theme) => ({
+                        cursor: 'pointer',
+                        '&:hover': {
+                          borderColor: theme.colors.gray[6],
+                          color: theme.colors.cyan[6],
+                        },
+                      })}
+                    >
+                      Edit Profile
+                    </Menu.Item>
+                    <Menu.Item
+                      color="red"
+                      icon={<AiOutlineLogout />}
+                      onClick={() => {
+                        signout(), router.push('/');
+                      }}
+                    >
+                      Logout
+                    </Menu.Item>
+                  </Menu>
                 </Group>
               </div>
             ) : (
@@ -137,15 +165,15 @@ export default function Layout({ children }: Props) {
           })}
         >
           <Group position="center" style={{ height: '100%' }} my={0} noWrap>
-            <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
+            {/* <MediaQuery smallerThan="sm" styles={{ display: 'none' }}> */}
+            <Burger
+              opened={opened}
+              onClick={() => setOpened((o) => !o)}
+              size="sm"
+              color={theme.colors.gray[6]}
+              mr="xl"
+            />
+            {/* </MediaQuery> */}
             <Box
               sx={() => ({
                 display: 'flex',
@@ -164,9 +192,6 @@ export default function Layout({ children }: Props) {
               >
                 Periodize
               </Text>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <ColorModeSwitch />
-              </div>
             </Box>
           </Group>
         </Header>

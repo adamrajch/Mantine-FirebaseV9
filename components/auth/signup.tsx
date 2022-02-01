@@ -6,7 +6,6 @@ import Router from 'next/router';
 import React, { ReactElement } from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
-import { useAuth } from '../../context/auth';
 import { auth } from '../../firebase';
 
 const SignUpSchema = Yup.object().shape({
@@ -14,7 +13,6 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function SignUp({}: any): ReactElement {
-  const { signinWithGoogle } = useAuth();
   const provider = new GoogleAuthProvider();
 
   const initialValues = {
@@ -28,15 +26,7 @@ export default function SignUp({}: any): ReactElement {
           Router.push('/dashboard');
         })
         .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // setError(errorMessage);
-          // // ...
+          console.log(error.message);
         });
     };
 
