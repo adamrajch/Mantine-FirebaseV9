@@ -1,12 +1,16 @@
 import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
-import { GoogleAuthProvider, signInAnonymously, signInWithPopup } from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  signInAnonymously,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import React from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
-import { useAuth } from '../../context/auth';
 import { auth } from '../../firebase';
 const provider = new GoogleAuthProvider();
 const SignUpSchema = Yup.object().shape({
@@ -14,8 +18,6 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function Login(): JSX.Element {
-  const { user } = useAuth();
-
   // const loginWithGoogle = () => {
   //   signInWithPopup(auth, provider)
   //     .then((result) => {
@@ -39,6 +41,7 @@ export default function Login(): JSX.Element {
   //       // ...
   //     });
   // };
+
   function SignInButton() {
     const signInWithGoogle = async () => {
       await signInWithPopup(auth, provider)
@@ -70,6 +73,7 @@ export default function Login(): JSX.Element {
       </>
     );
   }
+
   const initialValues = {
     email: '',
     password: '',
@@ -81,6 +85,17 @@ export default function Login(): JSX.Element {
         initialValues={initialValues}
         onSubmit={async (values) => {
           // signinWithEmail(values.email, values.password);
+          signInWithEmailAndPassword(auth, values.email, values.password)
+            .then((userCredential) => {
+              // Signed in
+              const user = userCredential.user;
+              Router.push('/dashboard');
+              // ...
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+            });
         }}
         enableReinitialize={false}
         validateOnChange={false}

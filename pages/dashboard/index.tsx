@@ -1,6 +1,8 @@
 import { Box, Button, Container, Grid, Group, Text, Title } from '@mantine/core';
 import { doc, setDoc } from 'firebase/firestore';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import nookies from 'nookies';
 import React from 'react';
 import ActiveProgramList from '../../components/activePrograms/ActiveProgramList';
 import Layout from '../../components/dashboard/AppShell';
@@ -10,7 +12,7 @@ import { LiftsData } from '../../components/workouts/LiftData';
 import WorkoutContainer from '../../components/workouts/WorkoutContainer';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
-
+import { verifyIdToken } from '../../firebaseAdmin';
 export default function DashboardHome(): JSX.Element {
   const { user, loading } = useAuth();
   async function addGlobalLifts() {
@@ -110,3 +112,32 @@ export default function DashboardHome(): JSX.Element {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    const cookies = nookies.get(context);
+    const token = await verifyIdToken(cookies.token);
+    const { uid, email } = token;
+    return {
+      props: {
+        verified: true,
+      },
+    };
+  } catch (error) {
+    // context.res.writeHead(302, {
+    //   Location: `/refresh`,
+    // });
+    // context.res.end();
+    // return {
+    //   props: {} as never,
+    // };
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+};

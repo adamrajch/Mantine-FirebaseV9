@@ -17,7 +17,6 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
-import ColorModeSwitch from '../ColorModeSwitch';
 import NavBarLink from '../NavBarLink';
 import Footer from './Footer';
 
@@ -77,7 +76,6 @@ export default function BasicShell({ children }: Props) {
             </Navbar.Section>
           </MediaQuery>
 
-          {/* <Divider my="sm" /> */}
           <Navbar.Section grow>
             {user ? (
               <Group position="left" direction="column" spacing={0}>
@@ -108,12 +106,14 @@ export default function BasicShell({ children }: Props) {
               <Group position="apart" noWrap>
                 <NavBarLink
                   key="afk"
-                  href="/signup"
+                  href="/login"
                   title="Login"
                   Component={
-                    <ActionIcon>
-                      <AiOutlineLogout />
-                    </ActionIcon>
+                    user ? (
+                      <ActionIcon>
+                        <AiOutlineLogout />
+                      </ActionIcon>
+                    ) : null
                   }
                 />
               </Group>
@@ -131,15 +131,15 @@ export default function BasicShell({ children }: Props) {
           })}
         >
           <Group position="center" style={{ height: '100%' }} my={0} noWrap>
-            <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
+            {/* <MediaQuery smallerThan="md" styles={{ display: 'none' }}> */}
+            <Burger
+              opened={opened}
+              onClick={() => setOpened((o) => !o)}
+              size="sm"
+              color={theme.colors.gray[6]}
+              mr="xl"
+            />
+            {/* </MediaQuery> */}
             <Box
               sx={() => ({
                 display: 'flex',
@@ -158,7 +158,7 @@ export default function BasicShell({ children }: Props) {
               >
                 Periodize
               </Text>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {/* <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                   <Group noWrap>
                     {headerLinks.map((g) => (
@@ -166,8 +166,7 @@ export default function BasicShell({ children }: Props) {
                     ))}
                   </Group>
                 </MediaQuery>
-                <ColorModeSwitch />
-              </div>
+              </div> */}
             </Box>
           </Group>
         </Header>

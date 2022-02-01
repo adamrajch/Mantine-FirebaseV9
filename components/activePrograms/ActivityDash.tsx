@@ -16,6 +16,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
   console.log(program);
   const [currIndex, setCurrIndex] = useState<number>(currentIndex);
   const [modalOpen, setModalOpen] = useState(false);
+  const [finishModalOpen, setFinishModalOpen] = useState(false);
   const [editing, setEdit] = useState(false);
   const workout = workouts[currIndex];
   console.log(workout);
@@ -43,12 +44,26 @@ export default function ActivityDash({ program, id }: any): ReactElement {
         currentIndex: currentIndex + 1,
       });
       setCurrIndex(currentIndex + 1);
+    } else {
+      setFinishModalOpen(true);
     }
   }
 
   async function handleSetCurrent() {
     await updateDoc(doc(db, 'subscribed', id), {
       currentIndex: currIndex,
+    });
+  }
+
+  async function handleRestart() {
+    await updateDoc(doc(db, 'subscribed', id), {
+      currentIndex: 0,
+    });
+  }
+
+  async function handleFinishProgram() {
+    await updateDoc(doc(db, 'subscribed', id), {
+      completed: true,
     });
   }
   console.log(program);
@@ -120,6 +135,22 @@ export default function ActivityDash({ program, id }: any): ReactElement {
 
             <>
               <Modal
+                opened={finishModalOpen}
+                onClose={() => setFinishModalOpen(false)}
+                transition="fade"
+                transitionDuration={400}
+                transitionTimingFunction="ease"
+                size="md"
+              >
+                <Text>This is the end of the program</Text>
+                <Group position="center" grow>
+                  <Button onClick={handleFinishProgram}>Mark Complete</Button>
+                  <Button onClick={handleRestart}>Restart Program</Button>
+                </Group>
+              </Modal>
+            </>
+            <>
+              <Modal
                 opened={modalOpen}
                 onClose={() => setModalOpen(false)}
                 transition="fade"
@@ -142,6 +173,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
               currentIndex={currIndex}
               setCurrIndex={setCurrIndex}
               workoutsLength={workouts.length}
+              finishProgram={handleFinishProgram}
               id={id}
             />
           ) : (

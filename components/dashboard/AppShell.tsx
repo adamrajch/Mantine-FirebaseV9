@@ -28,10 +28,10 @@ type Props = {
 };
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
-  {
-    href: '/library',
-    title: 'Library',
-  },
+  // {
+  //   href: '/library',
+  //   title: 'Library',
+  // },
   { href: '/basics', title: 'Learn Basics' },
 ];
 const userLinks = [
@@ -39,7 +39,7 @@ const userLinks = [
   { href: '/dashboard/post', title: 'Add Workout' },
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
-  { href: '/dashboard/journal', title: 'Journal' },
+  // { href: '/dashboard/journal', title: 'Journal' },
 ];
 
 export default function Layout({ children }: Props) {
@@ -110,12 +110,14 @@ export default function Layout({ children }: Props) {
               <Group position="apart" noWrap>
                 <NavBarLink
                   key="afk"
-                  href="/signup"
+                  href="/login"
                   title="Login"
                   Component={
-                    <ActionIcon>
-                      <AiOutlineLogout />
-                    </ActionIcon>
+                    user ? (
+                      <ActionIcon>
+                        <AiOutlineLogout />
+                      </ActionIcon>
+                    ) : null
                   }
                 />
               </Group>
@@ -163,10 +165,6 @@ export default function Layout({ children }: Props) {
                 Periodize
               </Text>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {/* {headerLinks.map((g) => (
-                  <NavBarLink key={g.href} href={g.href} title={g.title} />
-                ))} */}
-
                 <ColorModeSwitch />
               </div>
             </Box>
