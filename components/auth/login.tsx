@@ -1,13 +1,8 @@
 import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
-import {
-  GoogleAuthProvider,
-  signInAnonymously,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from 'firebase/auth';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
@@ -18,6 +13,7 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function Login(): JSX.Element {
+  const router = useRouter();
   function SignInButton() {
     const signInWithGoogle = async () => {
       await signInWithPopup(auth, provider)
@@ -38,9 +34,9 @@ export default function Login(): JSX.Element {
           Google
         </Button>
 
-        <Button variant="outline" onClick={() => signInAnonymously(auth)}>
+        {/* <Button variant="outline" onClick={() => signInAnonymously(auth)}>
           Sign in Anonymously
-        </Button>
+        </Button> */}
       </>
     );
   }
@@ -60,7 +56,7 @@ export default function Login(): JSX.Element {
             .then((userCredential) => {
               // Signed in
               const user = userCredential.user;
-              Router.push('/dashboard');
+              router.push('/dashboard');
               // ...
             })
             .catch((error) => {

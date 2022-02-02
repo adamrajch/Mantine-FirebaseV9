@@ -133,38 +133,47 @@ export default function DaySection({
                     Lift
                   </Button>
                   {values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].rest === false ? (
-                    <ActionIcon
-                      size="lg"
-                      color="cyan"
-                      onClick={() => {
-                        handleRest(true);
-                        console.log(values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].rest);
-                      }}
-                    >
-                      <RiZzzFill />
-                    </ActionIcon>
+                    <Tooltip label="Make rest day" color="cyan" withArrow>
+                      <ActionIcon
+                        size="lg"
+                        color="cyan"
+                        onClick={() => {
+                          handleRest(true);
+                          console.log(
+                            values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].rest
+                          );
+                        }}
+                      >
+                        <RiZzzFill />
+                      </ActionIcon>
+                    </Tooltip>
                   ) : (
+                    <Tooltip label="Active day" color="cyan" withArrow>
+                      <ActionIcon
+                        size="lg"
+                        color="cyan"
+                        onClick={() => {
+                          handleRest(false);
+                          console.log(
+                            values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].rest
+                          );
+                        }}
+                      >
+                        <FaDumbbell />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                  <Tooltip label="Delete day" color="cyan" withArrow>
                     <ActionIcon
                       size="lg"
                       color="cyan"
                       onClick={() => {
-                        handleRest(false);
-                        console.log(values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].rest);
+                        dayHelpers.remove(dayIndex);
                       }}
                     >
-                      <FaDumbbell />
+                      <AiOutlineDelete />
                     </ActionIcon>
-                  )}
-
-                  <ActionIcon
-                    size="lg"
-                    color="cyan"
-                    onClick={() => {
-                      dayHelpers.remove(dayIndex);
-                    }}
-                  >
-                    <AiOutlineDelete />
-                  </ActionIcon>
+                  </Tooltip>
                 </Group>
               </div>
               <Collapse in={open} my={8}>

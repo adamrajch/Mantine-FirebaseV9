@@ -2,7 +2,7 @@ import { Button, Center, Group, Text, TextInput, Title } from '@mantine/core';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
 import { AiOutlineGoogle } from 'react-icons/ai';
 import * as Yup from 'yup';
@@ -14,7 +14,7 @@ const SignUpSchema = Yup.object().shape({
 });
 export default function SignUp({}: any): ReactElement {
   const provider = new GoogleAuthProvider();
-
+  const router = useRouter();
   const initialValues = {
     email: '',
     password: '',
@@ -50,7 +50,7 @@ export default function SignUp({}: any): ReactElement {
         onSubmit={async (values) => {
           createUserWithEmailAndPassword(auth, values.email, values.password)
             .then((userCredential) => {
-              Router.push('/dashboard');
+              router.push('/dashboard');
             })
             .catch((error) => {
               const errorCode = error.code;

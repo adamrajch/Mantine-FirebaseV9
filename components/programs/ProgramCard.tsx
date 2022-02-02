@@ -1,18 +1,9 @@
-import {
-  ActionIcon,
-  Badge,
-  Box,
-  Card,
-  Group,
-  Text,
-  ThemeIcon,
-  useMantineColorScheme,
-} from '@mantine/core';
+import { Badge, Box, Card, Group, Text, ThemeIcon, useMantineColorScheme } from '@mantine/core';
 import { arrayRemove, arrayUnion, doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import router from 'next/router';
 import React, { ReactElement } from 'react';
-import { AiFillHeart, AiOutlineHeart, AiOutlineTrophy } from 'react-icons/ai';
+import { AiOutlineTrophy } from 'react-icons/ai';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 import { handleCatColor, handleExpColor, handlePColor } from '../../utils/ColorHelper';
@@ -128,7 +119,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
               </Badge>
             ))}
           </Group>
-          <Group position="left" style={{ flex: '1 0 auto' }}>
+          {/* <Group position="left" style={{ flex: '1 0 auto' }}>
             <Text size="xs">Likes</Text>
             <Text size="xs">
               {p.commentCount} {p.commentCount === 1 ? 'Comment' : 'Comments'}
@@ -148,7 +139,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
                 )}
               </ActionIcon>
             )}
-          </Group>
+          </Group> */}
         </div>
       </Card>
     </Box>
