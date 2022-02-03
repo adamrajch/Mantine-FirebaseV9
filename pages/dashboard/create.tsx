@@ -35,6 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (
       props: { user: 'nani' },
     };
   } catch (err) {
+    console.log(err);
     return {
       redirect: {
         destination: '/login',

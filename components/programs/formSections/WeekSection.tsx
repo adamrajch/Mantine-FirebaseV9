@@ -17,7 +17,6 @@ import { BiDuplicate } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
 import { Program } from '../../../types/types';
 import { BasicDays, BasicWeeks } from '../FormConstants';
-import AddLiftForm from './AddLiftForm';
 import DaySection from './DaySection';
 import GenerateForm from './GenerateForm';
 
@@ -98,7 +97,7 @@ export default function WeekSection({
                 }}
               />
               <Group position="right" spacing={matches ? 12 : 4} noWrap>
-                <AddLiftForm />
+                {/* <AddLiftForm /> */}
                 <Tooltip label="Edit Summary" color="cyan" withArrow>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>
                     {values.blocks[blockIndex].weeks[weekIndex].summary.length > 0 ? (

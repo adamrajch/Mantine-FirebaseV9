@@ -36,8 +36,8 @@ export default function CreateWorkoutForm({
   programId,
   programTitle,
 }: any): ReactElement {
-  const [list, setList] = useState<any>([]);
   const [dateInput, setDateInput] = useState<any>(new Date());
+  const [list, setList] = useState<any>([]);
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
@@ -47,6 +47,7 @@ export default function CreateWorkoutForm({
 
     return unsub;
   }, []);
+
   const mappedLifts = workout?.lifts.map((w: any) => {
     return { value: w.name, label: w.name, id: w.id };
   });

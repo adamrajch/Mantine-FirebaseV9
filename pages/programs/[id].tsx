@@ -5,6 +5,7 @@ import React, { ReactElement } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
+import ViewProgramPage from '../../components/programs/ViewProgramPage';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 export default function Program({ programProps, programID }: any): ReactElement {
@@ -23,7 +24,23 @@ export default function Program({ programProps, programID }: any): ReactElement 
         })}
       >
         {!loading && user && (
-          <FullProgramForm program={p} programID={programID} user={user} programAuthor={p.author} />
+          <>
+            {user.uid === p.author.uid ? (
+              <FullProgramForm
+                program={p}
+                programID={programID}
+                user={user}
+                programAuthor={p.author}
+              />
+            ) : (
+              <ViewProgramPage
+                program={p}
+                programID={programID}
+                user={user}
+                programAuthor={p.author}
+              />
+            )}
+          </>
         )}
 
         {!loading && user && (

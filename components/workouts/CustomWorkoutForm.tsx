@@ -1,11 +1,12 @@
 import { Box, Button, Group, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { collection, doc, getDoc, onSnapshot, writeBatch } from 'firebase/firestore';
+import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
 import { FieldArray, Formik } from 'formik';
 import Router from 'next/router';
 import React, { ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { useLiftLibrary } from '../../context/LiftsListContext';
 import { db } from '../../firebase';
 import WorkoutLiftSection from './WorkoutLiftSection';
 
@@ -30,48 +31,33 @@ interface MyFormValues {
 }
 export default function CustomWorkoutForm({ user }: any): ReactElement {
   const [list, setList] = useState<any>([]);
-  const [hits, setHits] = useState<any>([]);
+
   const [dateInput, setDateInput] = useState<any>(new Date());
   const [submitting, setSubmitting] = useState<boolean>(false);
   useEffect(() => {
     const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
       console.log('Current data: ', doc.data());
       const data = doc.data();
-      setList(
-        data?.lifts.map((l: any) => {
-          console.log('indi L ', l);
+      if (data) {
+        setList(
+          data?.lifts.map((l: any) => {
+            console.log('individual ', l);
 
-          return {
-            label: l.name,
-            value: l.name,
-            id: l.id,
-          };
-        })
-      );
+            return {
+              label: l.name,
+              value: l.name,
+              id: l.id,
+            };
+          })
+        );
+      }
     });
 
     return unsub;
   }, []);
-  useEffect(() => {
-    fetchGlobalLifts();
-  }, []);
 
-  async function fetchGlobalLifts() {
-    const docRef = doc(db, 'global-lifts', 'global');
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    console.log(data);
+  const { lifts } = useLiftLibrary();
 
-    setHits(
-      data?.lifts.map((l: any) => {
-        return {
-          label: l.name,
-          value: l.name,
-          id: l.id,
-        };
-      })
-    );
-  }
   const initialValues: MyFormValues = {
     name: '',
     lifts: [
@@ -227,19 +213,15 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
                 <Group direction="column" spacing="md" grow>
                   {values.lifts.length > 0 &&
                     values.lifts.map((lift, li) => (
-                      <>
-                        {hits.length > 0 && (
-                          <WorkoutLiftSection
-                            key={li}
-                            lift={lift}
-                            li={li}
-                            liftHelpers={liftHelpers}
-                            user={user}
-                            list={list}
-                            hits={hits}
-                          />
-                        )}
-                      </>
+                      <WorkoutLiftSection
+                        key={li}
+                        lift={lift}
+                        li={li}
+                        liftHelpers={liftHelpers}
+                        user={user}
+                        list={list}
+                        hits={lifts}
+                      />
                     ))}
                   <Group position="center">
                     <Button

@@ -86,7 +86,7 @@ export default function ProgramCard({ program, id }: any): ReactElement {
 
           {/* <Link href={`/dashboard/users/${p.author?.uid}`}> */}
           <Text size="sm" color="cyan" style={{ cursor: 'pointer' }}>
-            <Text component="span" style={{ color: 'white' }}>
+            <Text component="span" color="dimmed">
               Author:{' '}
             </Text>
             {p.author?.name ? p.author.name : p.author.email}

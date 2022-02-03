@@ -20,8 +20,6 @@ export default function WorkoutContainer({ user, program }: any): ReactElement {
           onChange={(q) => {
             let selected = data.filter((p: any) => p.value === q);
             const subbedId = `${selected[0].userId}-${selected[0].programId}`;
-            // setText(selected[0].value);
-            // setSesh(selected[0]);
             Router.push(`/dashboard/activity/${subbedId}`);
           }}
         />

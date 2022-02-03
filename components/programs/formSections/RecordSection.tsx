@@ -1,9 +1,9 @@
-import { ActionIcon, NumberInput, Select } from '@mantine/core';
+import { ActionIcon, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useFormikContext } from 'formik';
 import React, { ReactElement } from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
-import { FlexContainer } from '../../FlexContainer';
+import MUNumberInput from '../../MUNumberInput';
 
 export default function RecordSection({
   recordIndex,
@@ -18,8 +18,60 @@ export default function RecordSection({
   const matches = useMediaQuery('(min-width: 900px)');
 
   return (
-    <FlexContainer justify="flex-start">
-      <NumberInput
+    <Group grow noWrap>
+      <MUNumberInput
+        placeholder="sets"
+        label="sets"
+        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].sets`}
+        value={
+          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
+            recordIndex
+          ].sets
+        }
+        min={1}
+        step={1}
+        max={999}
+      />
+      <MUNumberInput
+        placeholder="reps"
+        label="reps"
+        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].reps`}
+        value={
+          values.blocks[blockIndex]?.weeks[weekIndex]?.days[dayIndex].lifts[liftIndex].records[
+            recordIndex
+          ].reps
+        }
+        min={1}
+        step={1}
+        max={999}
+      />
+      <MUNumberInput
+        placeholder=""
+        label="rpe"
+        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].rpe`}
+        value={
+          values.blocks[blockIndex]?.weeks[weekIndex]?.days[dayIndex].lifts[liftIndex].records[
+            recordIndex
+          ].rpe
+        }
+        min={1}
+        step={1}
+        max={10}
+      />
+      <MUNumberInput
+        placeholder=""
+        label="%"
+        name={`blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}].records[${recordIndex}].percent`}
+        value={
+          values.blocks[blockIndex]?.weeks[weekIndex]?.days[dayIndex].lifts[liftIndex].records[
+            recordIndex
+          ].percent
+        }
+        min={0}
+        step={20}
+        max={100}
+      />
+      {/* <NumberInput
         autoComplete="false"
         required
         min={1}
@@ -45,6 +97,7 @@ export default function RecordSection({
         icon={matches && <span>s</span>}
         hideControls={!matches}
       />
+
       <NumberInput
         autoComplete="false"
         required
@@ -121,9 +174,9 @@ export default function RecordSection({
         }}
         icon={matches && <span>%</span>}
         hideControls={!matches}
-      />
+      /> */}
 
-      <Select
+      {/* <Select
         value={
           values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records[
             recordIndex
@@ -140,10 +193,10 @@ export default function RecordSection({
           { label: 'kilo', value: 'kilo' },
           { label: 'time', value: 'seconds' },
         ]}
-      />
-      <ActionIcon onClick={() => recordHelpers.remove(recordIndex)}>
+      /> */}
+      <ActionIcon onClick={() => recordHelpers.remove(recordIndex)} style={{ flexShrink: 0 }}>
         <MdOutlineCancel color="#ba261c" />
       </ActionIcon>
-    </FlexContainer>
+    </Group>
   );
 }

@@ -6,7 +6,7 @@ import { useAuth } from '../../context/auth';
 
 export default function Post(): ReactElement {
   const { user, loading } = useAuth();
-  const [sesh, setSesh] = useState<any>('titl');
+  const [sesh, setSesh] = useState<any>('title');
   return (
     <Layout>
       {user && (

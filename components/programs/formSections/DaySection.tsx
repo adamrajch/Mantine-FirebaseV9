@@ -79,13 +79,12 @@ export default function DaySection({
           return (
             <Box
               sx={(theme) => ({
-                width: '100%',
                 padding: matches ? '12px' : '6px',
                 borderRadius: 8,
                 border: '2px solid',
                 borderColor: theme.colors.gray[7],
                 backgroundColor:
-                  theme.colorScheme === 'dark' ? theme.colors.gray[9] : theme.colors.gray[5],
+                  theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[5],
               })}
             >
               <div

@@ -1,10 +1,15 @@
 import { ActionIcon, Box, Collapse, Group, Select, Textarea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { arrayUnion, doc, setDoc } from 'firebase/firestore';
 import { FieldArray, useFormikContext } from 'formik';
+import { nanoid } from 'nanoid';
 import React, { ReactElement, useState } from 'react';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
 import { BiSearch } from 'react-icons/bi';
 import { FaRegStickyNote, FaStickyNote } from 'react-icons/fa';
+import { useAuth } from '../../../context/auth';
+import { useLiftLibrary } from '../../../context/LiftsListContext';
+import { db } from '../../../firebase';
 import { Program } from '../../../types/types';
 import RecordSection from './RecordSection';
 
@@ -27,7 +32,8 @@ export default function LiftSection({
     rpe: null,
     percent: null,
   };
-
+  const { lifts } = useLiftLibrary();
+  const { user } = useAuth();
   const searchLifts = async (q: string) => {
     if (q.length > 2) {
       let edited = q.toLowerCase().trim();
@@ -44,6 +50,30 @@ export default function LiftSection({
       );
     }
   };
+
+  async function CreateLiftData(q: string | null) {
+    const newId = nanoid();
+    await setDoc(
+      doc(db, `users/${user.uid}/lifts`, user.uid),
+      {
+        lifts: arrayUnion({
+          name: q,
+          id: newId,
+        }),
+      },
+      { merge: true }
+    );
+
+    setFieldValue(
+      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}]`,
+      {
+        name: q,
+        id: newId,
+        note: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].note,
+        records: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].records,
+      }
+    );
+  }
   return (
     <div>
       <FieldArray
@@ -57,8 +87,8 @@ export default function LiftSection({
                 marginTop: 2,
                 marginBottom: 2,
                 borderRadius: 8,
-                // borderColor: theme.colors.gray[9],
-                // border: '2px solid transparent',
+                // borderColor: theme.colors.dark[9],
+                // border: '2px solid ',
                 // '&:hover': {
                 //   border: '2px solid',
                 //   borderColor: theme.colors.gray[7],
@@ -70,36 +100,59 @@ export default function LiftSection({
                 <Select
                   placeholder="Select Lift"
                   searchable
-                  data={hits}
+                  clearable
+                  creatable
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  allowDeselect
+                  data={lifts}
                   maxDropdownHeight={200}
                   icon={<BiSearch />}
                   value={
                     values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].name
                   }
-                  onSearchChange={(q) => {
-                    searchLifts(q);
-                  }}
+                  // onSearchChange={(q) => {
+                  //   searchLifts(q);
+                  // }}
                   onChange={(q) => {
-                    let selected = hits.find((item: any) => item.value === q);
+                    let selected = lifts.find((item: any) => item.value === q);
 
-                    setFieldValue(
-                      `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}]`,
-                      {
-                        name: q,
-                        id: selected.entityId,
-                        note: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
-                          liftIndex
-                        ].note,
-                        records:
-                          values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex]
-                            .records,
-                      }
-                    );
+                    if (q === null) {
+                      setFieldValue(
+                        `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}]`,
+                        {
+                          name: null,
+                          id: null,
+                          note: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
+                            liftIndex
+                          ].note,
+                          records:
+                            values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
+                              liftIndex
+                            ].records,
+                        }
+                      );
+                      return;
+                    }
+
+                    if (selected?.id) {
+                      setFieldValue(
+                        `blocks[${blockIndex}].weeks[${weekIndex}].days[${dayIndex}].lifts[${liftIndex}]`,
+                        {
+                          name: q,
+                          id: selected.id,
+                          note: values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
+                            liftIndex
+                          ].note,
+                          records:
+                            values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[
+                              liftIndex
+                            ].records,
+                        }
+                      );
+                    } else {
+                      CreateLiftData(q);
+                    }
                   }}
-                  // filter={(value, item) =>
-                  //   item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
-                  //   item.category.includes(value.toLowerCase().trim())
-                  // }
                 />
                 <Group position="right" spacing={matches ? 6 : 0} noWrap>
                   <ActionIcon size="lg" color="cyan" onClick={() => setOpen((o) => !o)}>

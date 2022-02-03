@@ -7,6 +7,7 @@ import React, { ReactElement } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
 import { MdAdd, MdDelete } from 'react-icons/md';
+import { useLiftLibrary } from '../../context/LiftsListContext';
 import { db } from '../../firebase';
 export default function WorkoutLiftSection({
   li,
@@ -17,7 +18,7 @@ export default function WorkoutLiftSection({
   hits,
 }: any): ReactElement {
   const { values, setFieldValue }: any = useFormikContext();
-
+  const { lifts } = useLiftLibrary();
   const matches = useMediaQuery('(min-width: 900px)');
   async function CreateLiftData(q: string | null) {
     const newId = nanoid();
@@ -56,7 +57,7 @@ export default function WorkoutLiftSection({
   //   }
   // };
 
-  let dataList = [...hits, ...list];
+  let dataList = [...lifts, ...list];
   return (
     <Box
       key={li}

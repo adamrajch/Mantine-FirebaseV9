@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import GlobalStyle from '../components/GlobalStyles';
 import Loader from '../components/Loader';
 import { AuthProvider } from '../context/auth';
+import { LiftsProvider } from '../context/LiftsListContext';
 export default function App(props: AppProps) {
   const [loading, setLoading] = useState(false);
   const { Component, pageProps } = props;
@@ -79,7 +80,9 @@ export default function App(props: AppProps) {
           <ModalsProvider>
             <GlobalStyle />
             <NotificationsProvider>
-              <AuthProvider>{loading ? <Loader /> : <Component {...pageProps} />}</AuthProvider>
+              <LiftsProvider>
+                <AuthProvider>{loading ? <Loader /> : <Component {...pageProps} />}</AuthProvider>
+              </LiftsProvider>
             </NotificationsProvider>
           </ModalsProvider>
         </MantineProvider>

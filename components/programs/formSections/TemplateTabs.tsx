@@ -53,7 +53,7 @@ export default function TemplateTabs({ values }: any): ReactElement {
     return sum;
   };
   return (
-    <Group direction="column" position="left" grow my={20}>
+    <Group direction="column" grow my={20}>
       {/* <Group direction="column" position="left" spacing={0} grow>
         {values.category.length > 0 && (
           <Text mx={0}>
@@ -156,10 +156,10 @@ export default function TemplateTabs({ values }: any): ReactElement {
                                 grow
                                 key={dayIndex}
                                 style={{
-                                  border: '2px solid  ',
+                                  border: '1px solid ',
                                   borderRadius: 5,
                                   padding: '12px 24px',
-                                  borderColor: theme.colors.dark[3],
+                                  borderColor: theme.colors.dark[4],
                                 }}
                               >
                                 <div

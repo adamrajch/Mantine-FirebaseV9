@@ -1,5 +1,5 @@
 // import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Button, Group, Tab, Tabs, Text, TypographyStylesProvider } from '@mantine/core';
+import { Box, Button, Group, Tab, Tabs, Text, TypographyStylesProvider } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import {
   addDoc,
@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { db } from '../../firebase';
+import { Program } from '../../types/types';
 import DynamicTemplateForm from './DynamicTemplateForm';
 import { BasicDays } from './FormConstants';
 import GeneralSection from './formSections/GeneralSection';
@@ -26,43 +27,43 @@ const ProgramSchema = Yup.object().shape({
   category: Yup.array().of(Yup.string()).min(1, 'Check atleast one'),
   photoUrl: Yup.string().min(4, 'Too Short!'),
 });
-type Program = {
-  title: string;
-  public: boolean;
-  category: string[];
-  periodization: string[];
-  experience: string[];
-  photoUrl: string;
+// type Program = {
+//   title: string;
+//   public: boolean;
+//   category: string[];
+//   periodization: string[];
+//   experience: string[];
+//   photoUrl: string;
 
-  blocks: Array<{
-    name: string;
-    summary: string;
-    weeks?: Array<{
-      name: string;
-      summary: string;
-      days: Array<{
-        name: string;
-        summary: string;
-        rest: boolean;
-        lifts?: Array<{
-          name: string;
-          id?: string;
-          note: string;
-          type: string;
-          records?: Array<{
-            type: string;
-            sets: number;
-            reps: number;
-            rpe: number | null;
-            load: number | null;
-            unit: string | null;
-            percent: number | null;
-          }>;
-        }>;
-      }>;
-    }>;
-  }>;
-};
+//   blocks: Array<{
+//     name: string;
+//     summary: string;
+//     weeks?: Array<{
+//       name: string;
+//       summary: string;
+//       days: Array<{
+//         name: string;
+//         summary: string;
+//         rest: boolean;
+//         lifts?: Array<{
+//           name: string;
+//           id?: string;
+//           note: string;
+//           type: string;
+//           records?: Array<{
+//             type: string;
+//             sets: number;
+//             reps: number;
+//             rpe: number | null;
+//             load: number | null;
+//             unit: string | null;
+//             percent: number | null;
+//           }>;
+//         }>;
+//       }>;
+//     }>;
+//   }>;
+// };
 export default function FullProgramForm({
   program,
   programID,
@@ -206,7 +207,15 @@ export default function FullProgramForm({
     setSubLoading(false);
   }
   return (
-    <div>
+    <Box
+      sx={(theme) => ({
+        padding: 8,
+        borderRadius: theme.radius.md,
+        alignItems: 'flex-start',
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+        boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
+      })}
+    >
       <Formik
         initialValues={initialValues}
         onSubmit={async (values) => {
@@ -299,7 +308,7 @@ export default function FullProgramForm({
                 fontSize: 30,
               }}
             >
-              {program ? `${program.template.title}` : 'Create Your Program'}
+              {program ? `${program.template.title}` : 'Create Program'}
             </Text>
             <Tabs style={{ marginTop: 24 }}>
               {(!program || programAuthor?.uid === user?.uid) && (
@@ -311,13 +320,10 @@ export default function FullProgramForm({
               {(!program || programAuthor?.uid === user?.uid) && (
                 <Tab label="Editor">
                   <Group position="left" direction="column" grow>
-                    {/* <Divider /> */}
                     <FieldArray
                       name="blocks"
                       render={(blockHelpers) => (
-                        <div>
-                          <DynamicTemplateForm blockHelpers={blockHelpers} comments={comments} />
-                        </div>
+                        <DynamicTemplateForm blockHelpers={blockHelpers} comments={comments} />
                       )}
                     />
                   </Group>
@@ -352,13 +358,17 @@ export default function FullProgramForm({
               {program &&
                 user.subscribedPrograms.filter((e: any) => e.programId === programID).length ===
                   0 && (
-                  <Button onClick={() => subscribeToProgram()} loading={subLoading}>
+                  <Button
+                    onClick={() => subscribeToProgram()}
+                    loading={subLoading}
+                    variant="outline"
+                  >
                     {!subLoading && 'Subscribe'}
                   </Button>
                 )}
 
               {program && user.subscribedPrograms.some((e: any) => e.programId === programID) && (
-                <Button onClick={() => unsubToProgram()} loading={subLoading}>
+                <Button onClick={() => unsubToProgram()} loading={subLoading} variant="outline">
                   {!subLoading && 'Unsubscribe'}
                 </Button>
               )}
@@ -371,6 +381,6 @@ export default function FullProgramForm({
           </form>
         )}
       </Formik>
-    </div>
+    </Box>
   );
 }

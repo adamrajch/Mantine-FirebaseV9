@@ -2,27 +2,22 @@ export type Record = {
   sets: number;
   reps: number;
   rpe: number | null;
-  unit: string;
+  unit?: string;
   percent: number | null;
 };
 
 export type Lift = {
   name: string;
   note: string;
+  // unit: string;
   records: Record[];
-};
-
-export type Workout = {
-  name: string;
-  type: string;
-  note: string | null;
-  lifts: Lift[];
 };
 
 export type Day = {
   name: string;
   summary: string | null;
-  workouts: Workout[];
+  lifts: Lift[];
+  rest: boolean;
 };
 
 export type Week = {
@@ -44,6 +39,7 @@ export type Program = {
   periodization: string[];
   experience: string[];
   photoUrl: string;
+
   blocks: Array<{
     name: string;
     summary: string | null;
@@ -53,15 +49,21 @@ export type Program = {
       days: Array<{
         name: string;
         summary: string;
+        rest: boolean;
         lifts: Array<{
           name: string;
           note: string;
+          id?: string;
+          // type: string;
           records: Array<{
+            type?: string;
             sets: number;
             reps: number;
-            rpe: number | null;
-            unit: string | null;
+            load?: number | null;
+            rpe?: number | null;
+            unit?: string | null;
             percent: number | null;
+            time?: number | null;
           }>;
         }>;
       }>;
