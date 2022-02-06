@@ -18,12 +18,9 @@ export default function WorkoutDisplay({ user, workout, workoutId, setEdit }: an
           <DatePicker
             placeholder="Pick date"
             label="Date Performed"
-            value={new Date(workout.date)}
+            value={new Date(workout.date.toDate())}
             disabled
           />
-          <Button variant="outline" style={{ alignSelf: 'flex-end' }} onClick={() => setEdit(true)}>
-            Edit
-          </Button>
         </Group>
       </Group>
       <Box>
@@ -56,6 +53,11 @@ export default function WorkoutDisplay({ user, workout, workoutId, setEdit }: an
               </Group>
             </Group>
           ))}
+        </Group>
+        <Group position="center" mt={18}>
+          <Button variant="outline" style={{ alignSelf: 'flex-end' }} onClick={() => setEdit(true)}>
+            Edit
+          </Button>
         </Group>
       </Box>
     </Group>

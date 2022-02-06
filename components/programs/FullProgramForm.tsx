@@ -1,5 +1,5 @@
 // import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
-import { Box, Button, Group, Tab, Tabs, Text, TypographyStylesProvider } from '@mantine/core';
+import { Box, Button, Group, Tab, Tabs, Title, TypographyStylesProvider } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import {
   addDoc,
@@ -207,180 +207,179 @@ export default function FullProgramForm({
     setSubLoading(false);
   }
   return (
-    <Box
-      sx={(theme) => ({
-        padding: 8,
-        borderRadius: theme.radius.md,
-        alignItems: 'flex-start',
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
-        boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
-      })}
-    >
-      <Formik
-        initialValues={initialValues}
-        onSubmit={async (values) => {
-          console.log(values);
-          console.log(calculateWorkouts(values.blocks));
-
-          if (!program || program === undefined) {
-            try {
-              setSubmitLoading(true);
-              await addDoc(collection(db, 'programs'), {
-                title: values.title,
-                photoUrl: values.photoUrl,
-                experience: values.experience,
-                category: values.category,
-                periodization: values.periodization,
-                author: {
-                  email: user.email,
-                  name: user.name,
-                  uid: user.uid,
-                },
-                numberOfWeeks: calculateWeeks(values),
-                heartCount: 0,
-                commentCount: 0,
-                summary: value,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp(),
-                template: values,
-                activeCount: 0,
-                workouts: calculateWorkouts(values.blocks),
-              })
-                .then((docRef) => {
-                  router.push(`/programs/${docRef.id}`);
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(values);
-                  setSubmitLoading(false);
-                });
-
-              notifications.showNotification({
-                title: 'Created Program',
-                message: `Successfully Created ${values.title}`,
-              });
-            } catch (error) {
-              setSubmitLoading(false);
-              console.log('from create : ', error);
-            }
-          } else {
-            //update existing program
-            try {
-              const docRef = doc(db, 'programs', programID);
-              const updatedProgram = {
-                title: values.title,
-                numberOfWeeks: calculateWeeks(values),
-                template: values,
-                summary: value,
-                experience: values.experience,
-                category: values.category,
-                periodization: values.periodization,
-                updatedAt: serverTimestamp(),
-                photoUrl: values.photoUrl,
-                workouts: calculateWorkouts(values.blocks),
-              };
-              await updateDoc(docRef, updatedProgram);
-              setSubmitLoading(false);
-              notifications.showNotification({
-                title: 'Updated Program',
-                message: `Successfully updated ${values.title}`,
-              });
-            } catch (error) {
-              setSubmitLoading(false);
-              notifications.showNotification({
-                title: 'Failed Update',
-                message: `Unsucessfully updated your program. Try again soon`,
-              });
-              console.log('from update : ', error);
-            }
-          }
-        }}
-        enableReinitialize={false}
-        validateOnChange={false}
-        validateOnBlur={false}
-        validationSchema={ProgramSchema}
+    <>
+      <Title align="center" order={2}>
+        {program ? `${program.template.title}` : 'Create Program'}
+      </Title>
+      <Box
+        my={12}
+        sx={(theme) => ({
+          padding: 8,
+          borderRadius: theme.radius.md,
+          alignItems: 'flex-start',
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[1],
+          boxShadow: '6px 6px  14px   #0f0f0f, -2px -2px 6px #1b3742',
+        })}
       >
-        {({ handleSubmit, values, errors }) => (
-          <form onSubmit={handleSubmit}>
-            <Text
-              align="center"
-              sx={{
-                fontSize: 30,
-              }}
-            >
-              {program ? `${program.template.title}` : 'Create Program'}
-            </Text>
-            <Tabs style={{ marginTop: 24 }}>
-              {(!program || programAuthor?.uid === user?.uid) && (
-                <Tab label="General">
-                  <GeneralSection program={program} errors={errors} />
-                </Tab>
-              )}
+        <Formik
+          initialValues={initialValues}
+          onSubmit={async (values) => {
+            console.log(values);
+            console.log(calculateWorkouts(values.blocks));
 
-              {(!program || programAuthor?.uid === user?.uid) && (
-                <Tab label="Editor">
-                  <Group position="left" direction="column" grow>
-                    <FieldArray
-                      name="blocks"
-                      render={(blockHelpers) => (
-                        <DynamicTemplateForm blockHelpers={blockHelpers} comments={comments} />
-                      )}
-                    />
-                  </Group>
-                </Tab>
-              )}
+            if (!program || program === undefined) {
+              try {
+                setSubmitLoading(true);
+                await addDoc(collection(db, 'programs'), {
+                  title: values.title,
+                  photoUrl: values.photoUrl,
+                  experience: values.experience,
+                  category: values.category,
+                  periodization: values.periodization,
+                  author: {
+                    email: user.email,
+                    name: user.name,
+                    uid: user.uid,
+                  },
+                  numberOfWeeks: calculateWeeks(values),
+                  heartCount: 0,
+                  commentCount: 0,
+                  summary: value,
+                  createdAt: serverTimestamp(),
+                  updatedAt: serverTimestamp(),
+                  template: values,
+                  activeCount: 0,
+                  workouts: calculateWorkouts(values.blocks),
+                })
+                  .then((docRef) => {
+                    router.push(`/programs/${docRef.id}`);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    console.log(values);
+                    setSubmitLoading(false);
+                  });
 
-              <Tab label="Program">
-                <TemplateTabs values={values} />
-              </Tab>
-              {!program || programAuthor?.uid === user?.uid ? (
-                <Tab label="Summary">
-                  <RichText value={value} onChange={onChange} />
+                notifications.showNotification({
+                  title: 'Created Program',
+                  message: `Successfully Created ${values.title}`,
+                });
+              } catch (error) {
+                setSubmitLoading(false);
+                console.log('from create : ', error);
+              }
+            } else {
+              //update existing program
+              try {
+                const docRef = doc(db, 'programs', programID);
+                const updatedProgram = {
+                  title: values.title,
+                  numberOfWeeks: calculateWeeks(values),
+                  template: values,
+                  summary: value,
+                  experience: values.experience,
+                  category: values.category,
+                  periodization: values.periodization,
+                  updatedAt: serverTimestamp(),
+                  photoUrl: values.photoUrl,
+                  workouts: calculateWorkouts(values.blocks),
+                };
+                await updateDoc(docRef, updatedProgram);
+                setSubmitLoading(false);
+                notifications.showNotification({
+                  title: 'Updated Program',
+                  message: `Successfully updated ${values.title}`,
+                });
+              } catch (error) {
+                setSubmitLoading(false);
+                notifications.showNotification({
+                  title: 'Failed Update',
+                  message: `Unsucessfully updated your program. Try again soon`,
+                });
+                console.log('from update : ', error);
+              }
+            }
+          }}
+          enableReinitialize={false}
+          validateOnChange={false}
+          validateOnBlur={false}
+          validationSchema={ProgramSchema}
+        >
+          {({ handleSubmit, values, errors }) => (
+            <form onSubmit={handleSubmit}>
+              <Tabs style={{ marginTop: 24 }}>
+                {(!program || programAuthor?.uid === user?.uid) && (
+                  <Tab label="General">
+                    <GeneralSection program={program} errors={errors} />
+                  </Tab>
+                )}
+
+                {(!program || programAuthor?.uid === user?.uid) && (
+                  <Tab label="Editor">
+                    <Group position="left" direction="column" grow>
+                      <FieldArray
+                        name="blocks"
+                        render={(blockHelpers) => (
+                          <DynamicTemplateForm blockHelpers={blockHelpers} comments={comments} />
+                        )}
+                      />
+                    </Group>
+                  </Tab>
+                )}
+
+                <Tab label="Program">
+                  <TemplateTabs values={values} />
                 </Tab>
-              ) : (
-                <>
-                  {program.summary.length ? (
-                    <Tab label="Summary">
-                      <TypographyStylesProvider>
-                        <div dangerouslySetInnerHTML={{ __html: program.summary }} />
-                      </TypographyStylesProvider>
-                    </Tab>
-                  ) : null}
-                </>
-              )}
-            </Tabs>
-            <Group position="right" my={40}>
-              {/* {program && !user.subscribedPrograms.some((e: any) => e.programId === programID) && (
+                {!program || programAuthor?.uid === user?.uid ? (
+                  <Tab label="Summary">
+                    <RichText value={value} onChange={onChange} />
+                  </Tab>
+                ) : (
+                  <>
+                    {program.summary.length ? (
+                      <Tab label="Summary">
+                        <TypographyStylesProvider>
+                          <div dangerouslySetInnerHTML={{ __html: program.summary }} />
+                        </TypographyStylesProvider>
+                      </Tab>
+                    ) : null}
+                  </>
+                )}
+              </Tabs>
+              <Group position="right" my={40}>
+                {/* {program && !user.subscribedPrograms.some((e: any) => e.programId === programID) && (
                 <Button onClick={() => subscribeToProgram()} loading={subLoading}>
                   {!subLoading && 'Subscribe'}
                 </Button>
               )} */}
-              {program &&
-                user.subscribedPrograms.filter((e: any) => e.programId === programID).length ===
-                  0 && (
-                  <Button
-                    onClick={() => subscribeToProgram()}
-                    loading={subLoading}
-                    variant="outline"
-                  >
-                    {!subLoading && 'Subscribe'}
+                {program &&
+                  user.subscribedPrograms.filter((e: any) => e.programId === programID).length ===
+                    0 && (
+                    <Button
+                      onClick={() => subscribeToProgram()}
+                      loading={subLoading}
+                      variant="outline"
+                    >
+                      {!subLoading && 'Subscribe'}
+                    </Button>
+                  )}
+
+                {program && user.subscribedPrograms.some((e: any) => e.programId === programID) && (
+                  <Button onClick={() => unsubToProgram()} loading={subLoading} variant="outline">
+                    {!subLoading && 'Unsubscribe'}
                   </Button>
                 )}
-
-              {program && user.subscribedPrograms.some((e: any) => e.programId === programID) && (
-                <Button onClick={() => unsubToProgram()} loading={subLoading} variant="outline">
-                  {!subLoading && 'Unsubscribe'}
+                <Button variant="outline" type="submit" loading={submitLoading}>
+                  {program ? 'Save' : 'Create'}
                 </Button>
-              )}
-              <Button variant="outline" type="submit" loading={submitLoading}>
-                {program ? 'Save' : 'Create'}
-              </Button>
-            </Group>
+              </Group>
 
-            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-          </form>
-        )}
-      </Formik>
-    </Box>
+              {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+            </form>
+          )}
+        </Formik>
+      </Box>
+    </>
   );
 }

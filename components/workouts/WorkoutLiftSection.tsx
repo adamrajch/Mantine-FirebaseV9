@@ -40,23 +40,6 @@ export default function WorkoutLiftSection({
     });
   }
 
-  // const searchLifts = async (q: string) => {
-  //   if (q.length > 1) {
-  //     let edited = q.toLowerCase().trim();
-  //     const params = new URLSearchParams({ q });
-
-  //     const res = await fetch('/api/search?' + params);
-  //     console.log(q);
-  //     const result = await res.json();
-  //     console.log(result);
-  //     setResults(
-  //       result.lifts.map((l: any) => {
-  //         return { label: l.name, value: l.name, category: l.category };
-  //       })
-  //     );
-  //   }
-  // };
-
   let dataList = [...lifts, ...list];
   return (
     <Box
@@ -88,12 +71,6 @@ export default function WorkoutLiftSection({
                   getCreateLabel={(query) => `+ Add ${query}`}
                   value={values.lifts[li].name}
                   clearable
-                  // onCreate={(q) => {
-                  //   let selected = list.find((item: any) => item.value === q);
-                  // }}
-                  // onSearchChange={(q) => {
-                  //   searchLifts(q);
-                  // }}
                   onChange={(q) => {
                     let selected = dataList.find((item: any) => item.value === q);
                     if (q === null) {

@@ -102,15 +102,32 @@ export default function UpdateWorkoutForm({
         return { ...w, date: w.date.toDate() };
       });
 
-      newArr.push({
-        date: dateInput,
-        name: values.name,
-        user: user.uid,
-        workoutId: workoutId,
-        programId: programId ? programId : null,
-        programTitle: programTitle ? programTitle : null,
-      });
-      console.log('new Arr', newArr);
+      //check if arr has the workout already
+      const wIndex = newArr.findIndex((e: any) => e.workoutId === workoutId);
+      if (wIndex === -1) {
+        newArr.push({
+          date: dateInput,
+          name: values.name,
+          user: user.uid,
+          workoutId: workoutId,
+          programId: programId ? programId : null,
+          programTitle: programTitle ? programTitle : null,
+        });
+      } else {
+        //duplicate exists, kick out earlier date
+        if (newArr[wIndex].date < dateInput) {
+          newArr[wIndex] = {
+            date: dateInput,
+            name: values.name,
+            user: user.uid,
+            workoutId: workoutId,
+            programId: programId ? programId : null,
+            programTitle: programTitle ? programTitle : null,
+          };
+        }
+      }
+
+      // console.log('new Arr', newArr);
 
       let sortedArr = newArr.sort((f: any, s: any) => {
         return s.date - f.date;

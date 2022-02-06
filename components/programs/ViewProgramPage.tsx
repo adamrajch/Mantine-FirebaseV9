@@ -4,14 +4,11 @@ import {
   Box,
   Button,
   Center,
-  Col,
-  Grid,
+  Container,
   Group,
-  Table,
   Tabs,
   Text,
   Title,
-  Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
@@ -20,7 +17,6 @@ import { doc, writeBatch } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { BiNote } from 'react-icons/bi';
-import { FaRegStickyNote } from 'react-icons/fa';
 import { db } from '../../firebase';
 import { handleCatColor, handleExpColor, handlePColor } from '../../utils/ColorHelper';
 
@@ -33,6 +29,7 @@ interface Props {
 
 export default function ViewProgramPage({ program, programID, user, programAuthor }: Props) {
   const theme = useMantineTheme();
+  const [listView, setListView] = useState(false);
   const [subLoading, setSubLoading] = useState(false);
   const notifications = useNotifications();
   const router = useRouter();
@@ -191,6 +188,8 @@ export default function ViewProgramPage({ program, programID, user, programAutho
             </Badge>
           ))}
         </Group>
+        {/* <Button>List View</Button> */}
+
         <Tabs variant="outline">
           {p.blocks.map((block: any, i: number) => (
             <Tabs.Tab key={i} label={block.name}>
@@ -199,135 +198,114 @@ export default function ViewProgramPage({ program, programID, user, programAutho
                   p.blocks[i].weeks.length > 0 &&
                   p.blocks[i].weeks.map((week: any, w: number) => (
                     <Tabs.Tab key={w} label={week.name}>
-                      <Group position="right">
-                        {week.summary.length > 0 && (
-                          <Button
-                            onClick={() => summaryModal('Week', week.summary)}
-                            size="xs"
-                            variant="outline"
-                          >
-                            Week Summary
-                          </Button>
-                        )}
-                        {block.summary.length > 0 && (
-                          <Button
-                            onClick={() => summaryModal('Block', block.summary)}
-                            size="xs"
-                            variant="outline"
-                          >
-                            Block Summary
-                          </Button>
-                        )}
-                      </Group>
-                      <Group direction="column" grow style={{ marginTop: 12, width: '100%' }}>
-                        <Grid justify="space-around">
+                      <Container size="sm">
+                        <Group position="right">
+                          {week.summary.length > 0 && (
+                            <Button
+                              onClick={() => summaryModal('Week', week.summary)}
+                              size="xs"
+                              variant="outline"
+                            >
+                              Week Summary
+                            </Button>
+                          )}
+                          {block.summary.length > 0 && (
+                            <Button
+                              onClick={() => summaryModal('Block', block.summary)}
+                              size="xs"
+                              variant="outline"
+                            >
+                              Block Summary
+                            </Button>
+                          )}
+                        </Group>
+
+                        <Group direction="column" position="center" grow>
                           {p.blocks[i].weeks[w].days.length > 0 &&
                             p.blocks[i].weeks[w].days.map((day: any, dayIndex: number) => (
-                              <Col span={12} lg={12} key={dayIndex}>
-                                <Group
-                                  direction="column"
-                                  grow
-                                  key={dayIndex}
-                                  style={{
-                                    border: '1px solid ',
-                                    borderRadius: 5,
-                                    padding: '12px 24px',
-                                    borderColor: theme.colors.dark[4],
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      alignItems: 'center',
-                                      marginBottom: 8,
-                                    }}
-                                  >
-                                    <Text size="sm">{`W${w + 1}D${dayIndex + 1}`}</Text>
-                                    <Title
-                                      order={3}
-                                      align="center"
-                                      style={{ color: theme.colors.dark[2] }}
-                                    >
-                                      {day.name}
-                                    </Title>
-                                    <div>
-                                      {day.summary.length > 0 && (
-                                        <ActionIcon
-                                          onClick={() => summaryModal('Day', day.summary)}
-                                        >
-                                          <BiNote />
-                                        </ActionIcon>
-                                      )}
-                                    </div>
+                              <Group
+                                direction="column"
+                                grow
+                                key={dayIndex}
+                                my={12}
+                                sx={(theme) => ({
+                                  padding: 16,
+                                  borderRadius: theme.radius.md,
+                                  backgroundColor:
+                                    theme.colorScheme === 'dark'
+                                      ? theme.colors.dark[8]
+                                      : theme.colors.dark[1],
+                                  boxShadow: '0px 0px  0px   #0f0f0f, -2px -2px 6px #153d4d',
+                                  '&:hover': {
+                                    boxShadow: '4px 4px 10px  #0f0f0f, -2px -2px 6px #14698b',
+                                  },
+                                })}
+                              >
+                                <Group position="apart">
+                                  <Text size="sm">{`W${w + 1}D${dayIndex + 1}`}</Text>
+                                  <Title order={3} align="center">
+                                    {day.name}
+                                  </Title>
+                                  <div>
+                                    {day.summary.length > 0 && (
+                                      <ActionIcon onClick={() => summaryModal('Day', day.summary)}>
+                                        <BiNote />
+                                      </ActionIcon>
+                                    )}
                                   </div>
-
-                                  {day.rest ? (
-                                    <Center>{/* <Title order={2}>Rest Day</Title> */}</Center>
-                                  ) : (
-                                    <>
-                                      <Table highlightOnHover>
-                                        <thead>
-                                          <tr>
-                                            <th>Movement</th>
-                                            <th>Sets</th>
-                                            <th>Reps</th>
-                                            <th>RPE</th>
-                                            <th>%</th>
-                                            <th>Load</th>
-                                            <th>Note</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {p.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 &&
-                                            p.blocks[i].weeks[w].days[dayIndex].lifts !==
-                                              undefined &&
-                                            p.blocks[i].weeks[w].days[dayIndex].lifts.map(
-                                              (l: any, liftIndex: number) => (
-                                                <React.Fragment key={liftIndex}>
-                                                  {l.records.map((t: any, tIndex: number) => (
-                                                    <tr key={tIndex}>
-                                                      <td>{tIndex == 0 && l.name}</td>
-                                                      <td>{t.sets}</td>
-                                                      <td>{t.reps}</td>
-                                                      <td>{t.rpe}</td>
-                                                      <td>{t.percent}</td>
-                                                      <td>{t.load}</td>
-                                                      <td>
-                                                        {tIndex == 0 && l.note && (
-                                                          <Tooltip
-                                                            wrapLines
-                                                            withArrow
-                                                            transition="fade"
-                                                            transitionDuration={200}
-                                                            label={l.note}
-                                                          >
-                                                            <FaRegStickyNote color="cyan" />
-                                                          </Tooltip>
-                                                        )}
-                                                      </td>
-                                                    </tr>
-                                                  ))}
-                                                </React.Fragment>
-                                              )
-                                            )}
-                                        </tbody>
-                                      </Table>
-                                      {p.blocks[i].weeks[w].days[dayIndex].lifts &&
-                                        p.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
-                                        p.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
-                                          <Group>
-                                            <div>Total Sets: {calcTotalSets(i, w, dayIndex)}</div>
-                                            <div>Total Reps: {calcTotalReps(i, w, dayIndex)}</div>
-                                          </Group>
-                                        )}
-                                    </>
-                                  )}
                                 </Group>
-                              </Col>
+
+                                {day.rest ? (
+                                  <Center> </Center>
+                                ) : (
+                                  <Group grow direction="column">
+                                    {p.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 &&
+                                      p.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
+                                      p.blocks[i].weeks[w].days[dayIndex].lifts.map(
+                                        (l: any, lI: number) => (
+                                          <Group key={lI} grow>
+                                            <Text>
+                                              {lI + 1}. {l.name}
+                                            </Text>
+                                            <Group direction="column" grow>
+                                              {l.records.map((r: any, rI: number) => (
+                                                <Text key={rI}>
+                                                  {`${r.sets} x ${r.reps} ${
+                                                    r.rpe ? `@${r.rpe}` : ''
+                                                  } ${r.percent ? `${r.percent}%` : ''}${
+                                                    r.load ? `@${r.load}` : ''
+                                                  } `}
+                                                </Text>
+                                              ))}
+                                            </Group>
+                                          </Group>
+                                        )
+                                      )}
+
+                                    {p.blocks[i].weeks[w].days[dayIndex].lifts &&
+                                      p.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
+                                      p.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
+                                        <Group>
+                                          <Text>
+                                            <Text component="span" color="cyan">
+                                              Total Sets:{' '}
+                                            </Text>
+                                            {calcTotalSets(i, w, dayIndex)}
+                                          </Text>
+                                          <Text>
+                                            <Text component="span" color="cyan">
+                                              Total Sets:{' '}
+                                            </Text>
+                                            {calcTotalReps(i, w, dayIndex)}
+                                          </Text>
+                                        </Group>
+                                      )}
+                                  </Group>
+                                )}
+                              </Group>
                             ))}
-                        </Grid>
-                      </Group>
+                        </Group>
+                      </Container>
                     </Tabs.Tab>
                   ))}
               </Tabs>

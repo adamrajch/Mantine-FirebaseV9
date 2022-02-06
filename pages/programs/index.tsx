@@ -66,7 +66,7 @@ export default function ProgramFeed(): ReactElement {
     <Layout>
       <Container size="lg" padding={0}>
         <Title order={1} align="center" mb={20}>
-          Find Programs
+          Programs
         </Title>
         {/* <ProgramsNav /> */}
         <Group direction="column" grow>

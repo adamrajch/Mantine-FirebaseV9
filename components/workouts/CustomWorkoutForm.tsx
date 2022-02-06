@@ -78,76 +78,81 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
   };
   async function handleFormSubmit(values: MyFormValues) {
     setSubmitting(true);
-    const batch = writeBatch(db);
+    try {
+      const batch = writeBatch(db);
 
-    //add workout, updateUser user recents, add lifts
-    const r = collection(db, 'workouts');
-    const workoutRef = doc(r);
+      //add workout, updateUser user recents, add lifts
+      const r = collection(db, 'workouts');
+      const workoutRef = doc(r);
 
-    batch.set(workoutRef, {
-      date: dateInput,
-      lifts: values.lifts,
-      name: values.name,
-      user: user.uid,
-    });
-
-    const workoutId = workoutRef.id;
-    //add workout to sorted array
-    let newArr = user.recentWorkouts.map((w: any) => {
-      return { ...w, date: w.date.toDate() };
-    });
-
-    newArr.push({
-      date: dateInput,
-      name: values.name,
-      user: user.uid,
-      workoutId: workoutId,
-    });
-    console.log('new Arr', newArr);
-
-    let sortedArr = newArr.sort((f: any, s: any) => {
-      // console.log(f, s);
-      return s.date - f.date;
-    });
-    const userRef = doc(db, 'users', user.uid);
-    if (sortedArr.length >= 5) {
-      sortedArr = sortedArr.slice(0, 5);
-      // batch.update(userRef, { recentWorkouts: sortedArr });
-    }
-
-    for (let i = 0; i < values.lifts.length; i++) {
-      for (let k = 0; k < values.lifts[i].records.length; k++) {
-        const lr = collection(db, `users/${user.uid}/records`);
-        const liftRef = doc(lr);
-        batch.set(liftRef, {
-          name: values.lifts[i].name,
-          id: values.lifts[i].id,
-          records: values.lifts[i].records[k],
-          date: dateInput,
-          workoutId: workoutId,
-        });
-      }
-    }
-
-    const tracked = user.trackedLifts;
-    console.log('user tracked lifts: ', tracked);
-    let newLifts = values.lifts.filter((item: any) => {
-      return tracked.every((f: any) => {
-        return f.id !== item.id;
+      batch.set(workoutRef, {
+        date: dateInput,
+        lifts: values.lifts,
+        name: values.name,
+        user: user.uid,
       });
-    });
-    const formatNew = newLifts.map((n: any) => {
-      return {
-        id: n.id,
-        name: n.name,
-      };
-    });
-    console.log('new lifts:', newLifts);
-    batch.update(userRef, { trackedLifts: tracked.concat(formatNew), recentWorkouts: sortedArr });
 
-    await batch.commit();
+      const workoutId = workoutRef.id;
+      //add workout to sorted array
+      let newArr = user.recentWorkouts.map((w: any) => {
+        return { ...w };
+      });
+
+      newArr.push({
+        date: dateInput,
+        name: values.name,
+        user: user.uid,
+        workoutId: workoutId,
+      });
+      console.log('new Arr', newArr);
+
+      let sortedArr = newArr.sort((f: any, s: any) => {
+        return s.date - f.date;
+      });
+      const userRef = doc(db, 'users', user.uid);
+      if (sortedArr.length >= 5) {
+        sortedArr = sortedArr.slice(0, 5);
+      }
+
+      for (let i = 0; i < values.lifts.length; i++) {
+        for (let k = 0; k < values.lifts[i].records.length; k++) {
+          const lr = collection(db, `users/${user.uid}/records`);
+          const liftRef = doc(lr);
+          batch.set(liftRef, {
+            name: values.lifts[i].name,
+            id: values.lifts[i].id,
+            records: values.lifts[i].records[k],
+            date: dateInput,
+            workoutId: workoutId,
+          });
+        }
+      }
+
+      const tracked = user.trackedLifts;
+      console.log('user tracked lifts: ', tracked);
+      let newLifts = values.lifts.filter((item: any) => {
+        return tracked.every((f: any) => {
+          return f.id !== item.id;
+        });
+      });
+      const formatNew = newLifts.map((n: any) => {
+        return {
+          id: n.id,
+          name: n.name,
+        };
+      });
+      console.log('new lifts:', newLifts);
+      batch.update(userRef, { trackedLifts: tracked.concat(formatNew), recentWorkouts: sortedArr });
+
+      await batch.commit();
+      Router.push('/dashboard');
+    } catch (err) {
+      console.log(err);
+
+      setSubmitting(false);
+    }
+
     setSubmitting(false);
-    Router.push('/dashboard');
   }
   return (
     <Formik

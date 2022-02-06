@@ -36,6 +36,7 @@ export function useUserData() {
   useEffect(() => {
     async function handleUser() {
       let unsubscribe: any;
+
       if (authUser) {
         const formattedUser = await formatUser(authUser);
         const { token, ...userWithoutToken } = formattedUser;

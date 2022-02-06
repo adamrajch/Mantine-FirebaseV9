@@ -1,6 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { db } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../firebase';
 
 type Props = {
   children?: React.ReactNode;
@@ -15,7 +16,8 @@ export function LiftsProvider({ children }: Props) {
 export function useLiftsData() {
   const [loading, setLoading] = useState(true);
   const [lifts, setLifts] = useState<any>([]);
-
+  const [userLifts, setUserLifts] = useState<any>([]);
+  const [authUser] = useAuthState(auth);
   useEffect(() => {
     async function fetchLifts() {
       const docRef = doc(db, 'global-lifts', 'global');
@@ -43,7 +45,35 @@ export function useLiftsData() {
     return;
   }, []);
 
-  return { lifts, loading };
+  useEffect(() => {
+    async function fetchUserLifts() {
+      if (authUser?.uid) {
+        const unsub = onSnapshot(doc(db, `users/${authUser.uid}/lifts`, authUser.uid), (doc) => {
+          console.log('Current data: ', doc.data());
+          const data = doc.data();
+          if (data) {
+            setUserLifts(
+              data?.lifts.map((l: any) => {
+                console.log('individual ', l);
+
+                return {
+                  label: l.name,
+                  value: l.name,
+                  id: l.id,
+                };
+              })
+            );
+          }
+        });
+
+        return unsub;
+      }
+    }
+    fetchUserLifts();
+    return;
+  }, [authUser]);
+
+  return { lifts, userLifts, loading };
 }
 
 export const useLiftLibrary = () => useContext(LiftsContext);

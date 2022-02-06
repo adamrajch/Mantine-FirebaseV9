@@ -54,10 +54,13 @@ export default function ProfileForm({ user }: any): JSX.Element {
             return;
           }
           try {
-            await setDoc(doc(db, 'users', user.uid), {
-              ...user,
-              ...values,
-            });
+            await setDoc(
+              doc(db, 'users', user.uid),
+              {
+                ...values,
+              },
+              { merge: true }
+            );
             notifications.showNotification({
               title: 'Saved',
               message: `Successfully saved your profile`,

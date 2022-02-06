@@ -20,10 +20,33 @@ export default function LiftSection({
   liftHelpers,
   liftIndex,
 }: any): ReactElement {
-  const [hits, setHits] = useState<any>([]);
+  // const [hits, setHits] = useState<any>([]);
+  // const [list, setList] = useState<any>([]);
   const { handleChange, setFieldValue } = useFormikContext();
   const { values }: { values: Program } = useFormikContext();
   const [open, setOpen] = useState(false);
+
+  // useEffect(() => {
+  //   const unsub = onSnapshot(doc(db, `users/${user.uid}/lifts`, user.uid), (doc) => {
+  //     console.log('Current data: ', doc.data());
+  //     const data = doc.data();
+  //     if (data) {
+  //       setList(
+  //         data?.lifts.map((l: any) => {
+  //           console.log('individual ', l);
+
+  //           return {
+  //             label: l.name,
+  //             value: l.name,
+  //             id: l.id,
+  //           };
+  //         })
+  //       );
+  //     }
+  //   });
+
+  //   return unsub;
+  // }, []);
   const matches = useMediaQuery('(min-width: 900px)');
   const emptyRecord = {
     sets: 5,
@@ -32,24 +55,8 @@ export default function LiftSection({
     rpe: null,
     percent: null,
   };
-  const { lifts } = useLiftLibrary();
+  const { lifts, userLifts } = useLiftLibrary();
   const { user } = useAuth();
-  const searchLifts = async (q: string) => {
-    if (q.length > 2) {
-      let edited = q.toLowerCase().trim();
-      const params = new URLSearchParams({ q });
-
-      const res = await fetch('/api/search?' + params);
-      console.log(q);
-      const result = await res.json();
-      console.log(result);
-      setHits(
-        result.lifts.map((l: any) => {
-          return { label: l.name, value: l.name, category: l.category };
-        })
-      );
-    }
-  };
 
   async function CreateLiftData(q: string | null) {
     const newId = nanoid();
@@ -74,6 +81,8 @@ export default function LiftSection({
       }
     );
   }
+
+  let dataList = [...lifts, ...userLifts];
   return (
     <div>
       <FieldArray
@@ -87,13 +96,6 @@ export default function LiftSection({
                 marginTop: 2,
                 marginBottom: 2,
                 borderRadius: 8,
-                // borderColor: theme.colors.dark[9],
-                // border: '2px solid ',
-                // '&:hover': {
-                //   border: '2px solid',
-                //   borderColor: theme.colors.gray[7],
-                //   backgroundColor: theme.colors.dark[7],
-                // },
               })}
             >
               <Group position="apart" noWrap>
@@ -104,15 +106,12 @@ export default function LiftSection({
                   creatable
                   getCreateLabel={(query) => `+ Create ${query}`}
                   allowDeselect
-                  data={lifts}
+                  data={dataList}
                   maxDropdownHeight={200}
                   icon={<BiSearch />}
                   value={
                     values.blocks[blockIndex].weeks[weekIndex].days[dayIndex].lifts[liftIndex].name
                   }
-                  // onSearchChange={(q) => {
-                  //   searchLifts(q);
-                  // }}
                   onChange={(q) => {
                     let selected = lifts.find((item: any) => item.value === q);
 

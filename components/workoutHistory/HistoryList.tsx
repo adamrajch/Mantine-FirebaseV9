@@ -81,7 +81,7 @@ export default function HistoryList({ user }: Props): ReactElement {
                 </Link>
 
                 <Text color="dimmed" size="sm">
-                  {dayjs(w.date.toDate()).fromNow()}
+                  {dayjs(new Date(w.date.toDate())).fromNow()}
                 </Text>
               </Group>
             </Box>

@@ -1,4 +1,13 @@
-import { Badge, Box, Card, Group, Text, ThemeIcon, useMantineColorScheme } from '@mantine/core';
+import {
+  Badge,
+  Box,
+  Card,
+  Group,
+  Text,
+  ThemeIcon,
+  Title,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { arrayRemove, arrayUnion, doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import router from 'next/router';
@@ -73,9 +82,9 @@ export default function ProgramCard({ program, id }: any): ReactElement {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginTop: 5 }}>
           <Group position="apart" noWrap spacing={0} style={{ padding: 0 }}>
             <Link href={`/programs/${id}`}>
-              <Text style={{ cursor: 'pointer', color: 'white', fontSize: 20 }} my={0}>
+              <Title order={2} style={{ cursor: 'pointer', color: 'white' }} my={0}>
                 {p.title}
-              </Text>
+              </Title>
             </Link>
             {p.featured ? (
               <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
