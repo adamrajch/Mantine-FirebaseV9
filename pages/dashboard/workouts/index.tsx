@@ -1,4 +1,4 @@
-import { Button, Container, Group, Text, Title } from '@mantine/core';
+import { Button, Container, Group, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {
@@ -48,6 +48,9 @@ export default function WorkoutsFeed(): ReactElement {
           arr.push({ id: doc.id, ...doc.data() });
         });
         setWorkouts(arr);
+        if (arr.length < LIMIT) {
+          setListEnd(true);
+        }
       });
     }
 
@@ -93,7 +96,7 @@ export default function WorkoutsFeed(): ReactElement {
             </Group>
           )}
 
-          {listEnd && <Text align="center">No more workouts!</Text>}
+          {/* {listEnd && <Text align="center">No more workouts!</Text>} */}
         </Container>
       )}
     </Layout>

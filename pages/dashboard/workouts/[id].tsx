@@ -12,13 +12,10 @@ export default function IndividualWorkout({ workoutId }: any): ReactElement {
   const { user, loading } = useAuth();
   const [workout, setWorkout] = useState<any>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  // const router = useRouter();
-
-  // const { id } = router.query;
 
   useEffect(() => {
     let unsub = onSnapshot(doc(db, 'workouts', workoutId), (doc) => {
-      console.log('Current data: ', doc.data());
+      // console.log('Current data: ', doc.data());
       if (doc.data() === undefined) {
         console.log('no data');
       } else {
@@ -54,7 +51,12 @@ export default function IndividualWorkout({ workoutId }: any): ReactElement {
                 setEdit={setEdit}
               />
             ) : (
-              <WorkoutDisplay workout={workout} setEdit={setEdit} />
+              <WorkoutDisplay
+                workout={workout}
+                setEdit={setEdit}
+                user={user}
+                workoutId={workoutId}
+              />
             )}
           </Box>
         </Container>

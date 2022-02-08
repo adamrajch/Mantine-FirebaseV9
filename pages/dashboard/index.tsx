@@ -1,5 +1,4 @@
-import { Box, Button, Container, Grid, Group, Text, Title } from '@mantine/core';
-import { doc, setDoc } from 'firebase/firestore';
+import { Box, Container, Grid, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import nookies from 'nookies';
@@ -8,22 +7,12 @@ import ActiveProgramList from '../../components/activePrograms/ActiveProgramList
 import Layout from '../../components/dashboard/AppShell';
 import LiftGraph from '../../components/graphs/GraphContainer';
 import HistoryList from '../../components/workoutHistory/HistoryList';
-import { LiftsData } from '../../components/workouts/LiftData';
 import WorkoutContainer from '../../components/workouts/WorkoutContainer';
 import { useAuth } from '../../context/auth';
-import { db } from '../../firebase';
 import { verifyIdToken } from '../../firebaseAdmin';
 export default function DashboardHome(): JSX.Element {
   const { user, loading } = useAuth();
-  async function addGlobalLifts() {
-    await setDoc(
-      doc(db, 'global-lifts', 'global'),
-      {
-        lifts: LiftsData,
-      },
-      { merge: true }
-    );
-  }
+
   return (
     <Layout>
       {user && (
@@ -102,11 +91,6 @@ export default function DashboardHome(): JSX.Element {
               </Grid.Col>
             )}
           </Grid>
-
-          <Box>
-            <Button onClick={addGlobalLifts}>Edit Global Lifts Data</Button>
-          </Box>
-          {/* <DynamicWorkoutList userId={user.uid} /> */}
         </Container>
       )}
     </Layout>

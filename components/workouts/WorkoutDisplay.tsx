@@ -1,8 +1,43 @@
-import { Box, Button, Group, Text, TextInput, Title } from '@mantine/core';
+import { Box, Button, Group, Modal, Text, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import React from 'react';
+import { doc, writeBatch } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { db } from '../../firebase';
 
 export default function WorkoutDisplay({ user, workout, workoutId, setEdit }: any) {
+  const [open, setOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const router = useRouter();
+  async function handleDelete() {
+    setDeleteLoading(true);
+    console.log(user.recentWorkouts);
+    let arr = user.recentWorkouts;
+
+    let filtered = arr.filter((e: any) => e.workoutId !== workoutId);
+
+    try {
+      const batch = writeBatch(db);
+      const workoutRef = doc(db, 'workouts', workoutId);
+      const userRef = doc(db, 'users', user.uid);
+
+      await batch.delete(workoutRef);
+
+      if (filtered.length < user.recentWorkouts.length) {
+        await batch.update(userRef, {
+          recentWorkouts: filtered,
+        });
+      }
+
+      await batch.commit();
+      setDeleteLoading(false);
+      router.push('/dashboard/workouts');
+    } catch (err) {
+      console.log(err);
+      setDeleteLoading(false);
+    }
+    setDeleteLoading(false);
+  }
   return (
     <Group direction="column" grow>
       <Title order={2} align="center">
@@ -55,9 +90,25 @@ export default function WorkoutDisplay({ user, workout, workoutId, setEdit }: an
           ))}
         </Group>
         <Group position="center" mt={18}>
-          <Button variant="outline" style={{ alignSelf: 'flex-end' }} onClick={() => setEdit(true)}>
+          <Button variant="outline" color="red" onClick={() => setOpen(true)}>
+            Delete
+          </Button>
+          <Button variant="outline" onClick={() => setEdit(true)}>
             Edit
           </Button>
+          <>
+            <Modal opened={open} onClose={() => setOpen(false)} title={`Workout: ${workout.name}`}>
+              <Text>Are you sure you want to delete this workout?</Text>
+              <Group position="center" mt={18}>
+                <Button variant="outline" color="red" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="outline" onClick={() => handleDelete()} loading={deleteLoading}>
+                  Delete
+                </Button>
+              </Group>
+            </Modal>
+          </>
         </Group>
       </Box>
     </Group>

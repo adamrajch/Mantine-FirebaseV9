@@ -18,7 +18,7 @@ export default function WorkoutLiftSection({
   hits,
 }: any): ReactElement {
   const { values, setFieldValue }: any = useFormikContext();
-  const { lifts } = useLiftLibrary();
+  const { lifts, userLifts } = useLiftLibrary();
   const matches = useMediaQuery('(min-width: 900px)');
   async function CreateLiftData(q: string | null) {
     const newId = nanoid();
@@ -40,7 +40,7 @@ export default function WorkoutLiftSection({
     });
   }
 
-  let dataList = [...lifts, ...list];
+  let dataList = [...lifts, ...userLifts];
   return (
     <Box
       key={li}

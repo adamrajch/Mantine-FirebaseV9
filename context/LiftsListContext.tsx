@@ -1,4 +1,4 @@
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
@@ -19,29 +19,50 @@ export function useLiftsData() {
   const [userLifts, setUserLifts] = useState<any>([]);
   const [authUser] = useAuthState(auth);
   useEffect(() => {
-    async function fetchLifts() {
-      const docRef = doc(db, 'global-lifts', 'global');
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();
+    async function subscribeUserLifts() {
+      const unsub = onSnapshot(doc(db, 'global-lifts', 'global'), (doc) => {
+        // console.log('Current data: ', doc.data());
+        const data = doc.data();
+        if (data) {
+          setLifts(
+            data?.lifts.map((l: any) => {
+              return {
+                label: l.value,
+                value: l.value,
+                name: l.value,
+                id: l.id,
+              };
+            })
+          );
+        }
+      });
 
-      if (docSnap.exists()) {
-        setLifts(
-          data?.lifts.map((l: any) => {
-            return {
-              label: l.name,
-              value: l.name,
-              id: l.id,
-            };
-          })
-        );
-      } else {
-        console.log('No such document!');
-      }
-      setLoading(false);
+      return unsub;
     }
+    subscribeUserLifts();
+    // non subscription
+    // async function fetchLifts() {
+    //   const docRef = doc(db, 'global-lifts', 'global');
+    //   const docSnap = await getDoc(docRef);
+    //   const data = docSnap.data();
 
-    fetchLifts();
+    //   if (docSnap.exists()) {
+    //     setLifts(
+    //       data?.lifts.map((l: any) => {
+    //         return {
+    //           label: l.value,
+    //           value: l.value,
+    //           id: l.id,
+    //         };
+    //       })
+    //     );
+    //   } else {
+    //     console.log('No such document!');
+    //   }
+    //   setLoading(false);
+    // }
 
+    //  fetchLifts()
     return;
   }, []);
 
@@ -49,13 +70,11 @@ export function useLiftsData() {
     async function fetchUserLifts() {
       if (authUser?.uid) {
         const unsub = onSnapshot(doc(db, `users/${authUser.uid}/lifts`, authUser.uid), (doc) => {
-          console.log('Current data: ', doc.data());
+          // console.log('Current data: ', doc.data());
           const data = doc.data();
           if (data) {
             setUserLifts(
               data?.lifts.map((l: any) => {
-                console.log('individual ', l);
-
                 return {
                   label: l.name,
                   value: l.name,
