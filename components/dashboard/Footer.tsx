@@ -9,7 +9,7 @@ export default function Footer(): JSX.Element {
         borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
         flexShrink: 0,
         width: '100%',
-        padding: `${theme.spacing.xl}px 0px`,
+        padding: `${theme.spacing.xl}px 8px`,
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       })}
     >
@@ -26,8 +26,11 @@ export default function Footer(): JSX.Element {
               <Col span={6} md={3}>
                 <Group direction="column" align="left">
                   <Title order={3}>Project</Title>
-                  <Text>About</Text>
-                  <Text>Creator</Text>
+                  {/* <Text>About</Text> */}
+
+                  <Text component="a" href="www.adamrajchwald.com">
+                    Creator
+                  </Text>
                 </Group>
               </Col>
 
