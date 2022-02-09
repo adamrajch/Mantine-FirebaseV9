@@ -1,4 +1,5 @@
 import { Button, Center, Group, SimpleGrid, Text, TextInput, Title } from '@mantine/core';
+import { useNotifications } from '@mantine/notifications';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
@@ -13,6 +14,8 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function Login(): JSX.Element {
+  const notifications = useNotifications();
+
   const router = useRouter();
   function SignInButton() {
     const signInWithGoogle = async () => {
@@ -25,6 +28,11 @@ export default function Login(): JSX.Element {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(error.message);
+
+          notifications.showNotification({
+            title: 'Login Error',
+            message: `${error.message}🤥`,
+          });
         });
     };
 
@@ -62,6 +70,11 @@ export default function Login(): JSX.Element {
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
+
+              notifications.showNotification({
+                title: 'Login Error',
+                message: `${error.message}🤥`,
+              });
             });
         }}
         enableReinitialize={false}

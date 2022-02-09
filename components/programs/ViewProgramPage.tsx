@@ -136,7 +136,7 @@ export default function ViewProgramPage({ program, programID, user, programAutho
   }
   return (
     <Box>
-      <Group direction="column" grow my={20}>
+      <Group direction="column" grow my={20} spacing={6}>
         <Group position="apart" grow>
           <Title order={2}>{p.title}</Title>
           <Group position="right">
@@ -258,7 +258,7 @@ export default function ViewProgramPage({ program, programID, user, programAutho
                                 {day.rest ? (
                                   <Center> </Center>
                                 ) : (
-                                  <Group grow direction="column">
+                                  <Group grow direction="column" spacing={0}>
                                     {p.blocks[i].weeks[w].days[dayIndex].lifts.length > 0 &&
                                       p.blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
                                       p.blocks[i].weeks[w].days[dayIndex].lifts.map(

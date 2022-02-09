@@ -1,4 +1,5 @@
 import { Button, Center, Group, Text, TextInput, Title } from '@mantine/core';
+import { useNotifications } from '@mantine/notifications';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
@@ -13,6 +14,7 @@ const SignUpSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(40, 'Too Long!').required('Required'),
 });
 export default function SignUp({}: any): ReactElement {
+  const notifications = useNotifications();
   const provider = new GoogleAuthProvider();
   const router = useRouter();
   const initialValues = {
@@ -27,6 +29,10 @@ export default function SignUp({}: any): ReactElement {
         })
         .catch((error) => {
           console.log(error.message);
+          notifications.showNotification({
+            title: 'Registration Error',
+            message: `${error.message}🤥`,
+          });
         });
     };
 
@@ -56,6 +62,10 @@ export default function SignUp({}: any): ReactElement {
               const errorCode = error.code;
               const errorMessage = error.message;
               console.log(errorMessage, errorCode);
+              notifications.showNotification({
+                title: 'Registration Error',
+                message: `${error.message}🤥`,
+              });
               return errorMessage;
               // ..
             });

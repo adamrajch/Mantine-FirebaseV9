@@ -2,11 +2,12 @@ import { ActionIcon, Badge, Box, Button, Group, Modal, Text, Title } from '@mant
 import { doc, updateDoc } from 'firebase/firestore';
 import React, { ReactElement, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import { MdFullscreen, MdToday } from 'react-icons/md';
+import { MdFullscreen, MdSettings, MdToday } from 'react-icons/md';
 import { useAuth } from '../../context/auth';
 import { db } from '../../firebase';
 import ProgramWorkoutForm from '../workouts/ProgramWorkoutForm';
 import FullTemplate from './FullTemplate';
+import SettingsForm from './SettingsForm';
 
 export default function ActivityDash({ program, id }: any): ReactElement {
   const curr = program.currentDay;
@@ -16,6 +17,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
   console.log(program);
   const [currIndex, setCurrIndex] = useState<number>(currentIndex);
   const [modalOpen, setModalOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [finishModalOpen, setFinishModalOpen] = useState(false);
   const [editing, setEdit] = useState(false);
   const workout = workouts[currIndex];
@@ -98,6 +100,22 @@ export default function ActivityDash({ program, id }: any): ReactElement {
               <MdToday color="cyan" />
             </ActionIcon>
           )}
+          <>
+            <Modal
+              opened={settingsOpen}
+              onClose={() => setSettingsOpen(false)}
+              title="Program Settings"
+            >
+              <SettingsForm />
+            </Modal>
+
+            <Group position="center">
+              <ActionIcon onClick={() => setSettingsOpen(true)}>
+                <MdSettings />
+              </ActionIcon>
+            </Group>
+          </>
+
           <ActionIcon onClick={() => setModalOpen(true)}>
             <MdFullscreen />
           </ActionIcon>
@@ -225,7 +243,7 @@ export default function ActivityDash({ program, id }: any): ReactElement {
                 </Button>
               )}
 
-              {currentIndex === currIndex && <Button onClick={handleSkip}>Skip</Button>}
+              {/* {currentIndex === currIndex && <Button onClick={handleSkip}>Skip</Button>} */}
 
               {currentIndex !== currIndex && (
                 <Button onClick={handleSetCurrent}>Set As Current</Button>
