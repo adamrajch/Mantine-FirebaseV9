@@ -11,12 +11,13 @@ export default function HomePage(): JSX.Element {
       <Box
         sx={(theme) => ({
           width: 550,
-          padding: 32,
+          marginRight: 62,
+          marginLeft: 62,
           marginTop: 160,
           [`@media (max-width:  ${theme.breakpoints.sm}px)`]: {
             width: 370,
-            paddingRight: 16,
-            paddingLeft: 16,
+            marginRight: 16,
+            marginLeft: 16,
           },
         })}
       >

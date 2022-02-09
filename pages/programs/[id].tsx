@@ -1,7 +1,8 @@
 import { Container } from '@mantine/core';
 import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
-import React, { ReactElement } from 'react';
+import Router from 'next/router';
+import React, { ReactElement, useEffect } from 'react';
 import Layout from '../../components/dashboard/AppShell';
 import CommentSection from '../../components/programs/Comments/CommentSection';
 import FullProgramForm from '../../components/programs/FullProgramForm';
@@ -12,7 +13,11 @@ export default function Program({ programProps, programID }: any): ReactElement 
   const p = JSON.parse(programProps);
   console.log(p);
   const { user, loading } = useAuth();
-
+  useEffect(() => {
+    if (!user && !loading) {
+      Router.push('/login');
+    }
+  }, [user, loading]);
   return (
     <Layout>
       <Container
