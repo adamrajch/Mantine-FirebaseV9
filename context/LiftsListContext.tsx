@@ -14,10 +14,10 @@ export function LiftsProvider({ children }: Props) {
 }
 
 export function useLiftsData() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<any>(true);
   const [lifts, setLifts] = useState<any>([]);
   const [userLifts, setUserLifts] = useState<any>([]);
-  const [authUser] = useAuthState(auth);
+  const [authUser, authLoading] = useAuthState(auth);
   useEffect(() => {
     async function subscribeUserLifts() {
       const unsub = onSnapshot(doc(db, 'global-lifts', 'global'), (doc) => {
@@ -40,30 +40,10 @@ export function useLiftsData() {
       return unsub;
     }
     subscribeUserLifts();
-    // non subscription
-    // async function fetchLifts() {
-    //   const docRef = doc(db, 'global-lifts', 'global');
-    //   const docSnap = await getDoc(docRef);
-    //   const data = docSnap.data();
 
-    //   if (docSnap.exists()) {
-    //     setLifts(
-    //       data?.lifts.map((l: any) => {
-    //         return {
-    //           label: l.value,
-    //           value: l.value,
-    //           id: l.id,
-    //         };
-    //       })
-    //     );
-    //   } else {
-    //     console.log('No such document!');
-    //   }
-    //   setLoading(false);
-    // }
-
-    //  fetchLifts()
-    return;
+    return () => {
+      setLoading({});
+    };
   }, []);
 
   useEffect(() => {
@@ -88,8 +68,13 @@ export function useLiftsData() {
         return unsub;
       }
     }
-    fetchUserLifts();
-    return;
+    if (authUser) {
+      fetchUserLifts();
+    }
+
+    return () => {
+      setLoading({});
+    };
   }, [authUser]);
 
   return { lifts, userLifts, loading };

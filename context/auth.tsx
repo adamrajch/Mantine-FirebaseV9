@@ -19,9 +19,9 @@ export function AuthProvider({ children }: Props) {
 export const useAuth = () => useContext(AuthContext);
 
 export function useUserData() {
-  const [authUser] = useAuthState(auth);
+  const [authUser, authLoading] = useAuthState(auth);
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<any>(true);
 
   useEffect(() => {
     const handle = setInterval(async () => {
@@ -29,13 +29,15 @@ export function useUserData() {
       if (user) await user.getIdToken(true);
     }, 10 * 60 * 1000);
 
-    // clean up setInterval
     return () => clearInterval(handle);
   }, []);
 
   useEffect(() => {
     async function handleUser() {
       let unsubscribe: any;
+      if (authLoading) {
+        return;
+      }
 
       if (authUser) {
         const formattedUser = await formatUser(authUser);
@@ -57,6 +59,7 @@ export function useUserData() {
         unsubscribe = onSnapshot(ref, (doc) => {
           console.log('sets user, ', doc.data());
           setUser(doc.data());
+          setLoading(false);
         });
 
         nookies.set(undefined, 'token', token, { maxAge: 30 * 24 * 60 * 60, path: '/' });
@@ -64,8 +67,7 @@ export function useUserData() {
         return unsubscribe;
       } else {
         nookies.set(undefined, 'token', '', { path: '/' });
-
-        setUser(null);
+        setUser(false);
         setLoading(false);
       }
 
@@ -73,9 +75,11 @@ export function useUserData() {
     }
 
     handleUser();
-
-    return;
-  }, [authUser]);
+    setLoading(false);
+    return () => {
+      setLoading({});
+    };
+  }, [authUser, authLoading]);
 
   const signinWithGoogle = (redirect: any) => {
     setLoading(true);

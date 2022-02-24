@@ -28,7 +28,7 @@ export default function LiftGraph({ lift, userId }: Props) {
   const [data, setData] = useState<any>([]);
   useEffect(() => {
     getRecords(lift.id);
-  }, []);
+  }, [lift]);
   useEffect(() => {
     console.log(data);
   }, [data]);

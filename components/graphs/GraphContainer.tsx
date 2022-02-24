@@ -21,6 +21,10 @@ export default function GraphContainer({ lifts, userId }: any) {
       setLift(selected);
     }
   }, [val]);
+
+  useEffect(() => {
+    console.log('change of lift : ', lift);
+  }, [lift]);
   console.log(data);
   return (
     <Box
@@ -38,15 +42,11 @@ export default function GraphContainer({ lifts, userId }: any) {
       <Group my={12}>
         <Select
           placeholder="Select Lift"
-          searchable
           data={data}
           nothingFound="No Lifts"
-          maxDropdownHeight={200}
+          maxDropdownHeight={250}
           icon={<BiSearch />}
-          creatable
-          getCreateLabel={(query) => `+ Add ${query}`}
           value={val}
-          clearable
           onChange={(q) => {
             let selected = data.find((item: any) => item.value === q);
             if (q) {
