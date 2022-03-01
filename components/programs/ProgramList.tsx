@@ -40,7 +40,7 @@ export default function ProgramList({ programsProps }: any): JSX.Element {
               position="apart"
               key={p.id}
               sx={(theme) => ({
-                padding: 8,
+                paddingLeft: 8,
                 borderRadius: theme.radius.md,
                 backgroundColor:
                   theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[1],
@@ -53,7 +53,7 @@ export default function ProgramList({ programsProps }: any): JSX.Element {
               <Group direction="column" position="left" spacing={0}>
                 <Anchor href={`/programs/${p.id}`} component={Link}>
                   <Text
-                    size="xl"
+                    size="lg"
                     sx={{
                       cursor: 'pointer',
                       '&:hover': {

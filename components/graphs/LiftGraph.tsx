@@ -43,13 +43,7 @@ export default function LiftGraph({ lift, userId }: Props) {
     );
 
     const querySnapshot = await getDocs(q);
-    // setRecords(
-    //   querySnapshot.map((r: any) => {
-    //     return {
-    //       ...r.data(),
-    //     };
-    //   })
-    // );
+
     let arr: any = [];
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
@@ -114,24 +108,7 @@ export default function LiftGraph({ lift, userId }: Props) {
             <CartesianGrid opacity={0.1} vertical={false} />
           </AreaChart>
         </ResponsiveContainer>
-        {/* <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart
-            width={400}
-            height={400}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
-              left: 20,
-            }}
-          >
-            <CartesianGrid />
-            <XAxis type="category" dataKey="date" name="date" unit="cm" />
-            <YAxis type="number" dataKey="load" name="weight" unit="lb" />
-            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter name="Lift History" data={data} fill="#8884d8" />
-          </ScatterChart>
-        </ResponsiveContainer> */}
+
         {records.length > 0 &&
           records.map((r: any) => <div key={r.recordId}>{r.records.load}</div>)}
       </Box>
@@ -154,8 +131,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       >
         <Title order={5}>{dayjs(label).format('dddd, D MMM, YYYY')}</Title>
         <Text>
-          {`${payload[0].payload.sets}x${payload[0].payload.reps} ${payload[0].value} ${
-            payload[0].payload.rpe ? `@${payload[0].payload.rpe}` : ''
+          {`${payload[0]?.payload.sets}x${payload[0]?.payload.reps} ${payload[0]?.value} ${
+            payload[0]?.payload.rpe ? `@${payload[0]?.payload.rpe}` : ''
           } `}
         </Text>
         {/* <Text>{JSON.stringify(payload[0], null, 2)}</Text> */}

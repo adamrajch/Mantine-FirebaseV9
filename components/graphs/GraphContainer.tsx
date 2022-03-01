@@ -1,4 +1,6 @@
-import { Box, Group, Select } from '@mantine/core';
+import { ActionIcon, Box, Group, Select } from '@mantine/core';
+import { ExternalLinkIcon } from '@modulz/radix-icons';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import LiftGraph from './LiftGraph';
@@ -7,6 +9,7 @@ export default function GraphContainer({ lifts, userId }: any) {
   const initial = { value: lifts[0].name, label: lifts[0].name, id: lifts[0].id };
   const [val, setVal] = useState<any>(initial.label);
   const [lift, setLift] = useState<any>(initial);
+  const router = useRouter();
   let data = lifts.map((l: any) => {
     return {
       value: l.name,
@@ -39,7 +42,7 @@ export default function GraphContainer({ lifts, userId }: any) {
         },
       })}
     >
-      <Group my={12}>
+      <Group my={12} position="apart">
         <Select
           placeholder="Select Lift"
           data={data}
@@ -57,6 +60,13 @@ export default function GraphContainer({ lifts, userId }: any) {
             }
           }}
         />
+        <ActionIcon
+          onClick={() => {
+            router.push('/dashboard/lifts');
+          }}
+        >
+          <ExternalLinkIcon />
+        </ActionIcon>
       </Group>
 
       {lift !== null && <LiftGraph lift={lift} userId={userId} />}

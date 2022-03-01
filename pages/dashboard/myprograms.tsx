@@ -59,7 +59,6 @@ export default function MyPrograms({ programsProps }: any): JSX.Element {
           My Programs
         </Title>
 
-        {/* {loading && <Loader />} */}
         {user && programs.length > 0 && <ProgramList programsProps={programs} />}
       </Container>
     </Layout>

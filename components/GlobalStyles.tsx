@@ -17,6 +17,25 @@ export default function GlobalStyle(): ReactElement {
           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
           color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
           lineHeight: theme.lineHeight,
+          '::-webkit-scrollbar': {
+            width: 6,
+          },
+
+          /* Track */
+          '::-webkit-scrollbar-track': {
+            background: theme.colors.dark[8],
+          },
+
+          /* Handle */
+          '::-webkit-scrollbar-thumb': {
+            background: '#0f8bb1 ',
+            borderRadius: '20',
+          },
+
+          /* Handle on hover */
+          '::-webkit-scrollbar-thumb:hover': {
+            background: '#10dbf6 ',
+          },
         },
 
         div: {

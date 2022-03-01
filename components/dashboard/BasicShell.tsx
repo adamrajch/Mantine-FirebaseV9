@@ -178,10 +178,10 @@ export default function BasicShell({ children }: Props) {
       }
     >
       <div
-        className="app-wrap"
+        // className="app-wrap"
         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       >
-        <Box
+        {/* <Box
           sx={(theme) => ({
             backgroundColor:
               theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[1],
@@ -189,11 +189,10 @@ export default function BasicShell({ children }: Props) {
             borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4],
             padding: '5px 10px 50px 10px',
             flex: '1 0 auto',
-            minHeight: mainHeight,
+            // minHeight: mainHeight,
           })}
-        >
-          {children}
-        </Box>
+        ></Box> */}
+        {children}
         <Footer />
       </div>
     </AppShell>

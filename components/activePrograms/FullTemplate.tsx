@@ -134,12 +134,36 @@ export default function FullTemplate({ blocks, title }: any): ReactElement {
                                     <Table highlightOnHover>
                                       <thead>
                                         <tr>
-                                          <th></th>
-                                          <th>Sets</th>
-                                          <th>Reps</th>
-                                          <th>RPE</th>
-                                          <th>%</th>
-                                          <th>Note</th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              Lift
+                                            </Text>
+                                          </th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              Sets
+                                            </Text>
+                                          </th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              Reps
+                                            </Text>
+                                          </th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              RPE
+                                            </Text>
+                                          </th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              %
+                                            </Text>
+                                          </th>
+                                          <th>
+                                            <Text color="cyan" size="sm">
+                                              Note
+                                            </Text>
+                                          </th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -151,10 +175,10 @@ export default function FullTemplate({ blocks, title }: any): ReactElement {
                                                 {l.records.map((t: any, tIndex: number) => (
                                                   <tr key={tIndex}>
                                                     <td>{tIndex == 0 && l.name}</td>
-                                                    <td>{t.sets}</td>
-                                                    <td>{t.reps}</td>
-                                                    <td>{t.rpe}</td>
-                                                    <td>{t.percent}</td>
+                                                    <td>{t.setse || '-'}</td>
+                                                    <td>{t.reps || '-'}</td>
+                                                    <td>{t.rpe || '-'}</td>
+                                                    <td>{t.percent || '-'}</td>
                                                     <td>
                                                       {tIndex == 0 && l.note && (
                                                         <Tooltip
@@ -179,8 +203,18 @@ export default function FullTemplate({ blocks, title }: any): ReactElement {
                                       blocks[i].weeks[w].days[dayIndex].lifts !== undefined &&
                                       blocks[i].weeks[w].days[dayIndex].lifts.length > 0 && (
                                         <Group>
-                                          <Text>Total Sets: {calcTotalSets(i, w, dayIndex)}</Text>
-                                          <Text>Total Reps: {calcTotalReps(i, w, dayIndex)}</Text>
+                                          <Text>
+                                            Total Sets:{' '}
+                                            <Text component="span" color="cyan">
+                                              {calcTotalSets(i, w, dayIndex)}
+                                            </Text>
+                                          </Text>
+                                          <Text>
+                                            Total Reps:{' '}
+                                            <Text component="span" color="cyan">
+                                              {calcTotalReps(i, w, dayIndex)}
+                                            </Text>
+                                          </Text>
                                         </Group>
                                       )}
                                   </>

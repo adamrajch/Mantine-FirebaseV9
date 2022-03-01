@@ -1,34 +1,26 @@
-import { Box, Button, Group, Text, Title } from '@mantine/core';
-import { useViewportSize } from '@mantine/hooks';
+import { Button, Grid, Group, Image, Text, Title } from '@mantine/core';
+import { useMediaQuery, useViewportSize } from '@mantine/hooks';
 import React from 'react';
 
 export default function HomePage(): JSX.Element {
   const { height, width } = useViewportSize();
   const headerHeight = 60;
   const mainHeight = height - headerHeight;
+  const matches = useMediaQuery('(min-width: 1200px)');
   return (
-    <Group direction="column" position="left" grow>
-      <Box
-        sx={(theme) => ({
-          width: 550,
-          marginRight: 62,
-          marginLeft: 62,
-          marginTop: 160,
-          [`@media (max-width:  ${theme.breakpoints.sm}px)`]: {
-            width: 370,
-            marginRight: 16,
-            marginLeft: 16,
-          },
-        })}
-      >
+    <Grid justify="center" align="center" style={{ height: '100%' }} gutter={0}>
+      <Grid.Col span={10} lg={6}>
         <Group direction="column" position="left" grow>
           <Title
             order={2}
             sx={(theme) => ({
               fontSize: 54,
               letterSpacing: 2,
+              [`@media (max-width:  ${theme.breakpoints.md}px)`]: {
+                fontSize: 44,
+              },
               [`@media (max-width:  ${theme.breakpoints.sm}px)`]: {
-                fontSize: 36,
+                fontSize: 30,
               },
             })}
           >
@@ -39,7 +31,7 @@ export default function HomePage(): JSX.Element {
               fontSize: 18,
               letterSpacing: 2,
               [`@media (max-width:  ${theme.breakpoints.sm}px)`]: {
-                fontSize: 14,
+                fontSize: 12,
               },
             })}
           >
@@ -51,7 +43,7 @@ export default function HomePage(): JSX.Element {
 
           <Group position="left" noWrap grow>
             <Button variant="outline" component="a" href="/programs">
-              Find Programs
+              Programs
             </Button>
 
             <Button variant="gradient" color="cyan" component="a" href="/dashboard/create">
@@ -59,7 +51,20 @@ export default function HomePage(): JSX.Element {
             </Button>
           </Group>
         </Group>
-      </Box>
-    </Group>
+      </Grid.Col>
+      <Grid.Col span={10} lg={6}>
+        <Image
+          src="/fitnessapp.svg"
+          height={matches ? 600 : 300}
+          fit="contain"
+          alt="fitness girl"
+          // sx={(theme) => ({
+          //   '@media (mmin-width: 1200px)': {
+          //     height: '100px',
+          //   },
+          // })}
+        />
+      </Grid.Col>
+    </Grid>
   );
 }

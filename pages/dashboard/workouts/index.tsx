@@ -24,7 +24,7 @@ export default function WorkoutsFeed(): ReactElement {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [workouts, setWorkouts] = useState<any>([]);
-  const [listEnd, setListEnd] = useState(false);
+  const [listEnd, setListEnd] = useState(true);
 
   dayjs.extend(relativeTime);
 
@@ -95,8 +95,6 @@ export default function WorkoutsFeed(): ReactElement {
               <Button onClick={getMorePosts}>Load more</Button>
             </Group>
           )}
-
-          {/* {listEnd && <Text align="center">No more workouts!</Text>} */}
         </Container>
       )}
     </Layout>
