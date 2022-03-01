@@ -171,7 +171,7 @@ export default function CustomWorkoutForm({ user }: any): ReactElement {
             {(liftHelpers) => (
               <Box>
                 <Group position="apart" my={8}>
-                  <Group position="center" style={{ alignItems: 'flex-start' }}>
+                  <Group style={{ alignItems: 'flex-start' }} noWrap>
                     <TextInput
                       name="name"
                       label="Workout Name"
