@@ -21,7 +21,7 @@ export default function ActiveProgramList({ user }: any): ReactElement {
       <Title order={3} align="center">
         Active Programs
       </Title>
-      <Group direction="column" grow>
+      <Group direction="column" grow spacing={0}>
         {user.subscribedPrograms.length > 0 ? (
           user.subscribedPrograms.map((p: any) => (
             <Group position="apart" grow key={p.programId} my={12}>

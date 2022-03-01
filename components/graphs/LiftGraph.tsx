@@ -88,7 +88,7 @@ export default function LiftGraph({ lift, userId }: Props) {
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tickCount={8}
+              tickCount={12}
               tickFormatter={(str) => {
                 const date = dayjs(str).toObject();
                 if (date.date % 7 === 0) {
@@ -110,12 +110,12 @@ export default function LiftGraph({ lift, userId }: Props) {
         </ResponsiveContainer>
 
         {records.length > 0 &&
-          records.map((r: any) => <div key={r.recordId}>{r.records.load}</div>)}
+          records.map((r: any, ri: number) => <div key={ri}>{r.records.load}</div>)}
       </Box>
     </div>
   );
 }
-// : TooltipProps<ValueType, NameType>
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload) {
     return (
@@ -131,7 +131,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       >
         <Title order={5}>{dayjs(label).format('dddd, D MMM, YYYY')}</Title>
         <Text>
-          {`${payload[0]?.payload.sets}x${payload[0]?.payload.reps} ${payload[0]?.value} ${
+          {`${payload[0]?.value} ${payload[0]?.payload.sets}x${payload[0]?.payload.reps}  ${
             payload[0]?.payload.rpe ? `@${payload[0]?.payload.rpe}` : ''
           } `}
         </Text>

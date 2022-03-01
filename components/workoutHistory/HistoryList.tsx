@@ -25,7 +25,7 @@ export default function HistoryList({ user }: Props): ReactElement {
       })}
     >
       <Group position="apart" grow>
-        <Title order={3} align="center">
+        <Title order={5} align="left">
           Recent Workouts
         </Title>
         {user.recentWorkouts.length > 0 && (
@@ -63,12 +63,17 @@ export default function HistoryList({ user }: Props): ReactElement {
         <Group direction="column" grow my={12}>
           {user.recentWorkouts.map((w: any) => (
             <Box key={w.workoutId}>
-              <Group position="apart">
+              <Group position="apart" grow>
                 <Link href={`/dashboard/workouts/${w.workoutId}`}>
                   <Text
                     weight={500}
                     sx={{
+                      flex: 1,
                       cursor: 'pointer',
+                      overflowX: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      minWidth: 0,
                       '&:hover': {
                         color: '#14b8f8',
                         textDecoration: 'underline',
@@ -80,7 +85,19 @@ export default function HistoryList({ user }: Props): ReactElement {
                   </Text>
                 </Link>
 
-                <Text color="dimmed" size="sm">
+                <Text
+                  color="dimmed"
+                  size="sm"
+                  sx={{
+                    // overflow: 'hidden',
+                    flex: 0,
+                    whiteSpace: 'nowrap',
+                    // minWidth: 0,
+                    // resize: 'horizontal',
+                    // textOverflow: 'ellipsis',
+                  }}
+                  align="right"
+                >
                   {dayjs(new Date(w.date.toDate())).fromNow()}
                 </Text>
               </Group>
