@@ -106,7 +106,7 @@ export default function Comment({ comment, user, programID }: any): ReactElement
       <Group direction="column" spacing={0} grow>
         <Group position="left">
           <Text size="sm" weight={700} color="cyan">
-            {c.data.name}
+            {c.data.name || c.data.email}
           </Text>
           <Text key={c.id}>{c.data.comment}</Text>
         </Group>
