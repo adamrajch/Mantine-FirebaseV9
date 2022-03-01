@@ -91,9 +91,17 @@ export default function BasicShell({ children }: Props) {
               <div>
                 <Divider my="sm" />
                 <Group position="center" noWrap>
-                  <Avatar size="md" src={user.photoUrl} alt="user" />
+                  <Avatar size="sm" src={user.photoUrl} alt="user" />
                   <Link href="/dashboard/profile">
-                    <Text size="sm" style={{ cursor: 'pointer' }}>
+                    <Text
+                      size="sm"
+                      style={{
+                        flex: 1,
+                        overflowX: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
                       {user.name ? user.name : user.email}
                     </Text>
                   </Link>

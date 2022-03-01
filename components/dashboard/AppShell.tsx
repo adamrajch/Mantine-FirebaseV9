@@ -96,7 +96,16 @@ export default function Layout({ children }: Props) {
                 <Group position="apart" noWrap spacing={1}>
                   <Avatar size="sm" src={user.photoUrl} alt="user" />
                   <Link href="/dashboard/profile">
-                    <Text size="sm" style={{ cursor: 'pointer' }}>
+                    <Text
+                      size="sm"
+                      style={{
+                        cursor: 'pointer',
+                        flex: 1,
+                        overflowX: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
                       {user.name ? user.name : user.email}
                     </Text>
                   </Link>

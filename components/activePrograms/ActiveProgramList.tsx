@@ -18,7 +18,7 @@ export default function ActiveProgramList({ user }: any): ReactElement {
         height: 300,
       })}
     >
-      <Title order={3} align="center">
+      <Title order={4} align="center">
         Active Programs
       </Title>
       <Group direction="column" grow spacing={0}>
@@ -43,7 +43,9 @@ export default function ActiveProgramList({ user }: any): ReactElement {
           ))
         ) : (
           <Group direction="column" grow>
-            <Text>You are not subscribed to any programs</Text>
+            <Text align="center" my={12} color="dimmed">
+              You are not subscribed to any programs
+            </Text>
             <Group position="center">
               <Button variant="outline" onClick={() => router.push('/programs')}>
                 Search Programs

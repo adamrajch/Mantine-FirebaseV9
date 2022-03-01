@@ -12,6 +12,9 @@ export default function About({}: Props) {
       <Title align="center" my={25}>
         Your All-In-One Trainer
       </Title>
+      <Text my={25} align="center">
+        Periodize brings all the features you need to fully maximize your fitness performance
+      </Text>
       <Grid grow style={{ color: 'white' }}>
         <Grid.Col span={12} md={6}>
           <Box
