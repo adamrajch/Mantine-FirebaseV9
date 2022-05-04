@@ -56,7 +56,7 @@ export default function Layout({ children }: Props) {
       fixed
       navbar={
         <Navbar
-          padding="md"
+          // padding="md"
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 240 }}
@@ -65,6 +65,7 @@ export default function Layout({ children }: Props) {
             borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[5],
             backgroundColor:
               theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+            padding: 12,
           })}
         >
           <Navbar.Section>

@@ -8,7 +8,7 @@ export default function GenModalButton() {
     modals.openConfirmModal({
       title: 'Please confirm your action',
       closeOnConfirm: false,
-      labels: { confirm: 'Next modal', cancel: 'Close modal' },
+      labels: { confirm: 'Next', cancel: 'Close' },
       children: (
         <Text size="sm">
           This action is so important that you are required to confirm it with a modal. Please click
@@ -18,7 +18,7 @@ export default function GenModalButton() {
       onConfirm: () =>
         modals.openConfirmModal({
           title: 'This is modal at second layer',
-          labels: { confirm: 'Close modal', cancel: 'Back' },
+          labels: { confirm: 'Close', cancel: 'Back' },
           closeOnConfirm: false,
           children: (
             <Text size="sm">When this modal is closed modals state will revert to first modal</Text>
