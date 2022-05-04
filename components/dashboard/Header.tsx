@@ -14,7 +14,7 @@ export default function HeaderComponent(): ReactElement {
   const { user } = useAuth();
   const theme = useMantineTheme();
   return (
-    <Header height={60} padding="md">
+    <Header height={60} sx={{ padding: 12 }}>
       <Group position="center" style={{ height: '100%' }} my={0} noWrap>
         <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
           <Burger
