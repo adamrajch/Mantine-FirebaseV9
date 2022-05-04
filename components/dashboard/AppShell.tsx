@@ -27,10 +27,6 @@ type Props = {
 };
 const generalLinks = [
   { href: '/programs', title: 'Programs' },
-  // {
-  //   href: '/library',
-  //   title: 'Library',
-  // },
   { href: '/basics', title: 'Learn Basics' },
 ];
 const userLinks = [
@@ -38,7 +34,6 @@ const userLinks = [
   { href: '/dashboard/post', title: 'Add Workout' },
   { href: '/dashboard/create', title: 'Create Program' },
   { href: '/dashboard/myprograms', title: 'My Programs' },
-  // { href: '/dashboard/journal', title: 'Journal' },
 ];
 
 export default function Layout({ children }: Props) {
@@ -166,7 +161,7 @@ export default function Layout({ children }: Props) {
       header={
         <Header
           height={headerHeight}
-          // padding={12}
+          // p={12}
           sx={(theme) => ({
             borderBottom: '1px solid',
             backgroundColor:

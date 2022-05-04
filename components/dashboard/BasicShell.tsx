@@ -48,7 +48,7 @@ export default function BasicShell({ children }: Props) {
       fixed
       navbar={
         <Navbar
-          padding="md"
+          // padding="md"
           hiddenBreakpoint={10000000}
           hidden={!opened}
           width={{ sm: 200, lg: 230 }}
@@ -189,17 +189,6 @@ export default function BasicShell({ children }: Props) {
         // className="app-wrap"
         style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       >
-        {/* <Box
-          sx={(theme) => ({
-            backgroundColor:
-              theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[1],
-            borderTop: '1px solid  ',
-            borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4],
-            padding: '5px 10px 50px 10px',
-            flex: '1 0 auto',
-            // minHeight: mainHeight,
-          })}
-        ></Box> */}
         {children}
         <Footer />
       </div>
