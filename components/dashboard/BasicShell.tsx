@@ -137,7 +137,7 @@ export default function BasicShell({ children }: Props) {
       header={
         <Header
           height={60}
-          padding={12}
+          // padding={12}
           sx={(theme) => ({
             backgroundColor:
               theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
