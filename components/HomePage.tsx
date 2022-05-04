@@ -1,4 +1,4 @@
-import { Button, Grid, Group, Image, Text, Title } from '@mantine/core';
+import { Button, Grid, Group, Image, Text } from '@mantine/core';
 import { useMediaQuery, useViewportSize } from '@mantine/hooks';
 import React from 'react';
 
@@ -10,22 +10,26 @@ export default function HomePage(): JSX.Element {
   return (
     <Grid justify="center" align="center" style={{ height: '100%' }} gutter={0}>
       <Grid.Col span={10} lg={6}>
-        <Group direction="column" position="left" grow>
-          <Title
-            order={2}
+        <Group direction="column" position="left" grow sx={{ paddingLeft: 12, paddingRight: 12 }}>
+          <Text
+            component="h1"
+            variant="gradient"
+            gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
             sx={(theme) => ({
               fontSize: 54,
               letterSpacing: 2,
+
               [`@media (max-width:  ${theme.breakpoints.md}px)`]: {
-                fontSize: 44,
+                fontSize: 54,
+                textAlign: 'center',
               },
               [`@media (max-width:  ${theme.breakpoints.sm}px)`]: {
-                fontSize: 30,
+                fontSize: 40,
               },
             })}
           >
             Perfect Training For All Athletes
-          </Title>
+          </Text>
           <Text
             sx={(theme) => ({
               fontSize: 18,
@@ -58,11 +62,6 @@ export default function HomePage(): JSX.Element {
           height={matches ? 600 : 300}
           fit="contain"
           alt="fitness girl"
-          // sx={(theme) => ({
-          //   '@media (mmin-width: 1200px)': {
-          //     height: '100px',
-          //   },
-          // })}
         />
       </Grid.Col>
     </Grid>

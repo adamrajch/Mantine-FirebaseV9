@@ -67,7 +67,7 @@ export default function BasicShell({ children }: Props) {
           <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
             <Divider my="sm" />
           </MediaQuery>
-          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+          {/* <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
             <Navbar.Section>
               <Group position="left" direction="column" spacing={0}>
                 {headerLinks.map((g) => (
@@ -75,7 +75,7 @@ export default function BasicShell({ children }: Props) {
                 ))}
               </Group>
             </Navbar.Section>
-          </MediaQuery>
+          </MediaQuery> */}
 
           <Navbar.Section grow>
             {user ? (

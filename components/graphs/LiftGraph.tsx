@@ -38,8 +38,8 @@ export default function LiftGraph({ lift, userId }: Props) {
     const q = query(
       collection(db, `users/${userId}/records`),
       where('name', '==', lift.value),
-      orderBy('date', 'asc'),
-      limit(20)
+      orderBy('date', 'desc'),
+      limit(5)
     );
 
     const querySnapshot = await getDocs(q);
@@ -52,12 +52,15 @@ export default function LiftGraph({ lift, userId }: Props) {
     });
 
     setData(
-      arr.map((r: any) => {
-        return {
-          ...r.records,
-          date: r.date.toDate().toISOString().substr(0, 10),
-        };
-      })
+      arr
+        .slice()
+        .reverse()
+        .map((r: any) => {
+          return {
+            ...r.records,
+            date: r.date.toDate().toISOString().substr(0, 10),
+          };
+        })
     );
   }
 

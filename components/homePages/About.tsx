@@ -37,7 +37,7 @@ export default function About({}: Props) {
                 <Text color="black" weight={600}>
                   Create The Perfect Program
                 </Text>
-                <Text color="black" size="xs">
+                <Text color="black" size="md">
                   Build a routine geared to your goals and preferences. Plan for the weeks and
                   months ahead with sound theory
                 </Text>
@@ -66,7 +66,7 @@ export default function About({}: Props) {
                 <Text color="black" weight={600}>
                   Subscribe
                 </Text>
-                <Text color="black" size="xs">
+                <Text color="black" size="md">
                   Subscribe to various training programs to build a well rounded system, or find one
                   that suits all your goals and needs!
                 </Text>
@@ -95,7 +95,7 @@ export default function About({}: Props) {
                 <Text color="black" weight={600}>
                   Log Progress
                 </Text>
-                <Text color="black" size="xs">
+                <Text color="black" size="md">
                   Keep track of your progress in the gym and analyze your progression of your
                   individual lifts
                 </Text>
@@ -124,7 +124,7 @@ export default function About({}: Props) {
                 <Text color="black" weight={600}>
                   Acquire gains
                 </Text>
-                <Text color="black" size="xs">
+                <Text color="black" size="md">
                   Being on a sound training program is one of the most imortant ways to progress in
                   your fitness jouney. Happy training!
                 </Text>
