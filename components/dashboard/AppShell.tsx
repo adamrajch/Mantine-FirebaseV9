@@ -166,7 +166,7 @@ export default function Layout({ children }: Props) {
       header={
         <Header
           height={headerHeight}
-          padding="md"
+          padding={12}
           sx={(theme) => ({
             borderBottom: '1px solid',
             backgroundColor:
